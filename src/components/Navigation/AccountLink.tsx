@@ -8,14 +8,15 @@ import {
   FiHeart,
   FiLogOut,
   FiChevronDown,
+  FiShoppingBag,
 } from "react-icons/fi";
 import { AuthContext } from "@/store/AuthContext";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function UserMenu() {
-  const { user } = useContext(AuthContext);
-
-  const { logout } = useContext(AuthContext);
+export default function PremiumUserMenu() {
+  const { user, logout } = useContext(AuthContext);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -33,13 +34,13 @@ export default function UserMenu() {
   }, []);
 
   const menuItems = [
-    { icon: <FiUser />, label: "My Profile", path: "/profile" },
-    { icon: <FiHeart />, label: "Saved Items", path: "/saved" },
-    { icon: <FiSettings />, label: "Settings", path: "/settings" },
+    { icon: <FiUser size={18} />, label: "Profile", path: "/profile" },
+    { icon: <FiShoppingBag size={18} />, label: "Orders", path: "/orders" },
+    { icon: <FiHeart size={18} />, label: "Wishlist", path: "/wishlist" },
+    { icon: <FiSettings size={18} />, label: "Settings", path: "/settings" },
   ];
 
   const handleLogout = () => {
-    console.log("User logged out");
     logout();
     setIsOpen(false);
     router.push("/");
@@ -47,59 +48,93 @@ export default function UserMenu() {
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* User button */}
-      <button
+      {/* Premium User Button */}
+      <motion.button
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-2 rounded-full transition-colors"
+        className="flex items-center gap-2 p-1 rounded-full transition-all"
+        aria-label="User menu"
       >
-        <div className="w-8 h-8  rounded-full flex items-center justify-center">
-          <FiUser className="pr-text text-2xl" />
+        <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
+          {user?.avatar ? (
+            <Image
+              src={user.avatar}
+              alt="User avatar"
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <FiUser className="text-gray-600" size={23} />
+          )}
         </div>
-        <FiChevronDown
-          className={`-translate-x-2 mt-1 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </button>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <FiChevronDown className="text-gray-500" size={16} />
+        </motion.div>
+      </motion.button>
 
-      {/* Dropdown menu */}
+      {/* Luxury Dropdown Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-56 pr-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
           >
-            {/* User info */}
-            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <p className="font-medium text-white">{user?.full_name}</p>
-              <p className="text-sm text-gray-400 wrap-break-word">{user?.email} </p>
+            {/* User Profile Section */}
+            <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
+              <div className="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                {user?.avatar ? (
+                  <Image
+                    src={user.avatar}
+                    alt="User avatar"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <FiUser className="text-gray-600" size={18} />
+                )}
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">
+                  {user?.full_name || "Guest"}
+                </p>
+                <p className="text-xs text-gray-500 truncate max-w-[180px]">
+                  {user?.email || "Sign in to your account"}
+                </p>
+              </div>
             </div>
 
-            {/* Menu items */}
+            {/* Menu Items */}
             <div className="py-1">
               {menuItems.map((item) => (
-                <button
-                  key={item.path}
-                  className="w-full px-4 py-2 text-left text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
-                >
-                  <span className="text-white">{item.icon}</span>
-                  <span>{item.label}</span>
-                </button>
+                <motion.div key={item.path} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href={item.path}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span className="text-gray-500">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                </motion.div>
               ))}
             </div>
 
-            {/* Logout */}
-            <div className="border-t border-gray-200 dark:border-gray-700">
-              <button
+            {/* Logout Section */}
+            <div className="border-t border-gray-100">
+              <motion.button
+                whileTap={{ scale: 0.98 }}
                 onClick={handleLogout}
-                className="w-full px-4 py-3 mb-1 text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
               >
-                <FiLogOut />
-                <span>Logout</span>
-              </button>
+                <FiLogOut className="text-red-400" size={18} />
+                <span>Sign Out</span>
+              </motion.button>
             </div>
           </motion.div>
         )}
