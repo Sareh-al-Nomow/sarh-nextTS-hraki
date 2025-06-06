@@ -65,7 +65,7 @@ export default function CategoriesLink() {
               </div>
 
               {/* Widget Content */}
-              <div className="p-4 overflow-y-auto h-[calc(100%-60px)]">
+              <div className="p-4 overflow-y-auto h-[calc(100%-60px)]  z-50">
                 {/* Categories Section - More prominent now */}
                 <section className="mb-8">
                   <h3 className="text-lg font-semibold mb-4 pr-text ">

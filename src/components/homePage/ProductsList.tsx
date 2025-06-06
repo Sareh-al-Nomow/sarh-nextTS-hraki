@@ -408,14 +408,14 @@ export default function ProductsList() {
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
-                  <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2">
+                  <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer">
                     <FiShoppingCart /> Add to Cart
                   </button>
                   <button
                     onClick={() =>
                       handleNavigateToProduct(quickViewProduct.name)
                     }
-                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2"
+                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                   >
                     View Details
                   </button>

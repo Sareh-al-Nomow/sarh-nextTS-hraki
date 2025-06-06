@@ -78,7 +78,7 @@ export default function ProductDetails() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Bar */}
-      <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+      <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-30">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
