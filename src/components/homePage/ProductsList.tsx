@@ -152,7 +152,7 @@ export default function ProductsList() {
 
   const handleNavigateToProduct = (id: string) => {
     sessionStorage.setItem("scrollY", window.scrollY.toString());
-    router.push(`/ProductDetails/${id}`);
+    router.push(`/product/${id}`);
   };
 
   return (
