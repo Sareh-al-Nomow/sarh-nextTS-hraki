@@ -15,7 +15,7 @@ export default function RegistrationLink() {
   const { login: loginCxt } = useContext(AuthContext);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [contentView, setContentView] = useState<string | null>("otp");
+  const [contentView, setContentView] = useState<string | null>("login");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formInput, setFormInput] = useState({
     name: "",
