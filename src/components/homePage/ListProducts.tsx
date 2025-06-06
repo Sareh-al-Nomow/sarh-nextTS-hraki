@@ -11,6 +11,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -396,12 +397,15 @@ export default function HorizontalProductList({
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
-                  <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition">
+                  <button className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition">
                     <FiShoppingCart /> Add to Cart
                   </button>
-                  <button className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition">
+                  <Link
+                    href={`/product/${quickViewProduct.name}`}
+                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+                  >
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
