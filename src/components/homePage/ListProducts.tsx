@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiShoppingCart,
@@ -8,6 +8,7 @@ import {
   FiStar,
   FiChevronLeft,
   FiChevronRight,
+  FiX,
 } from "react-icons/fi";
 import Image from "next/image";
 
@@ -21,6 +22,8 @@ interface Product {
   colors?: string[];
   tags?: string[];
   isNew?: boolean;
+  description?: string;
+  features?: string[];
 }
 
 const itemVariants = {
@@ -42,8 +45,10 @@ const itemVariants = {
 
 export default function HorizontalProductList({
   title = "Featured Products",
+  products,
 }: {
   title?: string;
+  products: Product[];
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -52,114 +57,26 @@ export default function HorizontalProductList({
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
     null
   );
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
-  // Your existing product data
-  const products: Product[] = [
-    {
-      id: 1,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 3,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 4,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 5,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 6,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 7,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 8,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    {
-      id: 9,
-      name: "AirMax Pro Shoes",
-      price: "$89.99",
-      originalPrice: "$129.99",
-      image: "/image/products/img-4.jpg",
-      rating: 4.7,
-      colors: ["#111827", "#6B7280", "#F59E0B"],
-      tags: ["HOT", "30% OFF"],
-      isNew: true,
-    },
-    // ... include all your other products
-  ];
+  // Check if content overflows
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (scrollRef.current) {
+        setIsOverflowing(
+          scrollRef.current.scrollWidth > scrollRef.current.clientWidth
+        );
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [products]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -500 : 500;
+      const scrollAmount = direction === "left" ? -400 : 400;
       scrollRef.current.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
@@ -191,13 +108,14 @@ export default function HorizontalProductList({
 
       <div className="relative">
         {/* Left Arrow */}
-        {showLeftArrow && (
+        {isOverflowing && showLeftArrow && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => scroll("left")}
             className="absolute left-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-r from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
             whileHover={{ scale: 1.1 }}
+            aria-label="Scroll left"
           >
             <FiChevronLeft className="h-6 w-6 text-gray-800" />
           </motion.button>
@@ -206,8 +124,12 @@ export default function HorizontalProductList({
         {/* Product List */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto no-scrollbar px-4 md:px-12 gap-4 py-2"
+          className="flex overflow-x-auto px-4 md:px-12 gap-4 py-2 scrollbar-hide"
           onScroll={checkScrollPosition}
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
         >
           {products.map((product) => (
             <motion.div
@@ -216,7 +138,7 @@ export default function HorizontalProductList({
               initial="hidden"
               animate="visible"
               whileHover="hover"
-              className="flex-shrink-0 w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group"
+              className="flex-shrink-0 w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
             >
               {/* Product Image */}
               <div className="relative aspect-square">
@@ -241,7 +163,7 @@ export default function HorizontalProductList({
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ delay: i * 0.1 }}
-                      className={`text-xs px-2 py-1 rounded-full  ${
+                      className={`text-xs px-2 py-1 rounded-full ${
                         tag === "HOT"
                           ? "bg-red-500"
                           : tag === "BESTSELLER"
@@ -264,6 +186,11 @@ export default function HorizontalProductList({
                   }}
                   className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
                   whileTap={{ scale: 0.9 }}
+                  aria-label={
+                    likedProducts.includes(product.id)
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
                 >
                   <FiHeart
                     className={`${
@@ -315,6 +242,7 @@ export default function HorizontalProductList({
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+                    aria-label="Add to cart"
                   >
                     <FiShoppingCart size={16} />
                   </motion.button>
@@ -323,8 +251,12 @@ export default function HorizontalProductList({
 
               {/* Quick View Trigger */}
               <button
-                onClick={() => setQuickViewProduct(product)}
-                className="absolute inset-0 z-10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setQuickViewProduct(product);
+                }}
+                className="absolute inset-0 w-full h-full z-10"
                 aria-label={`Quick view ${product.name}`}
               />
             </motion.div>
@@ -332,30 +264,147 @@ export default function HorizontalProductList({
         </div>
 
         {/* Right Arrow */}
-        {showRightArrow && (
+        {isOverflowing && showRightArrow && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => scroll("right")}
             className="absolute right-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-l from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
             whileHover={{ scale: 1.1 }}
+            aria-label="Scroll right"
           >
             <FiChevronRight className="h-6 w-6 text-gray-800" />
           </motion.button>
         )}
       </div>
 
-      {/* Quick View Modal (same as your existing implementation) */}
+      {/* Quick View Modal */}
       <AnimatePresence>
         {quickViewProduct && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-4"
             onClick={() => setQuickViewProduct(null)}
           >
-            {/* ... your existing modal content ... */}
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              className="bg-white rounded-xl w-full max-w-md overflow-hidden z-[1001]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Image Container with Close Button */}
+              <div className="relative h-48 w-full">
+                <Image
+                  src={quickViewProduct.image}
+                  alt={quickViewProduct.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setQuickViewProduct(null)}
+                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow hover:bg-gray-100 transition z-10"
+                  aria-label="Close quick view"
+                >
+                  <FiX size={18} className="text-gray-800" />
+                </button>
+
+                {/* Badges */}
+                {quickViewProduct.tags && quickViewProduct.tags.length > 0 && (
+                  <div className="absolute top-3 left-3 flex gap-1 z-10">
+                    {quickViewProduct.tags.slice(0, 2).map((tag, index) => (
+                      <span
+                        key={index}
+                        className={`text-xs px-2 py-0.5 rounded-full ${
+                          tag === "HOT"
+                            ? "bg-red-500"
+                            : tag === "BESTSELLER"
+                            ? "bg-purple-500"
+                            : tag === "NEW"
+                            ? "bg-blue-500"
+                            : "bg-green-500"
+                        } text-white`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Product Details */}
+              <div className="p-5 space-y-4">
+                <div className="flex justify-between items-start">
+                  <h2 className="text-xl font-bold">{quickViewProduct.name}</h2>
+                  <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
+                    <FiStar className="text-yellow-400 mr-1" size={14} />
+                    <span className="text-sm">{quickViewProduct.rating}</span>
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold">
+                    {quickViewProduct.price}
+                  </span>
+                  {quickViewProduct.originalPrice && (
+                    <span className="text-sm text-gray-500 line-through">
+                      {quickViewProduct.originalPrice}
+                    </span>
+                  )}
+                </div>
+
+                {/* Description */}
+                {quickViewProduct.description && (
+                  <p className="text-gray-600">
+                    {quickViewProduct.description}
+                  </p>
+                )}
+
+                {/* Features */}
+                {quickViewProduct.features && (
+                  <ul className="space-y-1">
+                    {quickViewProduct.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-green-500 mr-2">✓</span>
+                        <span className="text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Color Options */}
+                {quickViewProduct.colors && (
+                  <div>
+                    <h3 className="font-medium mb-1">Colors:</h3>
+                    <div className="flex gap-2">
+                      {quickViewProduct.colors.map((color, i) => (
+                        <div
+                          key={i}
+                          className="w-6 h-6 rounded-full border border-gray-200"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="grid grid-cols-2 gap-3 pt-4">
+                  <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition">
+                    <FiShoppingCart /> Add to Cart
+                  </button>
+                  <button className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
