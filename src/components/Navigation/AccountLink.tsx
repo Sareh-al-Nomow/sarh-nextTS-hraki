@@ -13,6 +13,8 @@ import { AuthContext } from "@/store/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function UserMenu() {
+  const { user } = useContext(AuthContext);
+
   const { logout } = useContext(AuthContext);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -72,8 +74,8 @@ export default function UserMenu() {
           >
             {/* User info */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <p className="font-medium text-white">Welcome back</p>
-              <p className="text-sm text-white">user@example.com</p>
+              <p className="font-medium text-white">{user?.full_name}</p>
+              <p className="text-sm text-gray-400 wrap-break-word">{user?.email} </p>
             </div>
 
             {/* Menu items */}

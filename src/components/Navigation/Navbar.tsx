@@ -34,8 +34,8 @@ export default function Navbar() {
 
         {/* Right */}
         <div className="flex items-center gap-2">
-          <span className="text-sm border px-2 py-1 rounded-lg pr-text cursor-pointer ">
-            USD
+          <span className="text-sm border px-3 py-1 rounded-lg pr-text cursor-pointer ">
+            JOD
           </span>
           {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
           <CartLink />
