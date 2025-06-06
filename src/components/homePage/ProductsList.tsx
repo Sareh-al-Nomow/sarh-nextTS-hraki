@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiShoppingCart, FiHeart, FiStar, FiX } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 interface Product {
   id: number;
@@ -131,12 +132,27 @@ export default function ProductsList() {
   );
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
 
+  const router = useRouter();
+
   const toggleLike = (productId: number) => {
     setLikedProducts((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
+  };
+
+  useEffect(() => {
+    const scrollY = sessionStorage.getItem("scrollY");
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY));
+      sessionStorage.removeItem("scrollY");
+    }
+  }, []);
+
+  const handleNavigateToProduct = (id: string) => {
+    sessionStorage.setItem("scrollY", window.scrollY.toString());
+    router.push(`/ProductDetails/${id}`);
   };
 
   return (
@@ -395,7 +411,12 @@ export default function ProductsList() {
                   <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2">
                     <FiShoppingCart /> Add to Cart
                   </button>
-                  <button className="border border-black py-3 rounded-lg flex items-center justify-center gap-2">
+                  <button
+                    onClick={() =>
+                      handleNavigateToProduct(quickViewProduct.name)
+                    }
+                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2"
+                  >
                     View Details
                   </button>
                 </div>

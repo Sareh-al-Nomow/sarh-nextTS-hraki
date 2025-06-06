@@ -4,7 +4,8 @@ import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
 import { queryClient } from "@/lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast"; // ✅ استدعاء Toaster
+import { Toaster } from "react-hot-toast"; 
+import Navbar from "@/components/Navigation/Navbar";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -28,6 +29,7 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <Toaster />
+            <Navbar />
             <div id="root-modal"></div>
             {children}
           </AuthProvider>

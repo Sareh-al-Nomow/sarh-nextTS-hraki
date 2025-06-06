@@ -9,6 +9,7 @@ import CategoriesLink from "./CategoriesLink";
 import { BsList } from "react-icons/bs";
 import { useContext } from "react";
 import { AuthContext } from "@/store/AuthContext";
+import Link from "next/link";
 
 export default function Navbar() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -20,11 +21,11 @@ export default function Navbar() {
         className="container m-auto flex items-center justify-between py-4"
       >
         {/* Left */}
-        <div className="flex items-center gap-3 mx-3">
+        <Link href={"/"} className="flex items-center gap-3 mx-3">
           <div className="text-3xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#219EBC] to-[#023047] cursor-pointer">
             SARAH
           </div>
-        </div>
+        </Link>
 
         {/* Center */}
         <div className="hidden md:flex items-center gap-5">
