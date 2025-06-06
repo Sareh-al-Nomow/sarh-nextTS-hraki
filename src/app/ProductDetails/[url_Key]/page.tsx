@@ -1,11 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FiUser,
-  FiSettings,
-  FiLogOut,
   FiShoppingCart,
   FiHeart,
   FiShare2,
@@ -30,13 +27,11 @@ interface Product {
 }
 
 export default function ProductDetails() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   // Sample product data
   const product: Product = {
@@ -91,50 +86,10 @@ export default function ProductDetails() {
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-xl font-semibold text-gray-800"
+          className="text-xl  font-semibold text-gray-800 -translate-x-1/2"
         >
           Product Details
         </motion.h1>
-
-        {/* User Menu */}
-        <div className="relative" ref={menuRef}>
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50 overflow-hidden"
-              >
-                <div className="py-1">
-                  <motion.button
-                    whileHover={{ backgroundColor: "#f3f4f6" }}
-                    className="w-full text-left px-4 py-2 flex items-center gap-2"
-                  >
-                    <FiUser />
-                    <span>Profile</span>
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ backgroundColor: "#f3f4f6" }}
-                    className="w-full text-left px-4 py-2 flex items-center gap-2"
-                  >
-                    <FiSettings />
-                    <span>Settings</span>
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ backgroundColor: "#f3f4f6" }}
-                    className="w-full text-left px-4 py-2 text-red-600 flex items-center gap-2"
-                  >
-                    <FiLogOut />
-                    <span>Logout</span>
-                  </motion.button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
       </header>
 
       {/* Main Content */}
