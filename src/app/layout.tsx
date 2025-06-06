@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Dosis } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/store/AuthContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dosis = Dosis({
+  variable: "--font-dosis",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,10 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${dosis.variable} antialiased`}>
+        <AuthProvider>
+          <div id="root-modal"></div>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
