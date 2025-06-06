@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Dosis } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
+import { queryClient } from "@/lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast"; // ✅ استدعاء Toaster
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -22,10 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dosis.variable} antialiased`}>
-        <AuthProvider>
-          <div id="root-modal"></div>
-          {children}
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Toaster />
+            <div id="root-modal"></div>
+            {children}
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

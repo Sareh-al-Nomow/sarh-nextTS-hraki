@@ -45,7 +45,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-5 mx-3">
-          <span className="hidden md:flex cursor-pointer pr-text hover:text-[#219EBC] text-[20px] ">
+          <span className="hidden md:flex cursor-pointer pr-text hover:text-[#219EBC] text-[20px] mt-1">
             Home
           </span>
           <CategoriesLink />

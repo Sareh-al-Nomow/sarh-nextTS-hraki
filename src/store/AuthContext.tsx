@@ -1,5 +1,7 @@
 "use client";
 
+import Spinner from "@/components/UI/SpinnerLoading";
+import User from "../lib/models/userModel";
 import React, {
   createContext,
   FC,
@@ -8,20 +10,11 @@ import React, {
   useState,
 } from "react";
 
-import { baseUrl } from "@/utils/ApiConfig";
-const BASE_URL = `${baseUrl}/api`;
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
 interface AuthContextType {
   isAuthenticated: boolean;
   token: string | null;
   userId: string | null;
-  login: (newToken: string, newUserId: string, user: User) => void;
+  login: (newToken: string, user: User) => void;
   logout: () => void;
   loginWithGoogle: (token: string) => void;
   isLoading: boolean;
@@ -54,14 +47,17 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const isAuthenticated = !!token;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = (newToken: string, newUserId: string, user: User) => {
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setIsAuthenticated(!!(token || storedToken));
+  }, [token]);
+
+  const login = (newToken: string, user: User) => {
     setToken(newToken);
-    setUserId(newUserId);
     setUser(user);
     localStorage.setItem("token", newToken);
-    localStorage.setItem("userId", newUserId);
     localStorage.setItem("userData", JSON.stringify(user));
   };
 
@@ -70,11 +66,13 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
   };
 
   const logout = () => {
+    setIsLoading(true);
     setToken(null);
     setUserId(null);
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("userData");
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -92,13 +90,16 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
     const verifyToken = async () => {
       let res;
       try {
-        res = await fetch(`${BASE_URL}/auth/verify-token`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        });
+        res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify-token`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedToken}`,
+            },
+          }
+        );
 
         const contentType = res.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
@@ -109,7 +110,7 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
 
         if (res.ok && data.valid) {
           console.log(res.status);
-          login(storedToken!, data.user.id.toString(), data.user);
+          login(storedToken!, data.user);
         } else if (res.status === 401 && !data.valid) {
           console.log(res.status);
           logout();
@@ -131,6 +132,10 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
       setIsLoading(false);
     }
   }, [token]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <AuthContext.Provider
