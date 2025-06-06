@@ -65,7 +65,6 @@ export default function ProductDetails() {
     ],
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -99,15 +98,6 @@ export default function ProductDetails() {
 
         {/* User Menu */}
         <div className="relative" ref={menuRef}>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={toggleMenu}
-            className="p-2 rounded-full hover:bg-gray-100 transition"
-          >
-            <FiUser className="text-xl text-gray-600" />
-          </motion.button>
-
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div
