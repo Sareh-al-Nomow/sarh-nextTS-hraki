@@ -200,7 +200,7 @@ export default function PremiumNavWidget() {
               {/* User Section */}
               <div className="p-5 border-t border-gray-100">
                 <Link
-                  href="/account"
+                  href="/profile"
                   className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-all"
                   onClick={() => setIsOpen(false)}
                 >
@@ -210,7 +210,7 @@ export default function PremiumNavWidget() {
                   <div>
                     <div className="font-medium">My Account</div>
                     <div className="text-sm text-gray-500">
-                      View profile & orders
+                      View profile
                     </div>
                   </div>
                 </Link>

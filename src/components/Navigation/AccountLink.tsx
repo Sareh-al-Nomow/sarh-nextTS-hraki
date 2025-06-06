@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiUser,
-  FiSettings,
   FiHeart,
   FiLogOut,
   FiChevronDown,
@@ -37,7 +36,6 @@ export default function PremiumUserMenu() {
     { icon: <FiUser size={18} />, label: "Profile", path: "/profile" },
     { icon: <FiShoppingBag size={18} />, label: "Orders", path: "/orders" },
     { icon: <FiHeart size={18} />, label: "Wishlist", path: "/wishlist" },
-    { icon: <FiSettings size={18} />, label: "Settings", path: "/settings" },
   ];
 
   const handleLogout = () => {
@@ -87,7 +85,7 @@ export default function PremiumUserMenu() {
           >
             {/* User Profile Section */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div className="relative w-10 h-[29px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                 {user?.avatar ? (
                   <Image
                     src={user.avatar}
