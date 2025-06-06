@@ -27,3 +27,12 @@ input:focus {
 .pr-bg {
   background-color: #023047;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

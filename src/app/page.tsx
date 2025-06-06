@@ -1,5 +1,6 @@
 import Carousel from "@/components/homePage/Carousel";
 import CategoriesList from "@/components/homePage/CategoriesList";
+import ListProducts from "@/components/homePage/ListProducts";
 import ProductsList from "@/components/homePage/ProductsList";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     <>
       <Carousel />
       <CategoriesList />
+      <ListProducts />
       <ProductsList />
     </>
   );
