@@ -81,11 +81,9 @@ export default function UserMenu() {
               {menuItems.map((item) => (
                 <button
                   key={item.path}
-                  className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
                 >
-                  <span className="text-gray-500 dark:text-gray-400">
-                    {item.icon}
-                  </span>
+                  <span className="text-white">{item.icon}</span>
                   <span>{item.label}</span>
                 </button>
               ))}
@@ -95,10 +93,10 @@ export default function UserMenu() {
             <div className="border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleLogout}
-                className="w-full px-4 py-2 text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors"
+                className="w-full px-4 py-3 mb-1 text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors"
               >
                 <FiLogOut />
-                <span>Log Out</span>
+                <span>Logout</span>
               </button>
             </div>
           </motion.div>
