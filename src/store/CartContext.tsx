@@ -1,8 +1,9 @@
 "use client";
 
-import { getCartByToken } from "@/lib/axios/CartAxios";
+import { AddToCart, getCartByToken } from "@/lib/axios/CartAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { createContext, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export type Cart = {
   cart_id: number;
@@ -87,6 +88,10 @@ interface CartContextType {
   cartQuantity: number;
   cartItems: CartItem[];
   summaryCart: SummaryCart;
+  addToCart: (productId: number, qty?: number) => void;
+  isLoadingCart: boolean;
+  isLoadingAddToCart: boolean;
+  cartError: string | null;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -99,15 +104,20 @@ export const CartContext = createContext<CartContextType>({
     tax: 0,
     shippingFee: null,
   },
+  addToCart: () => {},
+  isLoadingCart: false,
+  isLoadingAddToCart: false,
+  cartError: null,
 });
 
 type CartContextProviderProps = {
   children: React.ReactNode;
 };
+
 const CartContextProvider: React.FC<CartContextProviderProps> = ({
   children,
 }) => {
-  const [cartQuantity, setCartQuantity] = useState<number>(0);
+  const [cartQuantity, setCartQuantity] = useState(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [summaryCart, setSummaryCart] = useState<SummaryCart>({
     subTotal: 0,
@@ -116,19 +126,67 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     tax: 0,
     shippingFee: null,
   });
+  const [cartError, setCartError] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data,
+    isLoading: isLoadingCart,
+    refetch,
+  } = useQuery({
     queryKey: ["cart"],
     queryFn: getCartByToken,
+    // enabled: false, // نتحكم بالفetch يدوي
   });
 
-  const {} = useMutation({});
+  const { mutate: addToCartMutate, isPending: isLoadingAddToCart } =
+    useMutation({
+      mutationFn: AddToCart,
+      onSuccess: () => {
+        refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
+        toast.success("your item added successflly!");
+      },
+      onError: (error: Error) => {
+        setCartError(error.message);
+      },
+    });
 
-  console.log(data);
-  console.log(error?.message);
+  const updateCartState = useCallback((cart: Cart) => {
+    setCartItems(cart.items);
+    setCartQuantity(cart.total_qty);
+    setSummaryCart({
+      subTotal: cart.sub_total,
+      grandTotal: cart.grand_total,
+      discount: cart.discount_amount,
+      tax: cart.tax_amount,
+      shippingFee: cart.shipping_fee_incl_tax,
+    });
+    setCartError(null);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      updateCartState(data);
+    }
+  }, [data, updateCartState]);
+
+  const addToCart = (productId: number, qty: number = 1) => {
+    addToCartMutate({ productId, qty });
+  };
+
+  console.log(cartItems);
 
   return (
-    <CartContext.Provider value={{ cartQuantity, cartItems, summaryCart }}>
+    <CartContext.Provider
+      value={{
+        cartQuantity,
+        cartItems,
+        summaryCart,
+        addToCart,
+        isLoadingCart,
+        isLoadingAddToCart,
+        cartError,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

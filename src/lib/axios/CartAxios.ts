@@ -95,103 +95,41 @@ export const getCartByToken = async (): Promise<CartResponse> => {
   }
 };
 
-export const AddToCart = async (
-  productId: number,
-  qty: number = 1,
-  productName?: string
-): Promise<{ success: boolean; message: string }> => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return { success: false, message: "Not authenticated" };
-  }
+type AddToCartParams = {
+  productId: number;
+  qty?: number;
+};
 
-  if (!productId) {
-    return { success: false, message: "Product ID is required" };
+export const AddToCart = async ({
+  productId,
+  qty = 1,
+}: AddToCartParams): Promise<CartResponse> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    const message = "you are not authorize";
+    throw new Error(message);
   }
 
   try {
-    // Get or create cart
-    let cartRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/customer`,
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/add-items`,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        product_id: productId,
+        qty: qty,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
-    if (cartRes.status === 404) {
-      cartRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({}),
-        }
-      );
-    }
-
-    const cartData = await cartRes.json();
-    const cartId = cartData.cart_id || cartData.id;
-
-    // Get cart items
-    const itemsRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/${cartId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const cart = await itemsRes.json();
-    const existing = cart.items?.find(
-      (item: CartItem) => item.product_id === productId
-    );
-
-    // Update or add
-    if (existing) {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/${cartId}/items/${existing.cart_item_id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ qty: existing.qty + qty }),
-        }
-      );
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-      return {
-        success: true,
-        message: `${productName || "Product"} quantity updated.`,
-      };
-    } else {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/${cartId}/items`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ qty, product_id: productId }),
-        }
-      );
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-      return {
-        success: true,
-        message: `${productName || "Product"} added to cart.`,
-      };
-    }
-  } catch (err: unknown) {
-    let message = "Something went wrong";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return { success: false, message };
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
   }
 };

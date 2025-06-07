@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { FrontendProduct } from "@/models/forntEndProduct";
+import { CartContext } from "@/store/CartContext";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -35,6 +36,8 @@ const ProductItem: React.FC<ProductItemProp> = ({
   toggleLike,
   likedProducts,
 }) => {
+  const { addToCart, isLoadingAddToCart } = useContext(CartContext);
+
   const [quickViewProduct, setQuickViewProduct] =
     useState<FrontendProduct | null>(null);
 
@@ -159,8 +162,12 @@ const ProductItem: React.FC<ProductItemProp> = ({
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+                className={`p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition cursor-pointer ${
+                  isLoadingAddToCart ? "opacity-40" : ""
+                }`}
                 aria-label="Add to cart"
+                onClick={() => addToCart(product.id, 1)}
+                disabled={isLoadingAddToCart}
               >
                 <FiShoppingCart size={16} />
               </motion.button>
