@@ -4,7 +4,7 @@ import Spinner from "@/components/UI/SpinnerLoading";
 
 const loading = () => {
   return (
-    <div className="my-80">
+    <div className="mb-72 mt-36">
       <Spinner />
     </div>
   );

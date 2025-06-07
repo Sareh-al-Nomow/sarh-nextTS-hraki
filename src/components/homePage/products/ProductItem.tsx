@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiShoppingCart, FiStar, FiX } from "react-icons/fi";
+import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { FrontendProduct } from "@/models/forntEndProduct";
 
@@ -26,9 +26,15 @@ const itemVariants = {
 
 type ProductItemProp = {
   product: FrontendProduct;
+  toggleLike: (product: FrontendProduct) => void;
+  likedProducts: number[];
 };
 
-const ProductItem: React.FC<ProductItemProp> = ({ product }) => {
+const ProductItem: React.FC<ProductItemProp> = ({
+  product,
+  toggleLike,
+  likedProducts,
+}) => {
   const [quickViewProduct, setQuickViewProduct] =
     useState<FrontendProduct | null>(null);
 
@@ -47,18 +53,26 @@ const ProductItem: React.FC<ProductItemProp> = ({ product }) => {
       <motion.div
         key={product.id}
         variants={itemVariants}
+        initial="hidden"
+        animate="visible"
         whileHover="hover"
-        className="bg-white rounded-2xl shadow-sm overflow-hidden relative group"
+        className="flex-shrink-0 w-48 md:w-60 lg:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
       >
         {/* Product Image */}
-        <div className="relative aspect-square">
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setQuickViewProduct(product);
+          }}
+          className="relative aspect-square"
+        >
           <Image
             src={"/image/products/img-1.jpg"}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-            priority={product.id <= 4}
           />
 
           {/* Badges */}
@@ -68,18 +82,20 @@ const ProductItem: React.FC<ProductItemProp> = ({ product }) => {
                 NEW
               </span>
             )}
-            {product.tags?.map((tag: string, i: number) => (
+            {product.tags?.map((tag, i) => (
               <motion.span
                 key={i}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: i * 0.1 }}
                 className={`text-xs px-2 py-1 rounded-full ${
-                  tag === "SALE"
+                  tag === "HOT"
                     ? "bg-red-500"
-                    : tag === "OUT OF STOCK"
-                    ? "bg-gray-500"
-                    : "bg-blue-500"
+                    : tag === "BESTSELLER"
+                    ? "bg-purple-500"
+                    : tag === "NEW"
+                    ? "bg-blue-500"
+                    : "bg-green-500"
                 } text-white`}
               >
                 {tag}
@@ -96,7 +112,7 @@ const ProductItem: React.FC<ProductItemProp> = ({ product }) => {
 
           <div className="flex items-center mt-2">
             <div className="flex">
-              {[...Array(5)].map((_, i: number) => (
+              {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
                   className={`${
@@ -123,28 +139,34 @@ const ProductItem: React.FC<ProductItemProp> = ({ product }) => {
               )}
             </div>
 
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                // Add to cart logic
-              }}
-              disabled={!product.inventory?.stock_availability}
-            >
-              <FiShoppingCart size={16} />
-            </motion.button>
+            <div className="flex gap-4">
+              {/* Like Button */}
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(product);
+                }}
+                className=" p-2 bg-[#FFF] rounded-full shadow-md hover:bg-gray-100 transition"
+                whileTap={{ scale: 0.9 }}
+              >
+                <FiHeart
+                  className={`${
+                    likedProducts.includes(product.id)
+                      ? "fill-red-500 text-red-500"
+                      : "text-gray-700"
+                  }`}
+                />
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+                aria-label="Add to cart"
+              >
+                <FiShoppingCart size={16} />
+              </motion.button>
+            </div>
           </div>
         </div>
-
-        {/* Quick View Trigger */}
-        <button
-          onClick={(): void => {
-            setQuickViewProduct(product);
-          }}
-          className="absolute inset-0 z-10"
-          aria-label={`Quick view ${product.name}`}
-        />
       </motion.div>
 
       {/* Quick View Modal */}

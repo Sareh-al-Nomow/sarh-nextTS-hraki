@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { useQuery } from "@tanstack/react-query";
@@ -56,6 +56,8 @@ function transformProduct(product: Product): FrontendProduct {
 }
 
 export default function Products() {
+  const [likedProducts, setLikedProducts] = useState<number[]>([]);
+
   const { data, isLoading, isError, refetch } = useQuery<
     ProductsResponse,
     Error
@@ -67,12 +69,39 @@ export default function Products() {
   const displayedProducts = data?.data?.map(transformProduct) || [];
 
   useEffect(() => {
+    const stored = localStorage.getItem("wishlist");
+    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+
+    if (stored) {
+      const wishlistIDS = wishlist.flatMap((p) => p.id);
+      setLikedProducts(wishlistIDS);
+    }
+
     const scrollY = sessionStorage.getItem("scrollY");
     if (scrollY) {
       window.scrollTo(0, parseInt(scrollY));
       sessionStorage.removeItem("scrollY");
     }
   }, []);
+
+  const toggleLike = (product: FrontendProduct) => {
+    const stored = localStorage.getItem("wishlist");
+    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+
+    const exists = wishlist.some((p) => p.id === product.id);
+
+    if (exists) {
+      wishlist = wishlist.filter((p) => p.id !== product.id);
+    } else {
+      wishlist.push(product);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    setLikedProducts((prev) =>
+      prev.includes(product.id)
+        ? prev.filter((id) => id !== product.id)
+        : [...prev, product.id]
+    );
+  };
 
   if (isLoading) {
     return (
@@ -121,10 +150,15 @@ export default function Products() {
         <motion.div
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
         >
           {displayedProducts.map((product: FrontendProduct) => (
-            <ProductItem key={product.id} product={product} />
+            <ProductItem
+              key={product.id}
+              product={product}
+              toggleLike={toggleLike}
+              likedProducts={likedProducts}
+            />
           ))}
         </motion.div>
       </div>

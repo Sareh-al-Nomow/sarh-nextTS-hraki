@@ -1,13 +1,17 @@
+// i want to allow image form all the wold how
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [
-      "images.unsplash.com", // Unsplash
-      "plus.unsplash.com", // Unsplash (alternative)
-      "lh3.googleusercontent.com", // Google avatars (for team photos)
-      "randomuser.me", // Random user avatars
-      "your-cdn-domain.com", // Add your own CDN if needed
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      }, // Unsplash
+      {
+        protocol: "https",
+        hostname: "**", // يسمح بكل النطاقات (غير آمن)
+      },
     ],
   },
   // Other Next.js config options can go here

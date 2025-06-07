@@ -62,6 +62,14 @@ export default function HorizontalProductList({
 
   // Check if content overflows
   useEffect(() => {
+    const stored = localStorage.getItem("wishlist");
+    const wishlist: Product[] = stored ? JSON.parse(stored) : [];
+
+    if (stored) {
+      const wishlistIDS = wishlist.flatMap((p) => p.id);
+      setLikedProducts(wishlistIDS);
+    }
+
     const checkOverflow = () => {
       if (scrollRef.current) {
         setIsOverflowing(
@@ -93,11 +101,22 @@ export default function HorizontalProductList({
     }
   };
 
-  const toggleLike = (productId: number) => {
+  const toggleLike = (product: Product) => {
+    const stored = localStorage.getItem("wishlist");
+    let wishlist: Product[] = stored ? JSON.parse(stored) : [];
+
+    const exists = wishlist.some((p) => p.id === product.id);
+
+    if (exists) {
+      wishlist = wishlist.filter((p) => p.id !== product.id);
+    } else {
+      wishlist.push(product);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
     setLikedProducts((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
+      prev.includes(product.id)
+        ? prev.filter((id) => id !== product.id)
+        : [...prev, product.id]
     );
   };
 
@@ -142,9 +161,16 @@ export default function HorizontalProductList({
               className="flex-shrink-0 w-48 md:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
             >
               {/* Product Image */}
-              <div className="relative aspect-square">
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setQuickViewProduct(product);
+                }}
+                className="relative aspect-square"
+              >
                 <Image
-            src={"/image/products/img-1.jpg"}
+                  src={"/image/products/img-1.jpg"}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -178,29 +204,6 @@ export default function HorizontalProductList({
                     </motion.span>
                   ))}
                 </div>
-
-                {/* Like Button */}
-                <motion.button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleLike(product.id);
-                  }}
-                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
-                  whileTap={{ scale: 0.9 }}
-                  aria-label={
-                    likedProducts.includes(product.id)
-                      ? "Remove from favorites"
-                      : "Add to favorites"
-                  }
-                >
-                  <FiHeart
-                    className={`${
-                      likedProducts.includes(product.id)
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-700"
-                    }`}
-                  />
-                </motion.button>
               </div>
 
               {/* Product Info */}
@@ -240,26 +243,34 @@ export default function HorizontalProductList({
                     )}
                   </div>
 
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
-                    aria-label="Add to cart"
-                  >
-                    <FiShoppingCart size={16} />
-                  </motion.button>
+                  <div className="flex gap-4">
+                    {/* Like Button */}
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(product);
+                      }}
+                      className=" p-2 bg-[#FFF] rounded-full shadow-md hover:bg-gray-100 transition"
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <FiHeart
+                        className={`${
+                          likedProducts.includes(product.id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-700"
+                        }`}
+                      />
+                    </motion.button>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+                      aria-label="Add to cart"
+                    >
+                      <FiShoppingCart size={16} />
+                    </motion.button>
+                  </div>
                 </div>
               </div>
-
-              {/* Quick View Trigger */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setQuickViewProduct(product);
-                }}
-                className="absolute inset-0 w-full h-full z-10"
-                aria-label={`Quick view ${product.name}`}
-              />
             </motion.div>
           ))}
         </div>
