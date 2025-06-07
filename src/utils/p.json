@@ -1,0 +1,579 @@
+{
+  "data": [
+    {
+      "product_id": 2,
+      "uuid": "f5d47fb9-8c08-4f84-a837-e2e3fc5b9485",
+      "type": "configurable",
+      "variant_group_id": 2,
+      "visibility": true,
+      "group_id": 2,
+      "sku": "MODERN-GRANITE-TUNA",
+      "price": 946,
+      "old_price": null,
+      "weight": 3.8,
+      "tax_class": 4,
+      "status": true,
+      "created_at": "2025-06-01T08:55:05.628Z",
+      "updated_at": "2025-06-01T08:55:05.628Z",
+      "category_id": 4,
+      "brand_id": 2,
+      "description": {
+        "product_description_id": 5,
+        "product_description_product_id": 2,
+        "name": "Sleek Rubber Car",
+        "description": "Verus numquam omnis adulescens suffragium. Vacuus cotidie civitas ultio terebro fuga cetera cultellus cotidie tam. Crinis sit aspernatur textilis deporto debilito.",
+        "short_description": "Voluntarius ultio brevis.",
+        "url_key": "small-frozen-pizza",
+        "meta_title": "angelus condico dicta suppono cernuus",
+        "meta_description": "Excepturi utique conicio cogito verecundia.",
+        "meta_keywords": "aestas cito tollo",
+        "created_at": "2025-06-01T08:55:06.655Z",
+        "updated_at": "2025-06-01T08:55:06.655Z"
+      },
+      "images": [
+        {
+          "product_image_id": 31,
+          "product_image_product_id": 2,
+          "origin_image": "https://loremflickr.com/640/480?lock=7663294280105984",
+          "thumb_image": "https://picsum.photos/seed/PAzBUx/640/480",
+          "listing_image": "https://loremflickr.com/640/480?lock=1360945223827456",
+          "single_image": "https://loremflickr.com/640/480?lock=7153079038246912",
+          "is_main": true,
+          "created_at": "2025-06-01T08:55:10.138Z",
+          "updated_at": "2025-06-01T08:55:10.138Z"
+        },
+        {
+          "product_image_id": 33,
+          "product_image_product_id": 2,
+          "origin_image": "https://loremflickr.com/640/480?lock=6353980592488448",
+          "thumb_image": "https://loremflickr.com/640/480?lock=5259060876148736",
+          "listing_image": "https://picsum.photos/seed/hZhpbe0cHt/640/480",
+          "single_image": "https://picsum.photos/seed/LPseR/640/480",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.138Z",
+          "updated_at": "2025-06-01T08:55:10.138Z"
+        },
+        {
+          "product_image_id": 34,
+          "product_image_product_id": 2,
+          "origin_image": "https://loremflickr.com/640/480?lock=6440601996230656",
+          "thumb_image": "https://picsum.photos/seed/lRnqZv6rC/640/480",
+          "listing_image": "https://picsum.photos/seed/3HKqR/640/480",
+          "single_image": "https://loremflickr.com/640/480?lock=8886902205710336",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.138Z",
+          "updated_at": "2025-06-01T08:55:10.138Z"
+        },
+        {
+          "product_image_id": 35,
+          "product_image_product_id": 2,
+          "origin_image": "https://picsum.photos/seed/l6qT3tJ/640/480",
+          "thumb_image": "https://picsum.photos/seed/IA9wuA2BMq/640/480",
+          "listing_image": "https://loremflickr.com/640/480?lock=3274997986492416",
+          "single_image": "https://picsum.photos/seed/rVe92F817K/640/480",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.138Z",
+          "updated_at": "2025-06-01T08:55:10.138Z"
+        }
+      ],
+      "inventory": {
+        "product_inventory_id": 6,
+        "product_inventory_product_id": 2,
+        "qty": 865,
+        "manage_stock": true,
+        "stock_availability": true,
+        "created_at": "2025-06-01T08:55:08.741Z",
+        "updated_at": "2025-06-01T08:55:08.741Z"
+      },
+      "category": {
+        "id": 4,
+        "uuid": "ee4f76b5-198b-4eb5-b47e-8514243ae229",
+        "status": true,
+        "parent_id": null,
+        "include_in_nav": true,
+        "position": 26,
+        "show_products": true,
+        "created_at": "2025-06-01T08:55:01.678Z",
+        "updated_at": "2025-06-01T08:55:01.678Z",
+        "description": {
+          "category_description_id": 1,
+          "category_description_category_id": 4,
+          "name": "Shoes",
+          "short_description": "Demonstro sollers absens comedo auctus conspergo.",
+          "description": "Nulla crustulum abscido administratio comitatus non turbo laboriosam acer tripudio. Tener consectetur rerum denique solum aptus. Decretum aperte suscipio et cumque dedecor pecco canis consequatur uberrime.",
+          "image": "https://loremflickr.com/640/480?lock=61789999988736",
+          "meta_title": "temporibus theatrum bellicus titulus doloribus",
+          "meta_keywords": "arbitro ascit desparatus",
+          "meta_description": "Attonbitus defessus decor desparatus suggero.",
+          "url_key": "jewelery99780857-19f5-4726-9edf-b48e4f0610ed",
+          "created_at": "2025-06-01T08:55:01.983Z",
+          "updated_at": "2025-06-01T08:55:01.983Z"
+        }
+      },
+      "brand": {
+        "id": 2,
+        "name": "Hand - Stoltenberg",
+        "slug": "wolff-llc",
+        "image": "https://loremflickr.com/640/480?lock=2550901508145152",
+        "description": "Universe vito tyrannus argentum. Consequuntur admiratio alii asporto vitium arguo. Accendo commemoro audentia.",
+        "isActive": true,
+        "created_at": "2025-06-01T08:55:00.349Z",
+        "updated_at": "2025-06-01T08:55:00.349Z"
+      },
+      "attributes": [
+        {
+          "product_attribute_value_index_id": 38,
+          "product_id": 2,
+          "attribute_id": 4,
+          "option_id": 5,
+          "option_text": "cresco",
+          "created_at": "2025-06-01T08:55:11.823Z",
+          "updated_at": "2025-06-01T08:55:11.823Z",
+          "attribute": {
+            "attribute_id": 4,
+            "uuid": "eaa1d815-e4da-4989-8f96-3c7733b216eb",
+            "attribute_code": "articulus-vomito",
+            "attribute_name": "Ergonomic",
+            "type": "text",
+            "is_required": true,
+            "display_on_frontend": false,
+            "sort_order": 31,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 5,
+            "uuid": "c3995ad9-21d4-45d6-91f5-5f85dcfd69f0",
+            "attribute_id": 4,
+            "attribute_code": "articulus-vomito",
+            "option_text": "Outdoors",
+            "created_at": "2025-06-01T08:55:02.803Z",
+            "updated_at": "2025-06-01T08:55:02.803Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 40,
+          "product_id": 2,
+          "attribute_id": 5,
+          "option_id": 14,
+          "option_text": "nihil",
+          "created_at": "2025-06-01T08:55:11.823Z",
+          "updated_at": "2025-06-01T08:55:11.823Z",
+          "attribute": {
+            "attribute_id": 5,
+            "uuid": "8e0d5fc8-cb52-4698-8718-6fcb54ccea66",
+            "attribute_code": "enim-sumo",
+            "attribute_name": "Tasty",
+            "type": "multiselect",
+            "is_required": false,
+            "display_on_frontend": false,
+            "sort_order": 4,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 14,
+            "uuid": "39c053e5-4f27-4d54-8939-be9891af4094",
+            "attribute_id": 5,
+            "attribute_code": "enim-sumo",
+            "option_text": "Outdoors",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 39,
+          "product_id": 2,
+          "attribute_id": 1,
+          "option_id": 13,
+          "option_text": "validus",
+          "created_at": "2025-06-01T08:55:11.823Z",
+          "updated_at": "2025-06-01T08:55:11.823Z",
+          "attribute": {
+            "attribute_id": 1,
+            "uuid": "fae8e421-8870-44cf-b11c-0756807c6ed4",
+            "attribute_code": "ustilo-aro",
+            "attribute_name": "Tasty",
+            "type": "multiselect",
+            "is_required": true,
+            "display_on_frontend": true,
+            "sort_order": 79,
+            "is_filterable": true,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 13,
+            "uuid": "e12099df-6c67-4283-866d-fa45c6723f4a",
+            "attribute_id": 1,
+            "attribute_code": "ustilo-aro",
+            "option_text": "Books",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 37,
+          "product_id": 2,
+          "attribute_id": 3,
+          "option_id": 7,
+          "option_text": "vilitas",
+          "created_at": "2025-06-01T08:55:11.823Z",
+          "updated_at": "2025-06-01T08:55:11.823Z",
+          "attribute": {
+            "attribute_id": 3,
+            "uuid": "c33e11cc-3db9-4dbc-a9f5-690a491916ac",
+            "attribute_code": "barba-vulpes",
+            "attribute_name": "Handmade",
+            "type": "select",
+            "is_required": true,
+            "display_on_frontend": false,
+            "sort_order": 47,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 7,
+            "uuid": "4f5dd175-8337-4808-84c8-c3ec49d97d5e",
+            "attribute_id": 3,
+            "attribute_code": "barba-vulpes",
+            "option_text": "Grocery",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 36,
+          "product_id": 2,
+          "attribute_id": 2,
+          "option_id": 8,
+          "option_text": "angulus",
+          "created_at": "2025-06-01T08:55:11.823Z",
+          "updated_at": "2025-06-01T08:55:11.823Z",
+          "attribute": {
+            "attribute_id": 2,
+            "uuid": "3efb1d30-e227-4106-ba15-ef424d61ce8f",
+            "attribute_code": "conforto-vinitor",
+            "attribute_name": "Luxurious",
+            "type": "multiselect",
+            "is_required": false,
+            "display_on_frontend": false,
+            "sort_order": 22,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 8,
+            "uuid": "15e99acd-fbf9-4706-bec3-d0e837a24b42",
+            "attribute_id": 2,
+            "attribute_code": "conforto-vinitor",
+            "option_text": "Jewelery",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        }
+      ],
+      "reviews": [],
+      "meanRating": null
+    },
+    {
+      "product_id": 14,
+      "uuid": "ba6d401a-e983-43d9-b4b7-59b0c97797d7",
+      "type": "configurable",
+      "variant_group_id": 1,
+      "visibility": true,
+      "group_id": 2,
+      "sku": "LUXURIOUS-FRESH-SAUSAGES",
+      "price": 450,
+      "old_price": null,
+      "weight": 6.4,
+      "tax_class": 5,
+      "status": true,
+      "created_at": "2025-06-01T08:55:06.025Z",
+      "updated_at": "2025-06-01T08:55:06.025Z",
+      "category_id": 1,
+      "brand_id": 5,
+      "description": {
+        "product_description_id": 11,
+        "product_description_product_id": 14,
+        "name": "Unbranded Wooden Chips",
+        "description": "Decipio tam balbus paulatim aestas sub occaecati utilis centum repudiandae. Curto tunc amplitudo patrocinor umerus certe suffoco civis aeger audentia. Denego virgo solutio communis usitas tergeo attonbitus auctus.",
+        "short_description": "Asper aperte adhaero delectatio.",
+        "url_key": "bespoke-concrete-mouse",
+        "meta_title": "tamen adiuvo toties tracto coepi",
+        "meta_description": "Sono beatae confero cernuus velociter arbor aiunt.",
+        "meta_keywords": "succurro acceptus auxilium",
+        "created_at": "2025-06-01T08:55:06.964Z",
+        "updated_at": "2025-06-01T08:55:06.964Z"
+      },
+      "images": [
+        {
+          "product_image_id": 43,
+          "product_image_product_id": 14,
+          "origin_image": "https://loremflickr.com/640/480?lock=8275737924599808",
+          "thumb_image": "https://loremflickr.com/640/480?lock=5419437870022656",
+          "listing_image": "https://loremflickr.com/640/480?lock=2173164559794176",
+          "single_image": "https://loremflickr.com/640/480?lock=495770012745728",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.139Z",
+          "updated_at": "2025-06-01T08:55:10.139Z"
+        },
+        {
+          "product_image_id": 39,
+          "product_image_product_id": 14,
+          "origin_image": "https://loremflickr.com/640/480?lock=8176797818552320",
+          "thumb_image": "https://picsum.photos/seed/0zxLbQRQe/640/480",
+          "listing_image": "https://picsum.photos/seed/XGUCgkMGJ/640/480",
+          "single_image": "https://picsum.photos/seed/iIogiAF/640/480",
+          "is_main": true,
+          "created_at": "2025-06-01T08:55:10.139Z",
+          "updated_at": "2025-06-01T08:55:10.139Z"
+        },
+        {
+          "product_image_id": 42,
+          "product_image_product_id": 14,
+          "origin_image": "https://loremflickr.com/640/480?lock=1502848089063424",
+          "thumb_image": "https://picsum.photos/seed/eTx3J/640/480",
+          "listing_image": "https://picsum.photos/seed/f7b5mZ/640/480",
+          "single_image": "https://loremflickr.com/640/480?lock=186941343531008",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.139Z",
+          "updated_at": "2025-06-01T08:55:10.139Z"
+        },
+        {
+          "product_image_id": 46,
+          "product_image_product_id": 14,
+          "origin_image": "https://picsum.photos/seed/Lj3o7Lwooi/640/480",
+          "thumb_image": "https://loremflickr.com/640/480?lock=7368768143491072",
+          "listing_image": "https://picsum.photos/seed/VlRI74/640/480",
+          "single_image": "https://picsum.photos/seed/mS4y0ogdJ/640/480",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.139Z",
+          "updated_at": "2025-06-01T08:55:10.139Z"
+        },
+        {
+          "product_image_id": 41,
+          "product_image_product_id": 14,
+          "origin_image": "https://loremflickr.com/640/480?lock=4990151241498624",
+          "thumb_image": "https://loremflickr.com/640/480?lock=1888215856316416",
+          "listing_image": "https://loremflickr.com/640/480?lock=2363586689105920",
+          "single_image": "https://loremflickr.com/640/480?lock=5405014575022080",
+          "is_main": false,
+          "created_at": "2025-06-01T08:55:10.139Z",
+          "updated_at": "2025-06-01T08:55:10.139Z"
+        }
+      ],
+      "inventory": {
+        "product_inventory_id": 8,
+        "product_inventory_product_id": 14,
+        "qty": 442,
+        "manage_stock": true,
+        "stock_availability": true,
+        "created_at": "2025-06-01T08:55:08.742Z",
+        "updated_at": "2025-06-01T08:55:08.742Z"
+      },
+      "category": {
+        "id": 1,
+        "uuid": "22acdf7c-8f31-436e-aadf-9b947cf27386",
+        "status": true,
+        "parent_id": null,
+        "include_in_nav": false,
+        "position": 1,
+        "show_products": true,
+        "created_at": "2025-06-01T08:55:01.678Z",
+        "updated_at": "2025-06-01T08:55:01.678Z",
+        "description": {
+          "category_description_id": 4,
+          "category_description_category_id": 1,
+          "name": "Clothing",
+          "short_description": "Astrum tredecim utilis commodi officia sum est sponte.",
+          "description": "Cupressus commemoro varius. Vae subvenio templum possimus absum thema aeneus. Tempore aperio certus necessitatibus talis auditor voluptatibus.",
+          "image": "https://loremflickr.com/640/480?lock=5576586166272000",
+          "meta_title": "ascisco cupiditate cariosus depraedor cunctatio",
+          "meta_keywords": "canto alioqui aveho",
+          "meta_description": "Amplus arca confido conventus numquam voluptatum paens caute succurro.",
+          "url_key": "jewelerye5d6c094-ffe4-4269-8215-2dfe402c9e5e",
+          "created_at": "2025-06-01T08:55:01.984Z",
+          "updated_at": "2025-06-01T08:55:01.984Z"
+        }
+      },
+      "brand": {
+        "id": 5,
+        "name": "Berge - Vandervort",
+        "slug": "bahringer---konopelski",
+        "image": "https://picsum.photos/seed/riyDWh2ROQ/640/480",
+        "description": "Demitto sumptus dignissimos. Articulus cohaero alienus deporto placeat quidem ea. Cuppedia ipsum adimpleo tondeo tergiversatio totus auctus capio possimus canis.",
+        "isActive": true,
+        "created_at": "2025-06-01T08:55:00.349Z",
+        "updated_at": "2025-06-01T08:55:00.349Z"
+      },
+      "attributes": [
+        {
+          "product_attribute_value_index_id": 45,
+          "product_id": 14,
+          "attribute_id": 4,
+          "option_id": 4,
+          "option_text": "velum",
+          "created_at": "2025-06-01T08:55:12.238Z",
+          "updated_at": "2025-06-01T08:55:12.238Z",
+          "attribute": {
+            "attribute_id": 4,
+            "uuid": "eaa1d815-e4da-4989-8f96-3c7733b216eb",
+            "attribute_code": "articulus-vomito",
+            "attribute_name": "Ergonomic",
+            "type": "text",
+            "is_required": true,
+            "display_on_frontend": false,
+            "sort_order": 31,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 4,
+            "uuid": "c0b00848-037a-4f45-865c-ee8fa849429b",
+            "attribute_id": 4,
+            "attribute_code": "articulus-vomito",
+            "option_text": "Baby",
+            "created_at": "2025-06-01T08:55:02.803Z",
+            "updated_at": "2025-06-01T08:55:02.803Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 49,
+          "product_id": 14,
+          "attribute_id": 5,
+          "option_id": 15,
+          "option_text": "circumvenio",
+          "created_at": "2025-06-01T08:55:12.238Z",
+          "updated_at": "2025-06-01T08:55:12.238Z",
+          "attribute": {
+            "attribute_id": 5,
+            "uuid": "8e0d5fc8-cb52-4698-8718-6fcb54ccea66",
+            "attribute_code": "enim-sumo",
+            "attribute_name": "Tasty",
+            "type": "multiselect",
+            "is_required": false,
+            "display_on_frontend": false,
+            "sort_order": 4,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 15,
+            "uuid": "aa6f03b8-d0b8-4fc2-96a2-718e24dd6437",
+            "attribute_id": 5,
+            "attribute_code": "enim-sumo",
+            "option_text": "Outdoors",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 47,
+          "product_id": 14,
+          "attribute_id": 2,
+          "option_id": 10,
+          "option_text": "spero",
+          "created_at": "2025-06-01T08:55:12.238Z",
+          "updated_at": "2025-06-01T08:55:12.238Z",
+          "attribute": {
+            "attribute_id": 2,
+            "uuid": "3efb1d30-e227-4106-ba15-ef424d61ce8f",
+            "attribute_code": "conforto-vinitor",
+            "attribute_name": "Luxurious",
+            "type": "multiselect",
+            "is_required": false,
+            "display_on_frontend": false,
+            "sort_order": 22,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 10,
+            "uuid": "cec44d5a-78c9-42a8-9919-d1c8a42f7e62",
+            "attribute_id": 2,
+            "attribute_code": "conforto-vinitor",
+            "option_text": "Jewelery",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 50,
+          "product_id": 14,
+          "attribute_id": 1,
+          "option_id": 12,
+          "option_text": "spectaculum",
+          "created_at": "2025-06-01T08:55:12.239Z",
+          "updated_at": "2025-06-01T08:55:12.239Z",
+          "attribute": {
+            "attribute_id": 1,
+            "uuid": "fae8e421-8870-44cf-b11c-0756807c6ed4",
+            "attribute_code": "ustilo-aro",
+            "attribute_name": "Tasty",
+            "type": "multiselect",
+            "is_required": true,
+            "display_on_frontend": true,
+            "sort_order": 79,
+            "is_filterable": true,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 12,
+            "uuid": "32aa195a-3512-451a-8a72-84fdab9a28f1",
+            "attribute_id": 1,
+            "attribute_code": "ustilo-aro",
+            "option_text": "Books",
+            "created_at": "2025-06-01T08:55:02.804Z",
+            "updated_at": "2025-06-01T08:55:02.804Z"
+          }
+        },
+        {
+          "product_attribute_value_index_id": 48,
+          "product_id": 14,
+          "attribute_id": 3,
+          "option_id": 2,
+          "option_text": "confugo",
+          "created_at": "2025-06-01T08:55:12.238Z",
+          "updated_at": "2025-06-01T08:55:12.238Z",
+          "attribute": {
+            "attribute_id": 3,
+            "uuid": "c33e11cc-3db9-4dbc-a9f5-690a491916ac",
+            "attribute_code": "barba-vulpes",
+            "attribute_name": "Handmade",
+            "type": "select",
+            "is_required": true,
+            "display_on_frontend": false,
+            "sort_order": 47,
+            "is_filterable": false,
+            "created_at": "2025-06-01T08:55:02.498Z",
+            "updated_at": "2025-06-01T08:55:02.498Z"
+          },
+          "option": {
+            "attribute_option_id": 2,
+            "uuid": "a5fd0ecd-2698-4fec-8135-ba806e3795b6",
+            "attribute_id": 3,
+            "attribute_code": "barba-vulpes",
+            "option_text": "Home",
+            "created_at": "2025-06-01T08:55:02.803Z",
+            "updated_at": "2025-06-01T08:55:02.803Z"
+          }
+        }
+      ],
+      "reviews": [],
+      "meanRating": null
+    }
+  ],
+  "total": 13,
+  "page": 1,
+  "limit": 10,
+  "totalPages": 2
+}

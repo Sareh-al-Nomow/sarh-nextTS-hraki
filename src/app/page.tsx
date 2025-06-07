@@ -1,16 +1,15 @@
 import Carousel from "@/components/homePage/Carousel";
 import CategoriesList from "@/components/homePage/CategoriesList";
-import ListProducts from "@/components/homePage/ListProducts";
-import ProductsList from "@/components/homePage/ProductsList";
-import { demoProducts } from "@/utils/products";
+import Products from "@/components/homePage/products/Products";
+import ProductsLists from "@/components/homePage/products/ProductsLists";
 
 export default function Home() {
   return (
     <>
       <Carousel />
       <CategoriesList />
-      <ListProducts products={demoProducts} />
-      <ProductsList />
+      <ProductsLists />
+      <Products />
     </>
   );
 }

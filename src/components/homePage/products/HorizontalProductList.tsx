@@ -1,10 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiShoppingCart, FiHeart, FiStar, FiX } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import {
+  FiShoppingCart,
+  FiHeart,
+  FiStar,
+  FiChevronLeft,
+  FiChevronRight,
+  FiX,
+} from "react-icons/fi";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -20,100 +27,11 @@ interface Product {
   features?: string[];
 }
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "AirMax Pro Shoes - Premium Comfort & Style",
-    price: "$89.99",
-    originalPrice: "$129.99",
-    image: "/image/products/img-4.jpg",
-    rating: 4.7,
-    colors: ["#111827", "#6B7280", "#F59E0B"],
-    tags: ["HOT", "30% OFF"],
-    isNew: true,
-    description:
-      "Experience ultimate comfort with our premium running shoes featuring advanced cushioning technology and breathable materials.",
-    features: [
-      "Breathable knit upper",
-      "Responsive cushioning",
-      "Durable rubber outsole",
-      "Lightweight design",
-    ],
-  },
-  {
-    id: 2,
-    name: "Smart Watch Pro - Fitness & Health Tracker",
-    price: "$199.99",
-    originalPrice: "$249.99",
-    image: "/image/products/img-4.jpg",
-    rating: 4.8,
-    colors: ["#000000", "#1E3163", "#FF0000"],
-    tags: ["BESTSELLER", "NEW"],
-    isNew: true,
-    description:
-      "Track your fitness goals with precision using our advanced smartwatch with heart rate monitoring and GPS.",
-  },
-  {
-    id: 3,
-    name: "Minimalist Backpack - Urban Edition",
-    price: "$59.99",
-    image: "/image/products/img-2.jpg",
-    rating: 4.5,
-    colors: ["#2D4263", "#C84B31"],
-    tags: ["ECO-FRIENDLY"],
-    description:
-      "Sleek and functional backpack made from recycled materials with multiple compartments for urban travelers.",
-  },
-  {
-    id: 4,
-    name: "AirMax Pro Shoes - Premium Comfort & Style",
-    price: "$89.99",
-    originalPrice: "$129.99",
-    image: "/image/products/img-3.jpg",
-    rating: 4.7,
-    colors: ["#111827", "#6B7280", "#F59E0B"],
-    tags: ["HOT", "30% OFF"],
-    isNew: true,
-    description:
-      "Experience ultimate comfort with our premium running shoes featuring advanced cushioning technology and breathable materials.",
-    features: [
-      "Breathable knit upper",
-      "Responsive cushioning",
-      "Durable rubber outsole",
-      "Lightweight design",
-    ],
-  },
-  {
-    id: 5,
-    name: "Smart Watch Pro - Fitness & Health Tracker",
-    price: "$199.99",
-    originalPrice: "$249.99",
-    image: "/image/products/img-1.jpg",
-    rating: 4.8,
-    colors: ["#000000", "#1E3163", "#FF0000"],
-    tags: ["BESTSELLER", "NEW"],
-    isNew: true,
-    description:
-      "Track your fitness goals with precision using our advanced smartwatch with heart rate monitoring and GPS.",
-  },
-  {
-    id: 6,
-    name: "Minimalist Backpack - Urban Edition",
-    price: "$59.99",
-    image: "/image/products/img-2.jpg",
-    rating: 4.5,
-    colors: ["#2D4263", "#C84B31"],
-    tags: ["ECO-FRIENDLY"],
-    description:
-      "Sleek and functional backpack made from recycled materials with multiple compartments for urban travelers.",
-  },
-];
-
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, x: 20 },
   visible: {
     opacity: 1,
-    y: 0,
+    x: 0,
     transition: {
       type: "spring",
       stiffness: 100,
@@ -121,18 +39,59 @@ const itemVariants = {
     },
   },
   hover: {
-    y: -8,
+    y: -5,
     transition: { duration: 0.2 },
   },
 };
 
-export default function ProductsList() {
+export default function HorizontalProductList({
+  title = "Featured Products",
+  products,
+}: {
+  title?: string;
+  products: Product[];
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+  const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
     null
   );
-  const [likedProducts, setLikedProducts] = useState<number[]>([]);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
-  const router = useRouter();
+  // Check if content overflows
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (scrollRef.current) {
+        setIsOverflowing(
+          scrollRef.current.scrollWidth > scrollRef.current.clientWidth
+        );
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [products]);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === "left" ? -400 : 400;
+      scrollRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const checkScrollPosition = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+    }
+  };
 
   const toggleLike = (productId: number) => {
     setLikedProducts((prev) =>
@@ -142,54 +101,54 @@ export default function ProductsList() {
     );
   };
 
-  useEffect(() => {
-    const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
-  }, []);
-
-  const handleNavigateToProduct = (id: string) => {
-    sessionStorage.setItem("scrollY", window.scrollY.toString());
-    router.push(`/product/${id}`);
-  };
-
   return (
-    <div className="bg-gray-50 min-h-screen bg-gradient-to-r from-blue-50 to-cyan-50">
-      {/* Header */}
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="px-6 py-8 bg-gradient-to-r from-blue-50 to-cyan-50"
-      >
-        <h1 className="text-3xl font-bold text-gray-900">Premium Collection</h1>
-        <p className="text-gray-600 mt-2">Curated just for you</p>
-      </motion.header>
+    <div className="py-8 relative group">
+      <h2 className="text-xl font-bold text-gray-900 px-4 md:px-12 mb-4">
+        {title}
+      </h2>
 
-      {/* Product Grid */}
-      <div className="px-4 py-6">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      <div className="relative">
+        {/* Left Arrow */}
+        {isOverflowing && showLeftArrow && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-r from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            whileHover={{ scale: 1.1 }}
+            aria-label="Scroll left"
+          >
+            <FiChevronLeft className="h-6 w-6 text-gray-800" />
+          </motion.button>
+        )}
+
+        {/* Product List */}
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-auto px-4 md:px-12 gap-4 py-2 scrollbar-hide"
+          onScroll={checkScrollPosition}
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
         >
           {products.map((product) => (
             <motion.div
               key={product.id}
               variants={itemVariants}
+              initial="hidden"
+              animate="visible"
               whileHover="hover"
-              className="bg-white rounded-2xl shadow-sm overflow-hidden relative group"
+              className="flex-shrink-0 w-48 md:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
             >
               {/* Product Image */}
               <div className="relative aspect-square">
                 <Image
-                  src={product.image}
+            src={"/image/products/img-1.jpg"}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                  priority={product.id <= 4}
                 />
 
                 {/* Badges */}
@@ -221,28 +180,27 @@ export default function ProductsList() {
                 </div>
 
                 {/* Like Button */}
-                <motion.div
-                  className="absolute top-3 right-3 flex flex-col gap-2"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLike(product.id);
+                  }}
+                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
+                  whileTap={{ scale: 0.9 }}
+                  aria-label={
+                    likedProducts.includes(product.id)
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
                 >
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleLike(product.id);
-                    }}
-                    className="p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
-                  >
-                    <FiHeart
-                      className={`${
-                        likedProducts.includes(product.id)
-                          ? "fill-red-500 text-red-500"
-                          : "text-gray-700"
-                      }`}
-                    />
-                  </motion.button>
-                </motion.div>
+                  <FiHeart
+                    className={`${
+                      likedProducts.includes(product.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-700"
+                    }`}
+                  />
+                </motion.button>
               </div>
 
               {/* Product Info */}
@@ -285,10 +243,7 @@ export default function ProductsList() {
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Add to cart logic
-                    }}
+                    aria-label="Add to cart"
                   >
                     <FiShoppingCart size={16} />
                   </motion.button>
@@ -297,13 +252,31 @@ export default function ProductsList() {
 
               {/* Quick View Trigger */}
               <button
-                onClick={() => setQuickViewProduct(product)}
-                className="absolute inset-0 z-10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setQuickViewProduct(product);
+                }}
+                className="absolute inset-0 w-full h-full z-10"
                 aria-label={`Quick view ${product.name}`}
               />
             </motion.div>
           ))}
-        </motion.div>
+        </div>
+
+        {/* Right Arrow */}
+        {isOverflowing && showRightArrow && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-l from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            whileHover={{ scale: 1.1 }}
+            aria-label="Scroll right"
+          >
+            <FiChevronRight className="h-6 w-6 text-gray-800" />
+          </motion.button>
+        )}
       </div>
 
       {/* Quick View Modal */}
@@ -313,30 +286,30 @@ export default function ProductsList() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-4"
             onClick={() => setQuickViewProduct(null)}
           >
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className="bg-white rounded-xl w-full max-w-md overflow-hidden"
+              className="bg-white rounded-xl w-full max-w-md overflow-hidden z-[1001]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image Container with Close Button */}
               <div className="relative h-48 w-full">
                 <Image
-                  src={quickViewProduct.image}
+                  src={"/image/products/img-1.jpg"}
                   alt={quickViewProduct.name}
                   fill
                   className="object-cover"
                   priority
                 />
 
-                {/* Close Button Inside Image Box */}
+                {/* Close Button */}
                 <button
                   onClick={() => setQuickViewProduct(null)}
-                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow hover:bg-gray-100 transition"
+                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow hover:bg-gray-100 transition z-10"
                   aria-label="Close quick view"
                 >
                   <FiX size={18} className="text-gray-800" />
@@ -344,7 +317,7 @@ export default function ProductsList() {
 
                 {/* Badges */}
                 {quickViewProduct.tags && quickViewProduct.tags.length > 0 && (
-                  <div className="absolute top-3 left-3 flex gap-1">
+                  <div className="absolute top-3 left-3 flex gap-1 z-10">
                     {quickViewProduct.tags.slice(0, 2).map((tag, index) => (
                       <span
                         key={index}
@@ -388,7 +361,23 @@ export default function ProductsList() {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600">{quickViewProduct.description}</p>
+                {quickViewProduct.description && (
+                  <p className="text-gray-600">
+                    {quickViewProduct.description}
+                  </p>
+                )}
+
+                {/* Features */}
+                {quickViewProduct.features && (
+                  <ul className="space-y-1">
+                    {quickViewProduct.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-green-500 mr-2">✓</span>
+                        <span className="text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
                 {/* Color Options */}
                 {quickViewProduct.colors && (
@@ -408,39 +397,21 @@ export default function ProductsList() {
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
-                  <button className="bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer">
+                  <button className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition">
                     <FiShoppingCart /> Add to Cart
                   </button>
-                  <button
-                    onClick={() =>
-                      handleNavigateToProduct(quickViewProduct.name)
-                    }
-                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
+                  <Link
+                    href={`/product/${quickViewProduct.name}`}
+                    className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
                   >
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Load More Button */}
-      <motion.div
-        className="mt-8 sm:mt-12 text-center pb-12"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="px-8 py-3 bg-gradient-to-r from-[#219EBC] to-[#2EC4B6] text-white rounded-full font-medium shadow-md hover:shadow-lg transition"
-        >
-          Load More Products
-        </motion.button>
-      </motion.div>
     </div>
   );
 }

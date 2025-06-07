@@ -4,7 +4,7 @@ import Spinner from "@/components/UI/SpinnerLoading";
 
 const loading = () => {
   return (
-    <div className="w-full h-full">
+    <div className="pt-[600px]">
       <Spinner />
     </div>
   );
