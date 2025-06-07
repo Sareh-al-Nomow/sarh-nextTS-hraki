@@ -38,32 +38,9 @@ export default function AboutUsPage() {
     {
       name: "Alex Johnson",
       role: "Founder & CEO",
-      image:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      image: "/image/users/myPicture.jpg",
       bio: "Visionary leader...",
     },
-    {
-      name: "Alex Johnson",
-      role: "Founder & CEO",
-      image:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      bio: "Visionary leader...",
-    },
-    {
-      name: "Maria Garcia",
-      role: "Chief Design Officer",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      bio: "Award-winning designer...",
-    },
-    {
-      name: "Maria Garcia",
-      role: "Chief Design Officer",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      bio: "Award-winning designer...",
-    },
-    // Add others...
   ];
 
   return (
