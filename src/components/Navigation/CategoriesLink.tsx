@@ -199,13 +199,13 @@ export default function PremiumNavWidget() {
 
               <ul>
                 <li className="px-8 py-5">
-                  <Link href={"/about"} onClick={() => setIsOpen(false)}>
-                    About Us
+                  <Link href={"/contact"} onClick={() => setIsOpen(false)}>
+                    Pubulare Question
                   </Link>
                 </li>
                 <li className="px-8 py-5">
-                  <Link href={"/contact"} onClick={() => setIsOpen(false)}>
-                    Popular Questions
+                  <Link href={"/about"} onClick={() => setIsOpen(false)}>
+                    About Us
                   </Link>
                 </li>
               </ul>
