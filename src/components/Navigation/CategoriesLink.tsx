@@ -197,6 +197,18 @@ export default function PremiumNavWidget() {
                 </ul>
               </div>
 
+              <ul>
+                <li className="px-8 py-5">
+                  <Link href={"/about"} onClick={() => setIsOpen(false)}>
+                    About Us
+                  </Link>
+                </li>
+                <li className="px-8 py-5">
+                  <Link href={"/contact"} onClick={() => setIsOpen(false)}>
+                    Popular Questions
+                  </Link>
+                </li>
+              </ul>
               {/* User Section */}
               <div className="p-5 border-t border-gray-100">
                 <Link
@@ -209,9 +221,7 @@ export default function PremiumNavWidget() {
                   </div>
                   <div>
                     <div className="font-medium">My Account</div>
-                    <div className="text-sm text-gray-500">
-                      View profile
-                    </div>
+                    <div className="text-sm text-gray-500">View profile</div>
                   </div>
                 </Link>
               </div>

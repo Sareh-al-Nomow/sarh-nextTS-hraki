@@ -1,0 +1,340 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Image from "next/image";
+import {
+  FiAward,
+  FiUsers,
+  FiGlobe,
+  FiShoppingBag,
+  FiArrowRight,
+} from "react-icons/fi";
+
+export default function AboutUsPage() {
+  const stats = [
+    {
+      value: "10M+",
+      label: "Happy Customers",
+      icon: <FiUsers className="text-3xl" />,
+    },
+    {
+      value: "150+",
+      label: "Countries Worldwide",
+      icon: <FiGlobe className="text-3xl" />,
+    },
+    {
+      value: "2010",
+      label: "Established Since",
+      icon: <FiAward className="text-3xl" />,
+    },
+    {
+      value: "24/7",
+      label: "Customer Support",
+      icon: <FiShoppingBag className="text-3xl" />,
+    },
+  ];
+
+  const team = [
+    {
+      name: "Alex Johnson",
+      role: "Founder & CEO",
+      image:
+        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      bio: "Visionary leader...",
+    },
+    {
+      name: "Alex Johnson",
+      role: "Founder & CEO",
+      image:
+        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      bio: "Visionary leader...",
+    },
+    {
+      name: "Maria Garcia",
+      role: "Chief Design Officer",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      bio: "Award-winning designer...",
+    },
+    {
+      name: "Maria Garcia",
+      role: "Chief Design Officer",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      bio: "Award-winning designer...",
+    },
+    // Add others...
+  ];
+
+  return (
+    <div className="bg-white">
+      {/* Hero Section */}
+      <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Our team working together"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+        >
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            We are redefining the future of shopping
+          </h1>
+          <p className="text-xl text-white/90 mb-8">
+            A passionate team dedicated to bringing you the best products with
+            an exceptional experience
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-3 bg-white text-gray-900 font-medium rounded-full flex items-center gap-2 mx-auto"
+          >
+            Shop Our Collection <FiArrowRight />
+          </motion.button>
+        </motion.div>
+      </section>
+
+      {/* Our Story */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
+            <p className="text-lg text-gray-600 mb-4">
+              Founded in 2010, we started as a small boutique with a big dream -
+              to make premium products accessible to everyone.
+            </p>
+            <p className="text-lg text-gray-600 mb-4">
+              We believe shopping should be joyful, sustainable, and personal.
+              Every product in our collection is carefully curated to meet our
+              high standards.
+            </p>
+            <p className="text-lg text-gray-600">
+              Today, we are proud to serve millions of customers worldwide while
+              staying true to our original values.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="relative h-96 rounded-2xl overflow-hidden shadow-xl"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+              alt="Our early days"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+          >
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -5 }}
+                className="p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all"
+              >
+                <div className="text-blue-600 mb-4 flex justify-center">
+                  {stat.icon}
+                </div>
+                <h3 className="text-4xl font-bold text-gray-900 mb-2">
+                  {stat.value}
+                </h3>
+                <p className="text-gray-600">{stat.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Values</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            These principles guide everything we do
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Customer Obsession",
+              description: "We start with the customer and work backwards.",
+              icon: "❤️",
+            },
+            {
+              title: "Sustainable Future",
+              description: "Committed to eco-friendly practices.",
+              icon: "🌱",
+            },
+            {
+              title: "Innovation",
+              description: "Constantly pushing boundaries.",
+              icon: "💡",
+            },
+            {
+              title: "Quality Craftsmanship",
+              description: "Every product meets our standards.",
+              icon: "✨",
+            },
+            {
+              title: "Community",
+              description: "Building meaningful connections.",
+              icon: "🤝",
+            },
+            {
+              title: "Transparency",
+              description: "Open about our processes.",
+              icon: "🔍",
+            },
+          ].map((value, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-4xl mb-4 inline-block">{value.icon}</span>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {value.title}
+              </h3>
+              <p className="text-gray-600">{value.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Meet the Team */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Meet the Team
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The brilliant minds behind our success
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {team.map((member, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                whileHover={{ y: -10 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
+              >
+                <div className="relative h-64">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {member.name}
+                  </h3>
+                  <p className="text-blue-600 mb-2">{member.role}</p>
+                  <p className="text-gray-600">{member.bio}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-6 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold mb-6"
+          >
+            Join Our Community
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+          >
+            Sign up for exclusive offers and updates.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          >
+            <input
+              type="email"
+              placeholder="Your email address"
+              className="flex-1 px-4 py-3 rounded-lg text-gray-900"
+            />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors"
+            >
+              Subscribe
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+}
