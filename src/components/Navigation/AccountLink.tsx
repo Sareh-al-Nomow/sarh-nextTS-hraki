@@ -35,7 +35,7 @@ export default function PremiumUserMenu() {
   const menuItems = [
     { icon: <FiUser size={18} />, label: "Profile", path: "/profile" },
     { icon: <FiShoppingBag size={18} />, label: "Orders", path: "/orders" },
-    { icon: <FiHeart size={18} />, label: "Wishlist", path: "/wishlist" },
+    { icon: <FiHeart size={18} />, label: "wishlist", path: "/wishlist" },
   ];
 
   const handleLogout = () => {

@@ -85,7 +85,6 @@ export const getCartByToken = async (): Promise<CartResponse> => {
         },
       }
     );
-
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
@@ -125,6 +124,156 @@ export const AddToCart = async ({
       }
     );
 
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};
+
+type UpdateCartItemQuantityParams = {
+  cart_item_id: number;
+  qty?: number;
+};
+
+export const UpdateCartItemQuantity = async ({
+  qty = 1,
+  cart_item_id,
+}: UpdateCartItemQuantityParams): Promise<CartResponse> => {
+  console.log(qty, cart_item_id);
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    const message = "you are not authorize";
+    throw new Error(message);
+  }
+
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/items/${cart_item_id}`,
+      {
+        qty: qty,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};
+
+type DeleteCartItemParams = {
+  cart_item_id: number;
+};
+
+export const DeleteCartItem = async ({
+  cart_item_id,
+}: DeleteCartItemParams): Promise<CartResponse> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    const message = "you are not authorize";
+    throw new Error(message);
+  }
+
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/items/${cart_item_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};
+
+type ApplyCouponParams = {
+  coupon_code: string;
+};
+
+export const ApplyCoupon = async ({
+  coupon_code,
+}: ApplyCouponParams): Promise<CartResponse> => {
+  console.log("coupon at Axios : ", coupon_code);
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    const message = "you are not authorize";
+    throw new Error(message);
+  }
+
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupons/apply`,
+      {
+        couponCode: coupon_code,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};
+
+type DeleteAppliedCouponParams = {
+  cartId: number;
+};
+
+export const DeleteAppliedCoupon = async ({
+  cartId,
+}: DeleteAppliedCouponParams): Promise<CartResponse> => {
+  console.log("delete Applied coupon at Axios : ", cartId);
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    const message = "you are not authorize";
+    throw new Error(message);
+  }
+
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupons/remove`,
+      {
+        data: {
+          cartId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(response.data);
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;

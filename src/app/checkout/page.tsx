@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Head from "next/head";
+import { CartContext } from "@/store/CartContext";
+import Image from "next/image";
 
 const CheckoutPage = () => {
   const [activeTab, setActiveTab] = useState<
@@ -13,19 +15,7 @@ const CheckoutPage = () => {
   >("credit-card");
   const [saveInfo, setSaveInfo] = useState(true);
 
-  // Sample order summary data
-  const orderItems = [
-    { name: "Premium Sneakers", price: 129.99, quantity: 1 },
-    { name: "Designer T-Shirt", price: 49.99, quantity: 2 },
-  ];
-
-  const subtotal = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const shipping = 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const { margeItems, summaryCart } = useContext(CartContext);
 
   return (
     <>
@@ -110,14 +100,14 @@ const CheckoutPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label
-                        htmlFor="email"
+                        htmlFor="full_name"
                         className="block text-sm font-medium text-gray-700 mb-1"
                       >
-                        Email
+                        Full Name
                       </label>
                       <input
-                        type="email"
-                        id="email"
+                        type="text"
+                        id="full_name"
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="your@email.com"
                       />
@@ -142,34 +132,6 @@ const CheckoutPage = () => {
                     Shipping Address
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="first-name"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        id="first-name"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="John"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="last-name"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        id="last-name"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Doe"
-                      />
-                    </div>
                     <div className="md:col-span-2">
                       <label
                         htmlFor="address"
@@ -184,18 +146,18 @@ const CheckoutPage = () => {
                         placeholder="123 Main St"
                       />
                     </div>
-                    <div>
+                    <div className="md:col-span-2">
                       <label
-                        htmlFor="city"
+                        htmlFor="addressop"
                         className="block text-sm font-medium text-gray-700 mb-1"
                       >
-                        City
+                        Address Details (Optional)
                       </label>
                       <input
                         type="text"
-                        id="city"
+                        id="addressop"
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="New York"
+                        placeholder="123 Main St"
                       />
                     </div>
                     <div>
@@ -216,32 +178,32 @@ const CheckoutPage = () => {
                     </div>
                     <div>
                       <label
-                        htmlFor="state"
+                        htmlFor="city"
                         className="block text-sm font-medium text-gray-700 mb-1"
                       >
-                        State/Province
+                        City
                       </label>
                       <input
                         type="text"
-                        id="state"
+                        id="city"
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="NY"
+                        placeholder="New York"
                       />
                     </div>
-                    <div>
-                      <label
-                        htmlFor="zip"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        ZIP/Postal Code
-                      </label>
-                      <input
-                        type="text"
-                        id="zip"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="10001"
-                      />
-                    </div>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="zip"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      ZIP/Postal Code
+                    </label>
+                    <input
+                      type="text"
+                      id="zip"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="10001"
+                    />
                   </div>
 
                   <div className="flex items-center">
@@ -511,7 +473,7 @@ const CheckoutPage = () => {
 
                 <div className="space-y-4">
                   <div className="space-y-4 max-h-60 overflow-y-auto">
-                    {orderItems.map((item, index) => (
+                    {margeItems.map((item, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 10 }}
@@ -520,22 +482,28 @@ const CheckoutPage = () => {
                         className="flex justify-between"
                       >
                         <div className="flex items-center">
-                          <div className="w-12 h-12 rounded bg-gray-200 mr-3 flex items-center justify-center">
-                            <span className="text-xs text-gray-500">
-                              No Image
-                            </span>
+                          <div className="flex items-center">
+                            <div className="relative w-12 h-12 rounded bg-gray-200 mr-3 overflow-hidden">
+                              <Image
+                                src={item.image}
+                                alt={item.product_name || "Product image"}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                           </div>
+
                           <div>
                             <p className="text-sm font-medium text-gray-900">
-                              {item.name}
+                              {item.product_name}
                             </p>
                             <p className="text-sm text-gray-500">
-                              Qty: {item.quantity}
+                              Qty: {item.qty}
                             </p>
                           </div>
                         </div>
                         <p className="text-sm font-medium text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${summaryCart.grandTotal}
                         </p>
                       </motion.div>
                     ))}
@@ -545,23 +513,33 @@ const CheckoutPage = () => {
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal</span>
                       <span className="text-gray-900">
-                        ${subtotal.toFixed(2)}
+                        ${summaryCart.subTotal}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
                       <span className="text-gray-900">
-                        ${shipping.toFixed(2)}
+                        ${summaryCart.shippingFee ?? 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Tax</span>
-                      <span className="text-gray-900">${tax.toFixed(2)}</span>
+                      <span className="text-gray-900">
+                        ${summaryCart.tax ?? 0}
+                      </span>
                     </div>
+                    {summaryCart.discount && (
+                      <div className="flex justify-between">
+                        <span className="text-red-300">Discount</span>
+                        <span className="text-red-300 line-through">
+                          ${summaryCart.discount ?? 0}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="font-medium text-gray-900">Total</span>
                       <span className="font-medium text-gray-900">
-                        ${total.toFixed(2)}
+                        ${summaryCart.grandTotal ?? 0}
                       </span>
                     </div>
                   </div>

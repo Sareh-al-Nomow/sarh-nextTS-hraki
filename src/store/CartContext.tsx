@@ -1,6 +1,13 @@
 "use client";
 
-import { AddToCart, getCartByToken } from "@/lib/axios/CartAxios";
+import {
+  AddToCart,
+  ApplyCoupon,
+  DeleteAppliedCoupon,
+  DeleteCartItem,
+  getCartByToken,
+  UpdateCartItemQuantity,
+} from "@/lib/axios/CartAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -77,37 +84,61 @@ export interface CartItem {
 }
 
 export interface SummaryCart {
+  cart_id: number;
   subTotal: number;
   grandTotal: number;
   discount: number | null;
   tax: number;
   shippingFee: number | null;
+  coupon: string | null;
 }
 
 interface CartContextType {
   cartQuantity: number;
   cartItems: CartItem[];
   summaryCart: SummaryCart;
+  margeItems: CartItem[];
   addToCart: (productId: number, qty?: number) => void;
+  updateCartItemQuantity: (cart_item_id: number, qty?: number) => void;
+  deleteCartItem: (cart_item_id: number) => void;
+  applyCoupon: (coupon_code: string) => void;
+  deleteAppliedCoupon: (cartId: number) => void;
+  cartError: string | null;
+  getCartError: Error | null;
   isLoadingCart: boolean;
   isLoadingAddToCart: boolean;
-  cartError: string | null;
+  isLoadingUpdateCartQuantity: boolean;
+  isLoadingDeleteCartItem: boolean;
+  isLoadingApplyCoupon: boolean;
+  isLoadingdeleteAppliedCoupon: boolean;
 }
 
 export const CartContext = createContext<CartContextType>({
   cartQuantity: 0,
   cartItems: [],
   summaryCart: {
+    cart_id: 0,
+    coupon: "",
     subTotal: 0,
     grandTotal: 0,
     discount: null,
     tax: 0,
     shippingFee: null,
   },
+  margeItems: [],
   addToCart: () => {},
+  updateCartItemQuantity: () => {},
+  deleteCartItem: () => {},
+  applyCoupon: () => {},
+  deleteAppliedCoupon: () => {},
+  cartError: null,
+  getCartError: null,
   isLoadingCart: false,
   isLoadingAddToCart: false,
-  cartError: null,
+  isLoadingUpdateCartQuantity: false,
+  isLoadingDeleteCartItem: false,
+  isLoadingApplyCoupon: false,
+  isLoadingdeleteAppliedCoupon: false,
 });
 
 type CartContextProviderProps = {
@@ -119,10 +150,13 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
 }) => {
   const [cartQuantity, setCartQuantity] = useState(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [margeItems, setMargeItems] = useState<CartItem[]>([]);
   const [summaryCart, setSummaryCart] = useState<SummaryCart>({
+    cart_id: 0,
     subTotal: 0,
     grandTotal: 0,
     discount: null,
+    coupon: "",
     tax: 0,
     shippingFee: null,
   });
@@ -132,12 +166,43 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     data,
     isLoading: isLoadingCart,
     refetch,
+    error: getCartError,
   } = useQuery({
     queryKey: ["cart"],
     queryFn: getCartByToken,
-    // enabled: false, // نتحكم بالفetch يدوي
   });
 
+  const updateCartState = useCallback((cart: Cart) => {
+    console.log("updated cart items  :", cart.items);
+    setCartItems(cart.items);
+    setCartQuantity(cart.total_qty);
+    setSummaryCart({
+      cart_id: cart.cart_id,
+      subTotal: cart.sub_total,
+      grandTotal: cart.grand_total,
+      discount: cart.discount_amount,
+      coupon: cart.coupon,
+      tax: cart.tax_amount,
+      shippingFee: cart.shipping_fee_incl_tax,
+    });
+    setCartError(null);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log("updated cart");
+      updateCartState(data);
+    }
+  }, [data, updateCartState]);
+
+  useEffect(() => {
+    console.log("updated marged items");
+    const finalList = mergeCartItems(cartItems);
+    setMargeItems(finalList);
+  }, [cartItems]);
+
+  // ****************************** strat mutate section
+  // add to cart Mutation
   const { mutate: addToCartMutate, isPending: isLoadingAddToCart } =
     useMutation({
       mutationFn: AddToCart,
@@ -150,30 +215,127 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
       },
     });
 
-  const updateCartState = useCallback((cart: Cart) => {
-    setCartItems(cart.items);
-    setCartQuantity(cart.total_qty);
-    setSummaryCart({
-      subTotal: cart.sub_total,
-      grandTotal: cart.grand_total,
-      discount: cart.discount_amount,
-      tax: cart.tax_amount,
-      shippingFee: cart.shipping_fee_incl_tax,
-    });
-    setCartError(null);
-  }, []);
+  // update quanitity to cart Mutation
+  const {
+    mutate: updateCartItemQuantityMutate,
+    isPending: isLoadingUpdateCartQuantity,
+  } = useMutation({
+    mutationFn: UpdateCartItemQuantity,
+    onSuccess: () => {
+      refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
+      toast.success("updated quantity item successflly!");
+    },
+    onError: (error: Error) => {
+      setCartError(error.message);
+    },
+  });
 
-  useEffect(() => {
-    if (data) {
-      updateCartState(data);
-    }
-  }, [data, updateCartState]);
+  // delete cart item Mutation
+  const { mutate: deleteCartItemMutate, isPending: isLoadingDeleteCartItem } =
+    useMutation({
+      mutationFn: DeleteCartItem,
+      onSuccess: () => {
+        refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
+        toast.success("deleted item successflly!");
+      },
+      onError: (error: Error) => {
+        setCartError(error.message);
+      },
+    });
+
+  // apply coupon Mutation
+  const { mutate: applyCouponMutate, isPending: isLoadingApplyCoupon } =
+    useMutation({
+      mutationFn: ApplyCoupon,
+      onSuccess: () => {
+        refetch();
+        toast.success("applied coupon successflly!");
+      },
+      onError: (error: Error) => {
+        setCartError(error.message);
+      },
+    });
+
+  // apply coupon Mutation
+  const {
+    mutate: deleteAppliedCouponMutate,
+    isPending: isLoadingdeleteAppliedCoupon,
+  } = useMutation({
+    mutationFn: DeleteAppliedCoupon,
+    onSuccess: () => {
+      refetch();
+      toast.success("delete applied coupon successflly!");
+    },
+    onError: (error: Error) => {
+      setCartError(error.message);
+    },
+  });
+
+  // ****************************** end mutate section
+
+  // ****************************** strat actions section
 
   const addToCart = (productId: number, qty: number = 1) => {
-    addToCartMutate({ productId, qty });
+    const exsistingItem = margeItems.find(
+      (item) => item.product_id === productId
+    );
+    if (exsistingItem) {
+      updateCartItemQuantityMutate({
+        cart_item_id: exsistingItem.cart_item_id,
+        qty,
+      });
+    } else {
+      addToCartMutate({ productId, qty });
+    }
   };
 
-  console.log(cartItems);
+  const updateCartItemQuantity = (cart_item_id: number, qty: number = 1) => {
+    console.log("conext update item : ", cart_item_id, qty);
+    updateCartItemQuantityMutate({ cart_item_id, qty });
+  };
+
+  const deleteCartItem = (cart_item_id: number) => {
+    deleteCartItemMutate({ cart_item_id });
+  };
+
+  const applyCoupon = (coupon_code: string) => {
+    console.log("coupon at Context : ", coupon_code);
+    applyCouponMutate({ coupon_code });
+  };
+
+  const deleteAppliedCoupon = (cartId: number) => {
+    console.log("coupon at Context : ", cartId);
+    deleteAppliedCouponMutate({ cartId });
+  };
+
+  // ****************************** end actions section
+
+  const mergeCartItems = (items: CartItem[]): CartItem[] => {
+    const merged: CartItem[] = [];
+
+    items.forEach((item) => {
+      const existing = merged.find((i) => i.product_id === item.product_id);
+      if (existing) {
+        existing.qty += item.qty;
+        existing.line_total += item.line_total;
+        existing.line_total_with_discount += item.line_total_with_discount;
+        existing.line_total_incl_tax += item.line_total_incl_tax;
+        existing.line_total_with_discount_incl_tax +=
+          item.line_total_with_discount_incl_tax;
+      } else {
+        merged.push({ ...item });
+      }
+    });
+
+    // 🔽 Sort by product_name alphabetically (case-insensitive)
+    merged.sort((a, b) =>
+      a.product_name.localeCompare(b.product_name, undefined, {
+        sensitivity: "base",
+      })
+    );
+
+    return merged;
+  };
 
   return (
     <CartContext.Provider
@@ -182,9 +344,19 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
         cartItems,
         summaryCart,
         addToCart,
+        updateCartItemQuantity,
+        deleteCartItem,
+        applyCoupon,
+        deleteAppliedCoupon,
         isLoadingCart,
         isLoadingAddToCart,
+        isLoadingUpdateCartQuantity,
+        isLoadingDeleteCartItem,
+        isLoadingApplyCoupon,
+        isLoadingdeleteAppliedCoupon,
         cartError,
+        getCartError,
+        margeItems,
       }}
     >
       {children}
