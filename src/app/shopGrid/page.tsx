@@ -18,6 +18,8 @@ interface Category {
   subcategories?: string[];
 }
 
+const MAX_PRICE = 1000; // Replace with your actual max price (e.g., from API)
+
 const ShopGridPage = () => {
   // Demo data
   const demoProducts: FrontendProduct[] = [
@@ -139,6 +141,7 @@ const ShopGridPage = () => {
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >({});
+  const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null); // 'min' or 'max'
 
   // Define categories with subcategories
   const categories: Category[] = [
@@ -189,6 +192,44 @@ const ShopGridPage = () => {
         : [...prev, product.id]
     );
   };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!activeHandle) return;
+
+      // Ensure target is an HTMLElement
+      const target = e.target as HTMLElement;
+      const slider = target.closest(".relative") as HTMLElement | null;
+      if (!slider) return;
+
+      const rect = slider.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+      const newValue = Math.round(percentage * MAX_PRICE);
+
+      if (activeHandle === "min") {
+        setPriceRange([Math.min(newValue, priceRange[1] - 10), priceRange[1]]);
+      } else {
+        setPriceRange([priceRange[0], Math.max(newValue, priceRange[0] + 10)]);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setActiveHandle(null);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    if (activeHandle) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [activeHandle, priceRange]);
 
   // Filter and sort products with simulated loading
   useEffect(() => {
@@ -379,19 +420,19 @@ const ShopGridPage = () => {
                     <div
                       className="absolute h-2 bg-blue-500 rounded-full"
                       style={{
-                        left: `${(priceRange[0] / 500) * 100}%`,
-                        right: `${100 - (priceRange[1] / 500) * 100}%`,
+                        left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
+                        right: `${100 - (priceRange[1] / MAX_PRICE) * 100}%`,
                       }}
                     />
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
-                      style={{ left: `${(priceRange[0] / 500) * 100}%` }}
-                      onMouseDown={() => {}}
+                      style={{ left: `${(priceRange[0] / MAX_PRICE) * 100}%` }}
+                      onMouseDown={() => setActiveHandle("min")} // Mark min handle as active
                     />
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
-                      style={{ left: `${(priceRange[1] / 500) * 100}%` }}
-                      onMouseDown={() => {}}
+                      style={{ left: `${(priceRange[1] / MAX_PRICE) * 100}%` }}
+                      onMouseDown={() => setActiveHandle("max")} // Mark max handle as active
                     />
                   </div>
                   <div className="flex justify-between">
@@ -417,11 +458,11 @@ const ShopGridPage = () => {
                       <input
                         type="number"
                         min={priceRange[0] + 10}
-                        max="500"
+                        max={MAX_PRICE} // Now dynamic
                         value={priceRange[1]}
                         onChange={(e) => {
                           const value = Math.max(
-                            parseInt(e.target.value) || 500,
+                            parseInt(e.target.value) || MAX_PRICE,
                             priceRange[0] + 10
                           );
                           setPriceRange([priceRange[0], value]);
@@ -636,7 +677,7 @@ const ShopGridPage = () => {
                     No products found
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    We couldn`t find any items matching your criteria
+                    We couldnt find any items matching your criteria
                   </p>
                   <button
                     onClick={resetFilters}
@@ -682,37 +723,34 @@ const ShopGridPage = () => {
               <div className="p-4 overflow-y-auto h-[calc(100%-120px)]">
                 {/* Price Range - Enhanced for Mobile */}
                 <div className="mb-8">
-                  <h4 className="font-medium mb-4 text-gray-700 text-base sm:text-lg">
+                  <h4 className="font-medium mb-4 text-gray-700">
                     Price Range
                   </h4>
-
-                  <div className="space-y-6">
-                    {/* Slider Track */}
-                    <div className="relative h-3 bg-gray-200 rounded-full sm:h-2">
-                      {/* Active Range */}
+                  <div className="space-y-4">
+                    <div className="relative h-2 bg-gray-200 rounded-full">
                       <div
-                        className="absolute h-full bg-blue-500 rounded-full"
+                        className="absolute h-2 bg-blue-500 rounded-full"
                         style={{
-                          left: `${(priceRange[0] / 500) * 100}%`,
-                          right: `${100 - (priceRange[1] / 500) * 100}%`,
+                          left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
+                          right: `${100 - (priceRange[1] / MAX_PRICE) * 100}%`,
                         }}
                       />
-                      {/* Min Thumb */}
                       <div
-                        className="absolute h-6 w-6 sm:h-4 sm:w-4 bg-blue-600 rounded-full -top-1.5 sm:-top-1 transform -translate-x-1/2 cursor-pointer shadow-md touch-none"
-                        style={{ left: `${(priceRange[0] / 500) * 100}%` }}
-                        onMouseDown={() => {}}
+                        className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
+                        style={{
+                          left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
+                        }}
+                        onMouseDown={() => setActiveHandle("min")} // Mark min handle as active
                       />
-                      {/* Max Thumb */}
                       <div
-                        className="absolute h-6 w-6 sm:h-4 sm:w-4 bg-blue-600 rounded-full -top-1.5 sm:-top-1 transform -translate-x-1/2 cursor-pointer shadow-md touch-none"
-                        style={{ left: `${(priceRange[1] / 500) * 100}%` }}
-                        onMouseDown={() => {}}
+                        className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
+                        style={{
+                          left: `${(priceRange[1] / MAX_PRICE) * 100}%`,
+                        }}
+                        onMouseDown={() => setActiveHandle("max")} // Mark max handle as active
                       />
                     </div>
-
-                    {/* Input Fields */}
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                    <div className="flex justify-between">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Min:</span>
                         <input
@@ -727,7 +765,7 @@ const ShopGridPage = () => {
                             );
                             setPriceRange([value, priceRange[1]]);
                           }}
-                          className="w-24 px-3 py-2 border border-gray-300 rounded text-sm sm:w-20"
+                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
                         />
                       </div>
                       <div className="flex items-center gap-2">
@@ -735,16 +773,16 @@ const ShopGridPage = () => {
                         <input
                           type="number"
                           min={priceRange[0] + 10}
-                          max="500"
+                          max={MAX_PRICE} // Now dynamic
                           value={priceRange[1]}
                           onChange={(e) => {
                             const value = Math.max(
-                              parseInt(e.target.value) || 500,
+                              parseInt(e.target.value) || MAX_PRICE,
                               priceRange[0] + 10
                             );
                             setPriceRange([priceRange[0], value]);
                           }}
-                          className="w-24 px-3 py-2 border border-gray-300 rounded text-sm sm:w-20"
+                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
                         />
                       </div>
                     </div>
