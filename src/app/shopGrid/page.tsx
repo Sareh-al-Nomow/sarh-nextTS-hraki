@@ -2,9 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiFilter, FiX, FiChevronDown, FiSearch } from "react-icons/fi";
+import {
+  FiFilter,
+  FiX,
+  FiChevronDown,
+  FiSearch,
+  FiChevronRight,
+} from "react-icons/fi";
 import ProductItem from "@/components/homePage/products/ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
+
+// Define category and subcategory types
+interface Category {
+  name: string;
+  subcategories?: string[];
+}
 
 const ShopGridPage = () => {
   // Demo data
@@ -16,7 +28,7 @@ const ShopGridPage = () => {
       originalPrice: "129.99",
       rating: 4.5,
       isNew: true,
-      tags: ["BESTSELLER", "HOT"],
+      tags: ["BESTSELLER", "HOT", "Electronics/Headphones"],
       description:
         "Premium noise-cancelling wireless headphones with 30hr battery life",
       features: ["Active Noise Cancellation", "30hr Playtime", "Built-in Mic"],
@@ -29,7 +41,7 @@ const ShopGridPage = () => {
       name: "Smart Fitness Watch",
       price: "149.99",
       rating: 4.2,
-      tags: ["NEW"],
+      tags: ["NEW", "Electronics/Wearables"],
       description: "Track your workouts, heart rate, and sleep patterns",
       features: ["Heart Rate Monitor", "Water Resistant", "7-day Battery"],
       colors: ["#000000", "#ffffff"],
@@ -42,7 +54,7 @@ const ShopGridPage = () => {
       price: "59.99",
       originalPrice: "79.99",
       rating: 4.3,
-      tags: ["BESTSELLER"],
+      tags: ["BESTSELLER", "Electronics/Audio"],
       description: "High-quality sound with 20hr battery life",
       features: ["360° Sound", "IPX7 Waterproof", "Bluetooth 5.0"],
       colors: ["#000000", "#10b981"],
@@ -55,7 +67,7 @@ const ShopGridPage = () => {
       price: "499.99",
       rating: 4.8,
       isNew: true,
-      tags: ["NEW", "HOT"],
+      tags: ["NEW", "HOT", "Electronics/Cameras"],
       description: "Professional 4K camera with 24.2MP sensor",
       features: ["4K Video", "Wi-Fi Connectivity", "3-inch Touchscreen"],
       colors: ["#000000"],
@@ -68,7 +80,7 @@ const ShopGridPage = () => {
       price: "249.99",
       originalPrice: "299.99",
       rating: 4.6,
-      tags: ["BESTSELLER"],
+      tags: ["BESTSELLER", "Furniture/Office"],
       description: "Comfortable chair with lumbar support",
       features: ["Adjustable Height", "Breathable Mesh", "360° Swivel"],
       colors: ["#000000", "#6b7280"],
@@ -80,7 +92,7 @@ const ShopGridPage = () => {
       name: "Wireless Charging Pad",
       price: "29.99",
       rating: 4.1,
-      tags: ["NEW"],
+      tags: ["NEW", "Electronics/Accessories"],
       description: "Fast charging pad for all Qi-enabled devices",
       features: ["15W Fast Charge", "LED Indicator", "Non-slip Surface"],
       colors: ["#000000", "#ffffff"],
@@ -94,7 +106,7 @@ const ShopGridPage = () => {
       originalPrice: "159.99",
       rating: 4.4,
       isNew: true,
-      tags: ["HOT"],
+      tags: ["HOT", "Electronics/Headphones"],
       description: "True wireless earbuds with active noise cancellation",
       features: ["ANC Technology", "24hr Battery", "Touch Controls"],
       colors: ["#000000", "#3b82f6"],
@@ -106,7 +118,7 @@ const ShopGridPage = () => {
       name: "Smart Home Hub",
       price: "199.99",
       rating: 4.7,
-      tags: ["NEW", "BESTSELLER"],
+      tags: ["NEW", "BESTSELLER", "Electronics/Smart Home"],
       description: "Control all your smart devices from one place",
       features: ["Voice Assistant", "100+ Compatible Devices", "4K Streaming"],
       colors: ["#000000", "#6b7280"],
@@ -122,15 +134,52 @@ const ShopGridPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "BESTSELLER",
-  ]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({});
 
-  // Available categories from tags
-  const allCategories = Array.from(
-    new Set(demoProducts.flatMap((p) => p.tags || []))
-  );
+  // Define categories with subcategories
+  const categories: Category[] = [
+    {
+      name: "Electronics",
+      subcategories: [
+        "Headphones",
+        "Wearables",
+        "Audio",
+        "Cameras",
+        "Accessories",
+        "Smart Home",
+      ],
+    },
+    {
+      name: "Furniture",
+      subcategories: ["Office", "Living Room", "Bedroom"],
+    },
+    {
+      name: "BESTSELLER",
+    },
+    {
+      name: "NEW",
+    },
+    {
+      name: "HOT",
+    },
+  ];
+
+  // Toggle category expansion
+  const toggleCategoryExpansion = (categoryName: string) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [categoryName]: !prev[categoryName],
+    }));
+  };
+
+  // Extract all tags for filtering
+  // const allTags = Array.from(
+  //   new Set(demoProducts.flatMap((p) => p.tags || []))
+  // );
 
   // Toggle like with animation feedback
   const toggleLike = (product: FrontendProduct) => {
@@ -162,7 +211,18 @@ const ShopGridPage = () => {
       if (selectedCategories.length > 0) {
         filtered = filtered.filter(
           (p) =>
-            p.tags && p.tags.some((tag) => selectedCategories.includes(tag))
+            p.tags &&
+            p.tags.some((tag) => {
+              // Check if any tag matches the selected categories or subcategories
+              return selectedCategories.some((selectedCat) => {
+                // For subcategories (format: "Parent/Sub")
+                if (selectedCat.includes("/")) {
+                  return tag === selectedCat;
+                }
+                // For main categories or standalone tags
+                return tag === selectedCat || tag.startsWith(`${selectedCat}/`);
+              });
+            })
         );
       }
 
@@ -213,7 +273,13 @@ const ShopGridPage = () => {
     setSortOption("featured");
     setPriceRange([0, 500]);
     setSelectedCategories([]);
+    setExpandedCategories({});
   };
+
+  // Format price for display
+  // const formatPrice = (price: number) => {
+  //   return price === 500 ? "$500+" : `$${price}`;
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -305,89 +371,169 @@ const ShopGridPage = () => {
                 </button>
               </div>
 
-              {/* Price Range */}
+              {/* Price Range - Enhanced */}
               <div className="mb-8">
                 <h4 className="font-medium mb-4 text-gray-700">Price Range</h4>
-                <div className="px-2 space-y-4">
-                  <div className="relative">
-                    <input
-                      type="range"
-                      min="0"
-                      max="500"
-                      step="10"
-                      value={priceRange[0]}
-                      onChange={(e) =>
-                        setPriceRange([parseInt(e.target.value), priceRange[1]])
-                      }
-                      className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
+                <div className="space-y-4">
+                  <div className="relative h-2 bg-gray-200 rounded-full">
                     <div
-                      className="absolute top-0 h-1.5 bg-blue-500 rounded-l-lg pointer-events-none"
+                      className="absolute h-2 bg-blue-500 rounded-full"
                       style={{
                         left: `${(priceRange[0] / 500) * 100}%`,
                         right: `${100 - (priceRange[1] / 500) * 100}%`,
                       }}
                     />
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="range"
-                      min="0"
-                      max="500"
-                      step="10"
-                      value={priceRange[1]}
-                      onChange={(e) =>
-                        setPriceRange([priceRange[0], parseInt(e.target.value)])
-                      }
-                      className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    <div
+                      className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
+                      style={{ left: `${(priceRange[0] / 500) * 100}%` }}
+                      onMouseDown={() => {}}
+                    />
+                    <div
+                      className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
+                      style={{ left: `${(priceRange[1] / 500) * 100}%` }}
+                      onMouseDown={() => {}}
                     />
                   </div>
-                </div>
-                <div className="flex justify-between mt-4 text-sm text-gray-600">
-                  <span className="font-medium">${priceRange[0]}</span>
-                  <span className="font-medium">${priceRange[1]}</span>
+                  <div className="flex justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">Min:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={priceRange[1] - 10}
+                        value={priceRange[0]}
+                        onChange={(e) => {
+                          const value = Math.min(
+                            parseInt(e.target.value) || 0,
+                            priceRange[1] - 10
+                          );
+                          setPriceRange([value, priceRange[1]]);
+                        }}
+                        className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">Max:</span>
+                      <input
+                        type="number"
+                        min={priceRange[0] + 10}
+                        max="500"
+                        value={priceRange[1]}
+                        onChange={(e) => {
+                          const value = Math.max(
+                            parseInt(e.target.value) || 500,
+                            priceRange[0] + 10
+                          );
+                          setPriceRange([priceRange[0], value]);
+                        }}
+                        className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Categories */}
+              {/* Categories with Subcategories */}
               <div>
                 <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
-                <div className="space-y-3">
-                  {allCategories.map((category) => (
-                    <motion.label
-                      key={category}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center group cursor-pointer"
-                    >
-                      <div className="relative">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category)}
-                          onChange={() => toggleCategory(category)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-5 h-5 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                          {selectedCategories.includes(category) && (
-                            <svg
-                              className="w-3 h-3 text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={3}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          )}
-                        </div>
-                      </div>
-                      <span className="ml-3 text-gray-700 group-hover:text-gray-900 transition-colors">
-                        {category}
-                      </span>
-                    </motion.label>
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <div key={category.name} className="space-y-1">
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        className={`flex items-center justify-between w-full text-left ${
+                          category.subcategories ? "font-semibold" : ""
+                        }`}
+                        onClick={() =>
+                          category.subcategories
+                            ? toggleCategoryExpansion(category.name)
+                            : toggleCategory(category.name)
+                        }
+                      >
+                        <span
+                          className={
+                            selectedCategories.includes(category.name)
+                              ? "text-blue-600"
+                              : "text-gray-700"
+                          }
+                        >
+                          {category.name}
+                        </span>
+                        {category.subcategories && (
+                          <FiChevronRight
+                            className={`transition-transform ${
+                              expandedCategories[category.name]
+                                ? "transform rotate-90"
+                                : ""
+                            }`}
+                          />
+                        )}
+                      </motion.button>
+
+                      {category.subcategories &&
+                        expandedCategories[category.name] && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="pl-4 space-y-1"
+                          >
+                            {category.subcategories.map((subcategory) => {
+                              const fullCategoryPath = `${category.name}/${subcategory}`;
+                              return (
+                                <motion.label
+                                  key={subcategory}
+                                  whileTap={{ scale: 0.95 }}
+                                  className="flex items-center group cursor-pointer"
+                                >
+                                  <div className="relative">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedCategories.includes(
+                                        fullCategoryPath
+                                      )}
+                                      onChange={() =>
+                                        toggleCategory(fullCategoryPath)
+                                      }
+                                      className="sr-only peer"
+                                    />
+                                    <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                      {selectedCategories.includes(
+                                        fullCategoryPath
+                                      ) && (
+                                        <svg
+                                          className="w-2.5 h-2.5 text-white"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={3}
+                                            d="M5 13l4 4L19 7"
+                                          />
+                                        </svg>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span
+                                    className={`ml-2 text-sm ${
+                                      selectedCategories.includes(
+                                        fullCategoryPath
+                                      )
+                                        ? "text-blue-600"
+                                        : "text-gray-600"
+                                    } group-hover:text-gray-900 transition-colors`}
+                                  >
+                                    {subcategory}
+                                  </span>
+                                </motion.label>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -402,21 +548,28 @@ const ShopGridPage = () => {
                 Showing {products.length} of {demoProducts.length} products
               </p>
               {selectedCategories.length > 0 && (
-                <div className="flex gap-2">
-                  {selectedCategories.map((category) => (
-                    <span
-                      key={category}
-                      className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full flex items-center"
-                    >
-                      {category}
-                      <button
-                        onClick={() => toggleCategory(category)}
-                        className="ml-1.5 text-blue-500 hover:text-blue-700"
+                <div className="flex gap-2 flex-wrap justify-end">
+                  {selectedCategories.map((category) => {
+                    const displayName = category.includes("/")
+                      ? category.split("/")[1]
+                      : category;
+                    return (
+                      <motion.span
+                        key={category}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full flex items-center"
                       >
-                        <FiX size={14} />
-                      </button>
-                    </span>
-                  ))}
+                        {displayName}
+                        <button
+                          onClick={() => toggleCategory(category)}
+                          className="ml-1.5 text-blue-500 hover:text-blue-700"
+                        >
+                          <FiX size={14} />
+                        </button>
+                      </motion.span>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -527,101 +680,178 @@ const ShopGridPage = () => {
               </div>
 
               <div className="p-4 overflow-y-auto h-[calc(100%-120px)]">
-                {/* Price Range */}
+                {/* Price Range - Enhanced for Mobile */}
                 <div className="mb-8">
-                  <h4 className="font-medium mb-4 text-gray-700">
+                  <h4 className="font-medium mb-4 text-gray-700 text-base sm:text-lg">
                     Price Range
                   </h4>
-                  <div className="px-2">
-                    <div className="relative h-2 bg-gray-200 rounded-full mb-6">
+
+                  <div className="space-y-6">
+                    {/* Slider Track */}
+                    <div className="relative h-3 bg-gray-200 rounded-full sm:h-2">
+                      {/* Active Range */}
                       <div
-                        className="absolute h-2 bg-blue-500 rounded-full mb-4"
+                        className="absolute h-full bg-blue-500 rounded-full"
                         style={{
                           left: `${(priceRange[0] / 500) * 100}%`,
                           right: `${100 - (priceRange[1] / 500) * 100}%`,
                         }}
-                      ></div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="500"
-                        step="10"
-                        value={priceRange[0]}
-                        onChange={(e) => {
-                          const value = Math.min(
-                            parseInt(e.target.value),
-                            priceRange[1] - 10
-                          );
-                          setPriceRange([value, priceRange[1]]);
-                        }}
-                        className="absolute w-full h-2 appearance-none pointer-events-none opacity-0"
                       />
-                      <input
-                        type="range"
-                        min="0"
-                        max="500"
-                        step="10"
-                        value={priceRange[1]}
-                        onChange={(e) => {
-                          const value = Math.max(
-                            parseInt(e.target.value),
-                            priceRange[0] + 10
-                          );
-                          setPriceRange([priceRange[0], value]);
-                        }}
-                        className="absolute w-full h-2 appearance-none pointer-events-none opacity-0"
+                      {/* Min Thumb */}
+                      <div
+                        className="absolute h-6 w-6 sm:h-4 sm:w-4 bg-blue-600 rounded-full -top-1.5 sm:-top-1 transform -translate-x-1/2 cursor-pointer shadow-md touch-none"
+                        style={{ left: `${(priceRange[0] / 500) * 100}%` }}
+                        onMouseDown={() => {}}
                       />
-                      <div className="absolute flex justify-between w-full -bottom-6">
-                        <span className="text-sm text-gray-600">
-                          ${priceRange[0]}
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          ${priceRange[1]}
-                        </span>
+                      {/* Max Thumb */}
+                      <div
+                        className="absolute h-6 w-6 sm:h-4 sm:w-4 bg-blue-600 rounded-full -top-1.5 sm:-top-1 transform -translate-x-1/2 cursor-pointer shadow-md touch-none"
+                        style={{ left: `${(priceRange[1] / 500) * 100}%` }}
+                        onMouseDown={() => {}}
+                      />
+                    </div>
+
+                    {/* Input Fields */}
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Min:</span>
+                        <input
+                          type="number"
+                          min="0"
+                          max={priceRange[1] - 10}
+                          value={priceRange[0]}
+                          onChange={(e) => {
+                            const value = Math.min(
+                              parseInt(e.target.value) || 0,
+                              priceRange[1] - 10
+                            );
+                            setPriceRange([value, priceRange[1]]);
+                          }}
+                          className="w-24 px-3 py-2 border border-gray-300 rounded text-sm sm:w-20"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Max:</span>
+                        <input
+                          type="number"
+                          min={priceRange[0] + 10}
+                          max="500"
+                          value={priceRange[1]}
+                          onChange={(e) => {
+                            const value = Math.max(
+                              parseInt(e.target.value) || 500,
+                              priceRange[0] + 10
+                            );
+                            setPriceRange([priceRange[0], value]);
+                          }}
+                          className="w-24 px-3 py-2 border border-gray-300 rounded text-sm sm:w-20"
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Categories */}
+                {/* Categories with Subcategories for Mobile */}
                 <div>
                   <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
-                  <div className="space-y-3">
-                    {allCategories.map((category) => (
-                      <motion.label
-                        key={category}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center group cursor-pointer"
-                      >
-                        <div className="relative">
-                          <input
-                            type="checkbox"
-                            checked={selectedCategories.includes(category)}
-                            onChange={() => toggleCategory(category)}
-                            className="sr-only peer"
-                          />
-                          <div className="w-5 h-5 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                            {selectedCategories.includes(category) && (
-                              <svg
-                                className="w-3 h-3 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={3}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        </div>
-                        <span className="ml-3 text-gray-700 group-hover:text-gray-900 transition-colors">
-                          {category}
-                        </span>
-                      </motion.label>
+                  <div className="space-y-2">
+                    {categories.map((category) => (
+                      <div key={category.name} className="space-y-1">
+                        <motion.button
+                          whileTap={{ scale: 0.98 }}
+                          className={`flex items-center justify-between w-full text-left ${
+                            category.subcategories ? "font-semibold" : ""
+                          }`}
+                          onClick={() =>
+                            category.subcategories
+                              ? toggleCategoryExpansion(category.name)
+                              : toggleCategory(category.name)
+                          }
+                        >
+                          <span
+                            className={
+                              selectedCategories.includes(category.name)
+                                ? "text-blue-600"
+                                : "text-gray-700"
+                            }
+                          >
+                            {category.name}
+                          </span>
+                          {category.subcategories && (
+                            <FiChevronRight
+                              className={`transition-transform ${
+                                expandedCategories[category.name]
+                                  ? "transform rotate-90"
+                                  : ""
+                              }`}
+                            />
+                          )}
+                        </motion.button>
+
+                        {category.subcategories &&
+                          expandedCategories[category.name] && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="pl-4 space-y-1"
+                            >
+                              {category.subcategories.map((subcategory) => {
+                                const fullCategoryPath = `${category.name}/${subcategory}`;
+                                return (
+                                  <motion.label
+                                    key={subcategory}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="flex items-center group cursor-pointer"
+                                  >
+                                    <div className="relative">
+                                      <input
+                                        type="checkbox"
+                                        checked={selectedCategories.includes(
+                                          fullCategoryPath
+                                        )}
+                                        onChange={() =>
+                                          toggleCategory(fullCategoryPath)
+                                        }
+                                        className="sr-only peer"
+                                      />
+                                      <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                        {selectedCategories.includes(
+                                          fullCategoryPath
+                                        ) && (
+                                          <svg
+                                            className="w-2.5 h-2.5 text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={3}
+                                              d="M5 13l4 4L19 7"
+                                            />
+                                          </svg>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <span
+                                      className={`ml-2 text-sm ${
+                                        selectedCategories.includes(
+                                          fullCategoryPath
+                                        )
+                                          ? "text-blue-600"
+                                          : "text-gray-600"
+                                      } group-hover:text-gray-900 transition-colors`}
+                                    >
+                                      {subcategory}
+                                    </span>
+                                  </motion.label>
+                                );
+                              })}
+                            </motion.div>
+                          )}
+                      </div>
                     ))}
                   </div>
                 </div>
