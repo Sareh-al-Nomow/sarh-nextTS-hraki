@@ -706,7 +706,7 @@ const ShopGridPage = () => {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30 }}
+              transition={{ type: "spring", damping: 15 }}
               className="absolute right-0 top-0 h-full w-4/5 max-w-sm bg-white shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
