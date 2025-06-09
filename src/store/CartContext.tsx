@@ -102,7 +102,7 @@ interface CartContextType {
   updateCartItemQuantity: (cart_item_id: number, qty?: number) => void;
   deleteCartItem: (cart_item_id: number) => void;
   applyCoupon: (coupon_code: string) => void;
-  deleteAppliedCoupon: (cartId: number) => void;
+  deleteAppliedCoupon: (coupon_code: number) => void;
   cartError: string | null;
   getCartError: Error | null;
   isLoadingCart: boolean;
@@ -276,15 +276,18 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
   // ****************************** strat actions section
 
   const addToCart = (productId: number, qty: number = 1) => {
-    const exsistingItem = margeItems.find(
+    const exsistingItem = cartItems.find(
       (item) => item.product_id === productId
     );
     if (exsistingItem) {
+      console.log("updated");
+      console.log(exsistingItem);
       updateCartItemQuantityMutate({
         cart_item_id: exsistingItem.cart_item_id,
-        qty,
+        qty: exsistingItem.qty + 1,
       });
     } else {
+      console.log("add new");
       addToCartMutate({ productId, qty });
     }
   };

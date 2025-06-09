@@ -9,6 +9,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { redirect } from "next/navigation";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -73,6 +74,7 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
     localStorage.removeItem("userId");
     localStorage.removeItem("userData");
     setIsLoading(false);
+    redirect("/");
   };
 
   useEffect(() => {

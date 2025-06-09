@@ -1,10 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import { CartContext } from "@/store/CartContext";
 import Image from "next/image";
+import AddressTap from "@/components/chechout/AddressTap";
+import { redirect } from "next/navigation";
+import { Address } from "@/models/frontEndAddress";
+import { useQuery } from "@tanstack/react-query";
+import { getCountries } from "@/lib/axios/countryAxios";
+import { Country } from "@/models/forntEndCountry";
+import Spinner from "@/components/UI/SpinnerLoading";
+import Shipping from "@/components/chechout/Shipping";
 
 const CheckoutPage = () => {
   const [activeTab, setActiveTab] = useState<
@@ -13,9 +21,94 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState<
     "credit-card" | "paypal" | "apple-pay"
   >("credit-card");
-  const [saveInfo, setSaveInfo] = useState(true);
+  const [countries, setCountries] = useState<Country[] | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [selectedDelevaryMethodId, setSelectedDelevaryMethodId] = useState<
+    number | null
+  >(null);
+
+  console.log(selectedCountry);
+
+  interface OrderDataShape {
+    addressId: number | null;
+    delevaryMethodId: number | null;
+  }
+  const [orderData, setOrderData] = useState<OrderDataShape>({
+    addressId: null,
+    delevaryMethodId: null,
+  });
+
+  console.log(orderData);
 
   const { margeItems, summaryCart } = useContext(CartContext);
+
+  const {
+    data: dataCountries,
+    isLoading: isLoadingGetCountries,
+    error: getCountriesError,
+  } = useQuery({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+  });
+
+  useEffect(() => {
+    setCountries(dataCountries ?? null);
+  }, [dataCountries]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [orderData]);
+
+  function handleActiveTap(tap: "information" | "shipping" | "payment") {
+    setActiveTab(tap);
+  }
+
+  function handleUpdateOrderData(name: string, data: number | null) {
+    setOrderData((prev) => ({
+      ...prev,
+      [name]: data,
+    }));
+  }
+
+  function handleSelectAddress(address: Address) {
+    setSelectedAddress(address);
+  }
+
+  function handleSelectCountry(country: Country) {
+    setSelectedCountry(country);
+  }
+  function handleSelectedDelevaryMethodId(country: number | null) {
+    setSelectedDelevaryMethodId(country);
+  }
+
+  function handleStartPayment() {
+    console.log(orderData);
+    setActiveTab("payment");
+  }
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    redirect("/");
+  }
+
+  if (isLoadingGetCountries) {
+    return (
+      <div className="my-20 mb-56">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (getCountriesError) {
+    return (
+      <div className=" my-20 text-center">
+        <h1 className="p-5">{getCountriesError.name}</h1>
+        <p className="p-5">{getCountriesError.message}</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -59,27 +152,37 @@ const CheckoutPage = () => {
                     className={`flex-1 text-center pb-2 ${
                       activeTab === "information"
                         ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
-                        : "text-gray-500"
+                        : `text-black `
                     }`}
                   >
                     Information
                   </button>
                   <button
+                    disabled={!orderData.addressId}
                     onClick={() => setActiveTab("shipping")}
                     className={`flex-1 text-center pb-2 ${
                       activeTab === "shipping"
                         ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
-                        : "text-gray-500"
+                        : `${
+                            orderData.addressId
+                              ? "text-black "
+                              : "text-gray-500"
+                          } `
                     }`}
                   >
                     Shipping
                   </button>
                   <button
+                    disabled={!orderData.delevaryMethodId}
                     onClick={() => setActiveTab("payment")}
                     className={`flex-1 text-center pb-2 ${
                       activeTab === "payment"
                         ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
-                        : "text-gray-500"
+                        : `${
+                            orderData.delevaryMethodId
+                              ? "text-black "
+                              : "text-gray-500"
+                          } `
                     }`}
                   >
                     Payment
@@ -89,236 +192,32 @@ const CheckoutPage = () => {
 
               {/* Information Tab */}
               {activeTab === "information" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white shadow-sm rounded-lg p-6 space-y-6"
-                >
-                  <h2 className="text-xl font-medium text-gray-900">
-                    Contact Information
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="full_name"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        id="full_name"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="+1 (555) 123-4567"
-                      />
-                    </div>
-                  </div>
-
-                  <h2 className="text-xl font-medium text-gray-900 pt-4 border-t border-gray-200">
-                    Shipping Address
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                      <label
-                        htmlFor="address"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        id="address"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="123 Main St"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label
-                        htmlFor="addressop"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address Details (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        id="addressop"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="123 Main St"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="country"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Country
-                      </label>
-                      <select
-                        id="country"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option>United States</option>
-                        <option>Canada</option>
-                        <option>United Kingdom</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="city"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        id="city"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="New York"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="zip"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      ZIP/Postal Code
-                    </label>
-                    <input
-                      type="text"
-                      id="zip"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="10001"
-                    />
-                  </div>
-
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="save-info"
-                      checked={saveInfo}
-                      onChange={(e) => setSaveInfo(e.target.checked)}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor="save-info"
-                      className="ml-2 block text-sm text-gray-700"
-                    >
-                      Save this information for next time
-                    </label>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => setActiveTab("shipping")}
-                    className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium"
-                  >
-                    Continue to Shipping
-                  </motion.button>
-                </motion.div>
+                <AddressTap
+                  setActiveTab={handleActiveTap}
+                  UpdateOrderData={handleUpdateOrderData}
+                  setSelectedAddress={handleSelectAddress}
+                  selectedAddress={selectedAddress}
+                  countries={countries}
+                  selectCountry={handleSelectCountry}
+                  selectedCountry={selectedCountry}
+                />
               )}
 
               {/* Shipping Tab */}
-              {activeTab === "shipping" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white shadow-sm rounded-lg p-6 space-y-6"
-                >
-                  <h2 className="text-xl font-medium text-gray-900">
-                    Shipping Method
-                  </h2>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="standard"
-                          name="shipping"
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                          defaultChecked
-                        />
-                        <label
-                          htmlFor="standard"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          Standard Shipping
-                        </label>
-                      </div>
-                      <span className="text-sm text-gray-600">$9.99</span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="express"
-                          name="shipping"
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor="express"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          Express Shipping
-                        </label>
-                      </div>
-                      <span className="text-sm text-gray-600">$19.99</span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="free"
-                          name="shipping"
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor="free"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          Free Shipping (5-7 business days)
-                        </label>
-                      </div>
-                      <span className="text-sm text-gray-600">$0.00</span>
-                    </div>
+              {activeTab === "shipping" &&
+                (selectedCountry ? (
+                  <Shipping
+                    countryId={selectedCountry.id}
+                    updateOrderData={handleUpdateOrderData}
+                    selecteDelevaryMethodId={handleSelectedDelevaryMethodId}
+                    selectedDelevaryMethodId={selectedDelevaryMethodId}
+                    startPayment={handleStartPayment}
+                  />
+                ) : (
+                  <div className="text-center my-20">
+                    <h1>Please Select your Address...</h1>
                   </div>
-
-                  <div className="flex justify-between pt-4">
-                    <button
-                      onClick={() => setActiveTab("information")}
-                      className="text-indigo-600 hover:text-indigo-500 font-medium"
-                    >
-                      ← Back to Information
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      onClick={() => setActiveTab("payment")}
-                      className="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition font-medium"
-                    >
-                      Continue to Payment
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
+                ))}
 
               {/* Payment Tab */}
               {activeTab === "payment" && (

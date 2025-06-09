@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CategoriesList() {
   const categories = [
@@ -31,7 +32,8 @@ export default function CategoriesList() {
 
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
           {categories.map((cat, index) => (
-            <div
+            <Link
+              href={"/shopGrid"}
               key={index}
               className="flex flex-col items-center text-center group"
             >
@@ -47,7 +49,7 @@ export default function CategoriesList() {
               <span className="mt-2 text-sm md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
                 {cat.name}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

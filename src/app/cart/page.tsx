@@ -24,6 +24,9 @@ const CartPage = () => {
     deleteAppliedCoupon,
   } = useContext(CartContext);
 
+
+  console.log(margeItems)
+
   const defualtCoupon = summaryCart.coupon ? summaryCart.coupon : "";
   const [coupon, setCoupon] = useState<string>(defualtCoupon);
 
