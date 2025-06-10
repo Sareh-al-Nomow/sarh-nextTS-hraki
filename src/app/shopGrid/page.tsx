@@ -13,23 +13,47 @@ import ProductItem from "@/components/homePage/products/ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { ProductsResponse } from "@/lib/models/productsModal";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/lib/axios/getProductsAxios";
+import { getProducts, GetProductsParams } from "@/lib/axios/getProductsAxios";
 import Spinner from "@/components/UI/SpinnerLoading";
 import { getCategories } from "@/lib/axios/categoryAxios";
 import { organizeCategories } from "@/utils/organizeCategories";
-import { useProductsByMultipleCategories } from "@/hooks/useProductsByMultipleCategories";
+import { transformProduct } from "@/utils/trnsformProduct";
 
-// Define category and subcategory types
-interface Category {
-  name: string;
-  subcategories?: string[];
-}
-
-const MAX_PRICE = 1000; // Replace with your actual max price (e.g., from API)
+const MAX_PRICE = 1000;
 
 const ShopGridPage = () => {
+  // State
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("featured");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({});
+  const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null);
+  const [likedProducts, setLikedProducts] = useState<number[]>([]);
+  const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
+    []
+  );
+  const [productQuery, setProductQuery] = useState<GetProductsParams>({
+    page: 1,
+    limit: 10,
+  });
+
+  // Fetch products
   const {
-    data: DataCategories,
+    data: productsData,
+    isLoading: isLoadingFetchProducts,
+    error,
+    // refetch,
+  } = useQuery<ProductsResponse, Error>({
+    queryKey: ["products", productQuery],
+    queryFn: () => getProducts(productQuery),
+  });
+
+  // Fetch categories
+  const {
+    data: categoriesData,
     isLoading: isLoadingCategory,
     error: errorCategory,
   } = useQuery({
@@ -37,153 +61,15 @@ const ShopGridPage = () => {
     queryFn: getCategories,
   });
 
-  // Demo data
-  const demoProducts: FrontendProduct[] = [
-    {
-      id: 1,
-      name: "Wireless Bluetooth Headphones",
-      price: "89.99",
-      originalPrice: "129.99",
-      rating: 4.5,
-      images: [
-        { single_image: "", thumb_image: "" }
-      ],
-      isNew: true,
-      tags: ["BESTSELLER", "HOT", "Electronics/Headphones"],
-      description:
-        "Premium noise-cancelling wireless headphones with 30hr battery life",
-      features: ["Active Noise Cancellation", "30hr Playtime", "Built-in Mic"],
-      colors: ["#000000", "#3b82f6", "#ef4444"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 2,
-      name: "Smart Fitness Watch",
-      price: "149.99",
-      rating: 4.2,
-      tags: ["NEW", "Electronics/Wearables"],
-      description: "Track your workouts, heart rate, and sleep patterns",
-      features: ["Heart Rate Monitor", "Water Resistant", "7-day Battery"],
-      colors: ["#000000", "#ffffff"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 3,
-      name: "Portable Bluetooth Speaker",
-      price: "59.99",
-      originalPrice: "79.99",
-      rating: 4.3,
-      tags: ["BESTSELLER", "Electronics/Audio"],
-      description: "High-quality sound with 20hr battery life",
-      features: ["360° Sound", "IPX7 Waterproof", "Bluetooth 5.0"],
-      colors: ["#000000", "#10b981"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 4,
-      name: "Ultra HD 4K Camera",
-      price: "499.99",
-      rating: 4.8,
-      isNew: true,
-      tags: ["NEW", "HOT", "Electronics/Cameras"],
-      description: "Professional 4K camera with 24.2MP sensor",
-      features: ["4K Video", "Wi-Fi Connectivity", "3-inch Touchscreen"],
-      colors: ["#000000"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 5,
-      name: "Ergonomic Office Chair",
-      price: "249.99",
-      originalPrice: "299.99",
-      rating: 4.6,
-      tags: ["BESTSELLER", "Furniture/Office"],
-      description: "Comfortable chair with lumbar support",
-      features: ["Adjustable Height", "Breathable Mesh", "360° Swivel"],
-      colors: ["#000000", "#6b7280"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 6,
-      name: "Wireless Charging Pad",
-      price: "29.99",
-      rating: 4.1,
-      tags: ["NEW", "Electronics/Accessories"],
-      description: "Fast charging pad for all Qi-enabled devices",
-      features: ["15W Fast Charge", "LED Indicator", "Non-slip Surface"],
-      colors: ["#000000", "#ffffff"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 7,
-      name: "Noise Cancelling Earbuds",
-      price: "129.99",
-      originalPrice: "159.99",
-      rating: 4.4,
-      isNew: true,
-      tags: ["HOT", "Electronics/Headphones"],
-      description: "True wireless earbuds with active noise cancellation",
-      features: ["ANC Technology", "24hr Battery", "Touch Controls"],
-      colors: ["#000000", "#3b82f6"],
-      uuid: "",
-      image: "",
-    },
-    {
-      id: 8,
-      name: "Smart Home Hub",
-      price: "199.99",
-      rating: 4.7,
-      tags: ["NEW", "BESTSELLER", "Electronics/Smart Home"],
-      description: "Control all your smart devices from one place",
-      features: ["Voice Assistant", "100+ Compatible Devices", "4K Streaming"],
-      colors: ["#000000", "#6b7280"],
-      uuid: "",
-      image: "",
-    },
-  ];
+  // Organize categories data
+  const organizedCategories = categoriesData
+    ? organizeCategories(categoriesData.data)
+    : null;
 
-  // State
-  const [products, setProducts] = useState<FrontendProduct[]>(demoProducts);
-  const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState("featured");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<
-    Record<string, boolean>
-  >({});
-  const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null); // 'min' or 'max'
-  const [likedProducts, setLikedProducts] = useState<number[]>([]);
-  const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
-    []
-  );
+  // Transform products data
+  const displayProducts = productsData?.data.map((p) => transformProduct(p));
 
-  const {
-    // data,
-    isLoading: isLoadingFetchProducts,
-    error,
-    // refetch,
-  } = useQuery<ProductsResponse, Error>({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
-
-  const {
-    filteredProductsByCatedgoyiesIds: productsByCIds,
-    isLoading: isLoadingGetPbyIds,
-  } = useProductsByMultipleCategories(selectedCategoriesIds);
-
-  // useEffect(() => {
-  //   setProducts(productsByCIds);
-  // }, [productsByCIds]);
-
+  // Handle wishlist
   useEffect(() => {
     const stored = localStorage.getItem("wishlist");
     const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
@@ -219,35 +105,7 @@ const ShopGridPage = () => {
     );
   };
 
-  // Define categories with subcategories
-  const categories: Category[] = [
-    {
-      name: "Electronics",
-      subcategories: [
-        "Headphones",
-        "Wearables",
-        "Audio",
-        "Cameras",
-        "Accessories",
-        "Smart Home",
-      ],
-    },
-    {
-      name: "Furniture",
-      subcategories: ["Office", "Living Room", "Bedroom"],
-    },
-    {
-      name: "BESTSELLER",
-    },
-    {
-      name: "NEW",
-    },
-    {
-      name: "HOT",
-    },
-  ];
-
-  // Toggle category expansion
+  // Handle category selection
   const toggleCategoryExpansion = (categoryName: string) => {
     setExpandedCategories((prev) => ({
       ...prev,
@@ -255,16 +113,11 @@ const ShopGridPage = () => {
     }));
   };
 
-  // Extract all tags for filtering
-  // const allTags = Array.from(
-  //   new Set(demoProducts.flatMap((p) => p.tags || []))
-  // );
-
+  // Handle price range slider
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!activeHandle) return;
 
-      // Ensure target is an HTMLElement
       const target = e.target as HTMLElement;
       const slider = target.closest(".relative") as HTMLElement | null;
       if (!slider) return;
@@ -298,90 +151,24 @@ const ShopGridPage = () => {
     };
   }, [activeHandle, priceRange]);
 
-  // Filter and sort products with simulated loading
-  useEffect(() => {
-    const filterProducts = async () => {
-      setIsLoading(true);
-
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      let filtered = [...demoProducts];
-
-      // Search filter
-      if (searchQuery) {
-        filtered = filtered.filter((p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-
-      // Category filter
-      if (selectedCategories.length > 0) {
-        filtered = filtered.filter(
-          (p) =>
-            p.tags &&
-            p.tags.some((tag) => {
-              // Check if any tag matches the selected categories or subcategories
-              return selectedCategories.some((selectedCat) => {
-                // For subcategories (format: "Parent/Sub")
-                if (selectedCat.includes("/")) {
-                  return tag === selectedCat;
-                }
-                // For main categories or standalone tags
-                return tag === selectedCat || tag.startsWith(`${selectedCat}/`);
-              });
-            })
-        );
-      }
-
-      // Price filter
-      filtered = filtered.filter(
-        (p) =>
-          Number(p.price) >= priceRange[0] && Number(p.price) <= priceRange[1]
-      );
-
-      // Sorting
-      switch (sortOption) {
-        case "price-low":
-          filtered.sort((a, b) => Number(a.price) - Number(b.price));
-          break;
-        case "price-high":
-          filtered.sort((a, b) => Number(b.price) - Number(a.price));
-          break;
-        case "rating":
-          filtered.sort((a, b) => b.rating - a.rating);
-          break;
-        case "newest":
-          filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-          break;
-        default:
-          // "featured" - keep original order
-          break;
-      }
-
-      setProducts(filtered);
-      setIsLoading(false);
-    };
-
-    filterProducts();
-  }, [searchQuery, sortOption, priceRange, selectedCategories]);
-
-  // Toggle category selection
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
-
-  const toggleCategoryId = (categoryId: number) => {
+  // Handle category selection
+  const toggleCategoryId = async (categoryId: number) => {
     setSelectedCategoriesIds((prev) =>
       prev.includes(categoryId)
         ? prev.filter((c) => c !== categoryId)
-        : [...prev, categoryId]
+        : [categoryId]
     );
-    console.log(categoryId);
+
+    setProductQuery((prev) => {
+      if (prev.categoryId === categoryId) {
+        const { categoryId: _, ...rest } = prev;
+        return rest as Omit<typeof prev, "categoryId">;
+      }
+      return {
+        ...prev,
+        categoryId,
+      };
+    });
   };
 
   // Reset all filters
@@ -389,16 +176,16 @@ const ShopGridPage = () => {
     setSearchQuery("");
     setSortOption("featured");
     setPriceRange([0, 500]);
-    setSelectedCategories([]);
+    setSelectedCategoriesIds([]);
     setExpandedCategories({});
+    setProductQuery({
+      page: 1,
+      limit: 10,
+    });
   };
 
-  // Format price for display
-  // const formatPrice = (price: number) => {
-  //   return price === 500 ? "$500+" : `$${price}`;
-  // };
-
-  if (isLoadingFetchProducts || isLoadingCategory) {
+  // Loading and error states
+  if (isLoadingCategory) {
     return (
       <div className="my-40">
         <Spinner />
@@ -414,20 +201,6 @@ const ShopGridPage = () => {
       </div>
     );
   }
-
-  const viewCategory =
-    DataCategories && organizeCategories(DataCategories.data);
-  console.log(viewCategory);
-
-  // console.log(selectedCategories);
-  console.log(selectedCategoriesIds);
-  console.log(productsByCIds);
-
-  const displayProducts =
-    selectedCategoriesIds.length > 0 ? productsByCIds : products;
-
-  const displayIsLoading =
-    selectedCategoriesIds.length > 0 ? isLoadingGetPbyIds : isLoading;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -519,7 +292,7 @@ const ShopGridPage = () => {
                 </button>
               </div>
 
-              {/* Price Range - Enhanced */}
+              {/* Price Range */}
               <div className="mb-8">
                 <h4 className="font-medium mb-4 text-gray-700">Price Range</h4>
                 <div className="space-y-4">
@@ -534,12 +307,12 @@ const ShopGridPage = () => {
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
                       style={{ left: `${(priceRange[0] / MAX_PRICE) * 100}%` }}
-                      onMouseDown={() => setActiveHandle("min")} // Mark min handle as active
+                      onMouseDown={() => setActiveHandle("min")}
                     />
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
                       style={{ left: `${(priceRange[1] / MAX_PRICE) * 100}%` }}
-                      onMouseDown={() => setActiveHandle("max")} // Mark max handle as active
+                      onMouseDown={() => setActiveHandle("max")}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -565,7 +338,7 @@ const ShopGridPage = () => {
                       <input
                         type="number"
                         min={priceRange[0] + 10}
-                        max={MAX_PRICE} // Now dynamic
+                        max={MAX_PRICE}
                         value={priceRange[1]}
                         onChange={(e) => {
                           const value = Math.max(
@@ -581,11 +354,11 @@ const ShopGridPage = () => {
                 </div>
               </div>
 
-              {/* Categories with Subcategories */}
+              {/* Categories */}
               <div>
                 <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
                 <div className="space-y-2">
-                  {viewCategory?.parentsWithChildren.map((category) => (
+                  {organizedCategories?.parentsWithChildren.map((category) => (
                     <div key={category.description.name} className="space-y-1">
                       <motion.button
                         whileTap={{ scale: 0.98 }}
@@ -595,14 +368,12 @@ const ShopGridPage = () => {
                         onClick={() =>
                           category.children
                             ? toggleCategoryExpansion(category.description.name)
-                            : toggleCategory(category.description.name)
+                            : toggleCategoryId(category.id)
                         }
                       >
                         <span
                           className={
-                            selectedCategories.includes(
-                              category.description.name
-                            )
+                            selectedCategoriesIds.includes(category.id)
                               ? "text-blue-600"
                               : "text-gray-700"
                           }
@@ -629,7 +400,6 @@ const ShopGridPage = () => {
                             className="pl-4 space-y-1"
                           >
                             {category.children.map((subcategory) => {
-                              const fullCategoryPath = `${category.description.name}/${subcategory}`;
                               return (
                                 <motion.label
                                   key={subcategory.id}
@@ -638,18 +408,20 @@ const ShopGridPage = () => {
                                 >
                                   <div className="relative">
                                     <input
-                                      type="checkbox"
+                                      id={`${subcategory.id}`}
+                                      type="radio"
+                                      name="categoryId"
                                       checked={selectedCategoriesIds.includes(
-                                        category.id
+                                        subcategory.id
                                       )}
                                       onChange={() =>
-                                        toggleCategoryId(category.id)
+                                        toggleCategoryId(subcategory.id)
                                       }
                                       className="sr-only peer"
                                     />
                                     <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
                                       {selectedCategoriesIds.includes(
-                                        category.id
+                                        subcategory.id
                                       ) && (
                                         <svg
                                           className="w-2.5 h-2.5 text-white"
@@ -669,8 +441,8 @@ const ShopGridPage = () => {
                                   </div>
                                   <span
                                     className={`ml-2 text-sm ${
-                                      selectedCategories.includes(
-                                        fullCategoryPath
+                                      selectedCategoriesIds.includes(
+                                        subcategory.id
                                       )
                                         ? "text-blue-600"
                                         : "text-gray-600"
@@ -685,53 +457,55 @@ const ShopGridPage = () => {
                         )}
                     </div>
                   ))}
-                  {viewCategory?.parentsWithoutChildren.map((category) => {
-                    // const fullCategoryPath = `${category.description.name}/${category}`;
-                    return (
-                      <motion.label
-                        key={category.id}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center group cursor-pointer"
-                      >
-                        <div className="relative">
-                          <input
-                            type="checkbox"
-                            checked={selectedCategoriesIds.includes(
-                              category.id
-                            )}
-                            onChange={() => toggleCategoryId(category.id)}
-                            className="sr-only peer"
-                          />
-                          <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                            {selectedCategoriesIds.includes(category.id) && (
-                              <svg
-                                className="w-2.5 h-2.5 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={3}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        </div>
-                        <span
-                          className={`ml-2 text-sm ${
-                            selectedCategoriesIds.includes(category.id)
-                              ? "text-blue-600"
-                              : "text-gray-600"
-                          } group-hover:text-gray-900 transition-colors`}
+                  {organizedCategories?.parentsWithoutChildren.map(
+                    (category) => {
+                      return (
+                        <motion.label
+                          key={category.id}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center group cursor-pointer"
                         >
-                          {category.description.name}
-                        </span>
-                      </motion.label>
-                    );
-                  })}
+                          <div className="relative">
+                            <input
+                              type="radio"
+                              name="categoryId"
+                              checked={selectedCategoriesIds.includes(
+                                category.id
+                              )}
+                              onChange={() => toggleCategoryId(category.id)}
+                              className="sr-only peer"
+                            />
+                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                              {selectedCategoriesIds.includes(category.id) && (
+                                <svg
+                                  className="w-2.5 h-2.5 text-white"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={3}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                          <span
+                            className={`ml-2 text-sm ${
+                              selectedCategoriesIds.includes(category.id)
+                                ? "text-blue-600"
+                                : "text-gray-600"
+                            } group-hover:text-gray-900 transition-colors`}
+                          >
+                            {category.description.name}
+                          </span>
+                        </motion.label>
+                      );
+                    }
+                  )}
                 </div>
               </div>
             </div>
@@ -742,37 +516,39 @@ const ShopGridPage = () => {
             {/* Results Count */}
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
-                Showing {products.length} of {demoProducts.length} products
+                Showing {displayProducts?.length || 0} products
               </p>
-              {selectedCategories.length > 0 && (
+              {selectedCategoriesIds.length > 0 && (
                 <div className="flex gap-2 flex-wrap justify-end">
-                  {selectedCategories.map((category) => {
-                    const displayName = category.includes("/")
-                      ? category.split("/")[1]
-                      : category;
-                    return (
+                  {selectedCategoriesIds.map((categoryId) => {
+                    const category = [
+                      ...(organizedCategories?.parentsWithChildren || []),
+                      ...(organizedCategories?.parentsWithoutChildren || []),
+                    ].find((c) => c.id === categoryId);
+
+                    return category ? (
                       <motion.span
-                        key={category}
+                        key={categoryId}
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full flex items-center"
                       >
-                        {displayName}
+                        {category.description.name}
                         <button
-                          onClick={() => toggleCategory(category)}
+                          onClick={() => toggleCategoryId(categoryId)}
                           className="ml-1.5 text-blue-500 hover:text-blue-700"
                         >
                           <FiX size={14} />
                         </button>
                       </motion.span>
-                    );
+                    ) : null;
                   })}
                 </div>
               )}
             </div>
 
             {/* Products */}
-            {displayIsLoading ? (
+            {isLoadingFetchProducts ? (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {[...Array(8)].map((_, i) => (
                   <motion.div
@@ -793,14 +569,14 @@ const ShopGridPage = () => {
                   </motion.div>
                 ))}
               </div>
-            ) : displayProducts.length > 0 ? (
+            ) : (displayProducts ?? []).length > 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {displayProducts.map((product) => (
+                {(displayProducts ?? []).map((product) => (
                   <ProductItem
                     key={product.id}
                     product={product}
@@ -833,7 +609,7 @@ const ShopGridPage = () => {
                     No products found
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    We couldnt find any items matching your criteria
+                    We couldn`t find any items matching your criteria
                   </p>
                   <button
                     onClick={resetFilters}
@@ -877,7 +653,7 @@ const ShopGridPage = () => {
               </div>
 
               <div className="p-4 overflow-y-auto h-[calc(100%-120px)]">
-                {/* Price Range - Enhanced for Mobile */}
+                {/* Price Range */}
                 <div className="mb-8">
                   <h4 className="font-medium mb-4 text-gray-700">
                     Price Range
@@ -896,14 +672,14 @@ const ShopGridPage = () => {
                         style={{
                           left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
                         }}
-                        onMouseDown={() => setActiveHandle("min")} // Mark min handle as active
+                        onMouseDown={() => setActiveHandle("min")}
                       />
                       <div
                         className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
                         style={{
                           left: `${(priceRange[1] / MAX_PRICE) * 100}%`,
                         }}
-                        onMouseDown={() => setActiveHandle("max")} // Mark max handle as active
+                        onMouseDown={() => setActiveHandle("max")}
                       />
                     </div>
                     <div className="flex justify-between">
@@ -929,7 +705,7 @@ const ShopGridPage = () => {
                         <input
                           type="number"
                           min={priceRange[0] + 10}
-                          max={MAX_PRICE} // Now dynamic
+                          max={MAX_PRICE}
                           value={priceRange[1]}
                           onChange={(e) => {
                             const value = Math.max(
@@ -945,108 +721,166 @@ const ShopGridPage = () => {
                   </div>
                 </div>
 
-                {/* Categories with Subcategories for Mobile */}
+                {/* Categories */}
                 <div>
                   <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
                   <div className="space-y-2">
-                    {categories.map((category) => (
-                      <div key={category.name} className="space-y-1">
-                        <motion.button
-                          whileTap={{ scale: 0.98 }}
-                          className={`flex items-center justify-between w-full text-left ${
-                            category.subcategories ? "font-semibold" : ""
-                          }`}
-                          onClick={() =>
-                            category.subcategories
-                              ? toggleCategoryExpansion(category.name)
-                              : toggleCategory(category.name)
-                          }
+                    {organizedCategories?.parentsWithChildren.map(
+                      (category) => (
+                        <div
+                          key={category.description.name}
+                          className="space-y-1"
                         >
-                          <span
-                            className={
-                              selectedCategories.includes(category.name)
-                                ? "text-blue-600"
-                                : "text-gray-700"
+                          <motion.button
+                            whileTap={{ scale: 0.98 }}
+                            className={`flex items-center justify-between w-full text-left ${
+                              category.children ? "font-semibold" : ""
+                            }`}
+                            onClick={() =>
+                              category.children
+                                ? toggleCategoryExpansion(
+                                    category.description.name
+                                  )
+                                : toggleCategoryId(category.id)
                             }
                           >
-                            {category.name}
-                          </span>
-                          {category.subcategories && (
-                            <FiChevronRight
-                              className={`transition-transform ${
-                                expandedCategories[category.name]
-                                  ? "transform rotate-90"
-                                  : ""
-                              }`}
-                            />
-                          )}
-                        </motion.button>
-
-                        {category.subcategories &&
-                          expandedCategories[category.name] && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
-                              className="pl-4 space-y-1"
+                            <span
+                              className={
+                                selectedCategoriesIds.includes(category.id)
+                                  ? "text-blue-600"
+                                  : "text-gray-700"
+                              }
                             >
-                              {category.subcategories.map((subcategory) => {
-                                const fullCategoryPath = `${category.name}/${subcategory}`;
-                                return (
-                                  <motion.label
-                                    key={subcategory}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center group cursor-pointer"
-                                  >
-                                    <div className="relative">
-                                      <input
-                                        type="checkbox"
-                                        checked={selectedCategories.includes(
-                                          fullCategoryPath
-                                        )}
-                                        onChange={() =>
-                                          toggleCategory(fullCategoryPath)
-                                        }
-                                        className="sr-only peer"
-                                      />
-                                      <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                                        {selectedCategories.includes(
-                                          fullCategoryPath
-                                        ) && (
-                                          <svg
-                                            className="w-2.5 h-2.5 text-white"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth={3}
-                                              d="M5 13l4 4L19 7"
-                                            />
-                                          </svg>
-                                        )}
-                                      </div>
-                                    </div>
-                                    <span
-                                      className={`ml-2 text-sm ${
-                                        selectedCategories.includes(
-                                          fullCategoryPath
-                                        )
-                                          ? "text-blue-600"
-                                          : "text-gray-600"
-                                      } group-hover:text-gray-900 transition-colors`}
+                              {category.description.name}
+                            </span>
+                            {category.children && (
+                              <FiChevronRight
+                                className={`transition-transform ${
+                                  expandedCategories[category.description.name]
+                                    ? "transform rotate-90"
+                                    : ""
+                                }`}
+                              />
+                            )}
+                          </motion.button>
+
+                          {category.children &&
+                            expandedCategories[category.description.name] && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="pl-4 space-y-1"
+                              >
+                                {category.children.map((subcategory) => {
+                                  return (
+                                    <motion.label
+                                      key={subcategory.id}
+                                      whileTap={{ scale: 0.95 }}
+                                      className="flex items-center group cursor-pointer"
                                     >
-                                      {subcategory}
-                                    </span>
-                                  </motion.label>
-                                );
-                              })}
-                            </motion.div>
-                          )}
-                      </div>
-                    ))}
+                                      <div className="relative">
+                                        <input
+                                          type="radio"
+                                          name="categoryId"
+                                          checked={selectedCategoriesIds.includes(
+                                            subcategory.id
+                                          )}
+                                          onChange={() =>
+                                            toggleCategoryId(subcategory.id)
+                                          }
+                                          className="sr-only peer"
+                                        />
+                                        <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                          {selectedCategoriesIds.includes(
+                                            subcategory.id
+                                          ) && (
+                                            <svg
+                                              className="w-2.5 h-2.5 text-white"
+                                              fill="none"
+                                              viewBox="0 0 24 24"
+                                              stroke="currentColor"
+                                            >
+                                              <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={3}
+                                                d="M5 13l4 4L19 7"
+                                              />
+                                            </svg>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <span
+                                        className={`ml-2 text-sm ${
+                                          selectedCategoriesIds.includes(
+                                            subcategory.id
+                                          )
+                                            ? "text-blue-600"
+                                            : "text-gray-600"
+                                        } group-hover:text-gray-900 transition-colors`}
+                                      >
+                                        {subcategory.description.name}
+                                      </span>
+                                    </motion.label>
+                                  );
+                                })}
+                              </motion.div>
+                            )}
+                        </div>
+                      )
+                    )}
+                    {organizedCategories?.parentsWithoutChildren.map(
+                      (category) => {
+                        return (
+                          <motion.label
+                            key={category.id}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center group cursor-pointer"
+                          >
+                            <div className="relative">
+                              <input
+                                type="radio"
+                                name="categoryId"
+                                checked={selectedCategoriesIds.includes(
+                                  category.id
+                                )}
+                                onChange={() => toggleCategoryId(category.id)}
+                                className="sr-only peer"
+                              />
+                              <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                {selectedCategoriesIds.includes(
+                                  category.id
+                                ) && (
+                                  <svg
+                                    className="w-2.5 h-2.5 text-white"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={3}
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
+                            <span
+                              className={`ml-2 text-sm ${
+                                selectedCategoriesIds.includes(category.id)
+                                  ? "text-blue-600"
+                                  : "text-gray-600"
+                              } group-hover:text-gray-900 transition-colors`}
+                            >
+                              {category.description.name}
+                            </span>
+                          </motion.label>
+                        );
+                      }
+                    )}
                   </div>
                 </div>
               </div>

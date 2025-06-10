@@ -85,7 +85,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
           className="relative aspect-square"
         >
           <Image
-            src={"/image/products/img-1.jpg"}
+            src={product.image}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
