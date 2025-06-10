@@ -7,6 +7,8 @@ import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { CartContext } from "@/store/CartContext";
+import { AuthContext } from "@/store/AuthContext";
+import { AuthModalContext } from "@/store/AuthModalContext";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,9 +39,12 @@ const ProductItem: React.FC<ProductItemProp> = ({
   likedProducts,
 }) => {
   const { addToCart, isLoadingAddToCart } = useContext(CartContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   const [quickViewProduct, setQuickViewProduct] =
     useState<FrontendProduct | null>(null);
+
+  const { openAuthModal } = useContext(AuthModalContext);
 
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollY");
@@ -48,6 +53,15 @@ const ProductItem: React.FC<ProductItemProp> = ({
       sessionStorage.removeItem("scrollY");
     }
   }, []);
+
+  function handleAddToCart() {
+    if (isAuthenticated) {
+      addToCart(product.id, 1);
+    } else {
+      setQuickViewProduct(null);
+      openAuthModal();
+    }
+  }
 
   return (
     <>
@@ -166,7 +180,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   isLoadingAddToCart ? "opacity-40" : ""
                 }`}
                 aria-label="Add to cart"
-                onClick={() => addToCart(product.id, 1)}
+                onClick={handleAddToCart}
                 disabled={isLoadingAddToCart}
               >
                 <FiShoppingCart size={16} />
@@ -294,7 +308,10 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
-                  <button className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition">
+                  <button
+                    onClick={handleAddToCart}
+                    className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition"
+                  >
                     <FiShoppingCart /> Add to Cart
                   </button>
                   <Link

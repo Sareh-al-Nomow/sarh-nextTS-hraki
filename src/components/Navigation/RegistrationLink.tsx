@@ -10,11 +10,14 @@ import toast from "react-hot-toast";
 import { login, loginRequest } from "@/lib/axios/loginAxios";
 import { otpRequest, otpVerify } from "@/lib/axios/otpAxios";
 import { AuthContext } from "@/store/AuthContext";
+import { AuthModalContext } from "@/store/AuthModalContext";
 
 export default function RegistrationLink() {
   const { login: loginCxt } = useContext(AuthContext);
+  const { openAuthModal, closeAuthModal, isAuthModalOpen } =
+    useContext(AuthModalContext);
 
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  // const [isAuthModalOpen, setisAuthModalOpen] = useState(false);
   const [contentView, setContentView] = useState<string | null>("login");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formInput, setFormInput] = useState({
@@ -151,7 +154,7 @@ export default function RegistrationLink() {
 
   // handle close modal and rest it ...
   function handleCloseModal() {
-    setIsOpenModal(false);
+    closeAuthModal();
     setContentView("login");
   }
 
@@ -172,13 +175,13 @@ export default function RegistrationLink() {
       <GoSignIn
         className="pr-text text-2xl cursor-pointer"
         onClick={() => {
-          setIsOpenModal(true);
+          openAuthModal();
           setErrors({});
         }}
       />
 
-      <Modal open={isOpenModal}>
-        <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
+      <Modal open={isAuthModalOpen}>
+        <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative z-[1500]">
           {/* زر الإغلاق */}
           <button
             onClick={handleCloseModal}

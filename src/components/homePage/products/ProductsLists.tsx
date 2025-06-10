@@ -105,8 +105,12 @@ export default function ProductsLists() {
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-cyan-50">
-      <HorizontalProductList products={displayedProducts} />
-      <HorizontalProductList products={displayedProducts} />
+      <HorizontalProductList title="Best Saller" products={displayedProducts} />
+      <HorizontalProductList
+        title="Suggestion for you"
+        products={displayedProducts}
+      />
+      <HorizontalProductList title="Children" products={displayedProducts} />
     </div>
   );
 }

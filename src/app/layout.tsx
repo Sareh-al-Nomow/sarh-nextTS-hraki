@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navigation/Navbar";
 import Footer from "@/components/footer/footer";
 import CartContextProvider from "@/store/CartContext";
+import { AuthModalProvider } from "@/store/AuthModalContext";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -29,15 +30,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dosis.variable} antialiased`}>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <CartContextProvider>
-              <Toaster />
-              <Navbar />
-              <div id="root-modal"></div>
-              {children}
-              <Footer />
-            </CartContextProvider>
-          </AuthProvider>
+          <AuthModalProvider>
+            <AuthProvider>
+              <CartContextProvider>
+                <Toaster />
+                <Navbar />
+                <div id="root-modal"></div>
+                {children}
+                <Footer />
+              </CartContextProvider>
+            </AuthProvider>
+          </AuthModalProvider>
         </QueryClientProvider>
       </body>
     </html>

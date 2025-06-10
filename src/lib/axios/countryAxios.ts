@@ -13,7 +13,6 @@ export const getCountries = async (): Promise<Country[]> => {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
@@ -36,7 +35,6 @@ export const getCountry = async (
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;

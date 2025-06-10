@@ -28,8 +28,6 @@ const CheckoutPage = () => {
     number | null
   >(null);
 
-  console.log(selectedCountry);
-
   interface OrderDataShape {
     addressId: number | null;
     delevaryMethodId: number | null;
@@ -38,8 +36,6 @@ const CheckoutPage = () => {
     addressId: null,
     delevaryMethodId: null,
   });
-
-  console.log(orderData);
 
   const { margeItems, summaryCart } = useContext(CartContext);
 
@@ -51,6 +47,9 @@ const CheckoutPage = () => {
     queryKey: ["countries"],
     queryFn: getCountries,
   });
+
+
+  
 
   useEffect(() => {
     setCountries(dataCountries ?? null);
@@ -78,6 +77,7 @@ const CheckoutPage = () => {
   function handleSelectCountry(country: Country) {
     setSelectedCountry(country);
   }
+
   function handleSelectedDelevaryMethodId(country: number | null) {
     setSelectedDelevaryMethodId(country);
   }

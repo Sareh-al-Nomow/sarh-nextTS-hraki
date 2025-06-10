@@ -63,8 +63,6 @@ const Shipping: React.FC<{
     );
   }
 
-  console.log(data?.ShippingZone[0].zone_methods[0].method.name);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

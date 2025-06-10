@@ -77,6 +77,9 @@ const AddressTap: React.FC<{
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    if (showCancelButton) {
+      setShowCancelButton(false);
+    }
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -180,6 +183,23 @@ const AddressTap: React.FC<{
   }
 
   function handleFinishAddressFiled() {
+    const enteredData: AddAddressRequest = {
+      address_1: String(formData["address_1"]),
+      address_2: String(formData["address_2"]),
+      full_name: String(formData["full_name"]),
+      phone_number: String(formData["phone_number"]),
+      postcode: String(formData["postcode"]),
+      city_id: Number(formData["city_id"]),
+      country_id: Number(formData["country_id"]),
+    };
+
+    const errors = validateAddressForm(enteredData);
+    if (errors.length > 0) {
+      setAddressError(errors);
+      setIsModalOpen(true);
+      return;
+    }
+
     if (selectedAddress?.id) {
       UpdateOrderData("addressId", selectedAddress?.id);
       setActiveTab("shipping");
