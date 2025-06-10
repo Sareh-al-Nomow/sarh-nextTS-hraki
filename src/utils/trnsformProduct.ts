@@ -43,5 +43,7 @@ export function transformProduct(product: Product): FrontendProduct {
       attribute_name: attr.attribute?.attribute_name,
       option_text: attr.option_text,
     })),
+    categoryId: product.category_id,
+    createdAt: product.created_at,
   };
 }
