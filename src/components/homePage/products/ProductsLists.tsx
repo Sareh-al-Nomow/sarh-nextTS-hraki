@@ -18,7 +18,7 @@ export default function ProductsLists() {
     queryFn: ({ signal }) => getProducts(undefined, signal),
   });
 
-  const displayedProducts = data?.data?.map(transformProduct) || [];
+  const displayedProducts = data?.data?.map(transformProduct).reverse() || [];
 
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollY");
