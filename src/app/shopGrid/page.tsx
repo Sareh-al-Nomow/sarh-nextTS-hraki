@@ -161,6 +161,7 @@ const ShopGridPage = () => {
 
     setProductQuery((prev) => {
       if (prev.categoryId === categoryId) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { categoryId: _, ...rest } = prev;
         return rest as Omit<typeof prev, "categoryId">;
       }
