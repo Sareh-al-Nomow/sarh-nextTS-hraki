@@ -18,6 +18,7 @@ import Spinner from "@/components/UI/SpinnerLoading";
 import { getCategories } from "@/lib/axios/categoryAxios";
 import { organizeCategories } from "@/utils/organizeCategories";
 import { transformProduct } from "@/utils/trnsformProduct";
+import {  GoDotFill } from "react-icons/go";
 
 const MAX_PRICE = 1000;
 
@@ -422,21 +423,7 @@ const ShopGridPage = () => {
                                     <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
                                       {selectedCategoriesIds.includes(
                                         subcategory.id
-                                      ) && (
-                                        <svg
-                                          className="w-2.5 h-2.5 text-white"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={3}
-                                            d="M5 13l4 4L19 7"
-                                          />
-                                        </svg>
-                                      )}
+                                      ) && <GoDotFill className="text-white" />}
                                     </div>
                                   </div>
                                   <span
@@ -477,19 +464,7 @@ const ShopGridPage = () => {
                             />
                             <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
                               {selectedCategoriesIds.includes(category.id) && (
-                                <svg
-                                  className="w-2.5 h-2.5 text-white"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={3}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
+                                <GoDotFill className="text-white" />
                               )}
                             </div>
                           </div>
