@@ -64,7 +64,7 @@ export default function Products() {
     Error
   >({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: ({ signal }) => getProducts(undefined, signal),
   });
 
   const displayedProducts = data?.data?.map(transformProduct) || [];
