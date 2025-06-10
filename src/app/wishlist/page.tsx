@@ -12,20 +12,8 @@ import {
 } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
+import { FrontendProduct } from "@/models/forntEndProduct";
 
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  originalPrice?: string;
-  image: string;
-  rating: number;
-  colors?: string[];
-  tags?: string[];
-  isNew?: boolean;
-  description?: string;
-  features?: string[];
-}
 
 const itemVariants = {
   hidden: { opacity: 0, x: 20 },
@@ -50,15 +38,15 @@ export default function WishlistPage() {
   );
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [wishlist, setWishlist] = useState<Product[]>([]);
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
+  const [wishlist, setWishlist] = useState<FrontendProduct[]>([]);
+  const [quickViewProduct, setQuickViewProduct] = useState<FrontendProduct | null>(
     null
   );
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("wishlist");
-    const wishlistLocal: Product[] = stored ? JSON.parse(stored) : [];
+    const wishlistLocal: FrontendProduct[] = stored ? JSON.parse(stored) : [];
     if (stored) {
       const wishlistIDS = wishlistLocal.flatMap((p) => p.id);
       setLikedProducts(wishlistIDS);
@@ -66,21 +54,9 @@ export default function WishlistPage() {
     }
   }, []);
 
-  // const removeFromWishlist = (productId: string) => {
-  //   setWishlist(wishlist.filter((item) => item.id !== productId));
-  // };
-
-  // const toggleCartStatus = (productId: string) => {
-  //   setWishlist(
-  //     wishlist.map((item) =>
-  //       item.id === productId ? { ...item, isInCart: !item.isInCart } : item
-  //     )
-  //   );
-  // };
-
-  const toggleLike = (product: Product) => {
+  const toggleLike = (product: FrontendProduct) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: Product[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 

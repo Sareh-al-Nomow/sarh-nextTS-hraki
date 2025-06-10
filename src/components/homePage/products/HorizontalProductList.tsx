@@ -104,7 +104,7 @@ export default function HorizontalProductList({
 
   const toggleLike = (product: FrontendProduct) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: Product[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 
