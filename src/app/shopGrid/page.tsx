@@ -45,7 +45,6 @@ const ShopGridPage = () => {
     data: productsData,
     isLoading: isLoadingFetchProducts,
     error,
-    // refetch,
   } = useQuery<ProductsResponse, Error>({
     queryKey: ["products", productQuery],
     queryFn: () => getProducts(productQuery),
