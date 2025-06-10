@@ -221,7 +221,7 @@ const ShopGridPage = () => {
   const resetFilters = () => {
     setSearchQuery("");
     setSortOption("featured");
-    setPriceRange([0, 500]);
+    setPriceRange([0, 5000]);
     setSelectedCategoriesIds([]);
     // setExpandedCategories({});
     setProductQuery({
