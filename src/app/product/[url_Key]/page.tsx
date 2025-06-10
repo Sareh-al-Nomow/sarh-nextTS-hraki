@@ -35,8 +35,9 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const { url_Key } = use(params);
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [""],
+    queryKey: ["product", url_Key],
     queryFn: ({ signal }) => getProductByUrlKey(url_Key, signal),
+    enabled: !!url_Key,
   });
 
   useEffect(() => {
