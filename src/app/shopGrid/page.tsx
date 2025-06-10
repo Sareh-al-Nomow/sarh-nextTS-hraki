@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import {
   FiFilter,
   FiX,
@@ -18,7 +19,9 @@ import Spinner from "@/components/UI/SpinnerLoading";
 import { getCategories } from "@/lib/axios/categoryAxios";
 import { organizeCategories } from "@/utils/organizeCategories";
 import { transformProduct } from "@/utils/trnsformProduct";
-import {  GoDotFill } from "react-icons/go";
+import { GoDotFill } from "react-icons/go";
+import { Category } from "@/lib/models/categoryModal";
+import { useSearchParams } from "next/navigation";
 
 const MAX_PRICE = 1000;
 
@@ -36,10 +39,13 @@ const ShopGridPage = () => {
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>();
   const [productQuery, setProductQuery] = useState<GetProductsParams>({
     page: 1,
     limit: 10,
   });
+
+  const param = useSearchParams();
 
   // Fetch products
   const {
@@ -66,43 +72,54 @@ const ShopGridPage = () => {
     ? organizeCategories(categoriesData.data)
     : null;
 
+  useEffect(() => {
+    const cateID = param.get("categoryid");
+    console.log(cateID);
+    if (cateID) {
+      console.log("param is here", cateID);
+      const categoryId = Number(cateID);
+      setSelectedCategoriesIds([categoryId]);
+      setProductQuery((prev) => {
+        return {
+          ...prev,
+          categoryId,
+        };
+      });
+    }
+  }, [param]);
+
+  console.log(selectedCategoriesIds);
+
+  console.log(organizedCategories);
+
   // Transform products data
   const displayProducts = productsData?.data.map((p) => transformProduct(p));
 
-  // Handle wishlist
-  useEffect(() => {
-    const stored = localStorage.getItem("wishlist");
-    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
-
-    if (stored) {
-      const wishlistIDS = wishlist.flatMap((p) => p.id);
-      setLikedProducts(wishlistIDS);
-    }
-
-    const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
-  }, []);
-
-  const toggleLike = (product: FrontendProduct) => {
-    const stored = localStorage.getItem("wishlist");
-    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
-
-    const exists = wishlist.some((p) => p.id === product.id);
-
-    if (exists) {
-      wishlist = wishlist.filter((p) => p.id !== product.id);
-    } else {
-      wishlist.push(product);
-    }
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    setLikedProducts((prev) =>
-      prev.includes(product.id)
-        ? prev.filter((id) => id !== product.id)
-        : [...prev, product.id]
+  // Handle category selection
+  const toggleCategoryId = async (categoryId: number) => {
+    const cate = organizedCategories?.allWithSub.find(
+      (c) => c.id === categoryId
     );
+    if (cate) {
+      handleSelectedCategory(cate);
+    }
+    setSelectedCategoriesIds((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((c) => c !== categoryId)
+        : [categoryId]
+    );
+
+    setProductQuery((prev) => {
+      if (prev.categoryId === categoryId) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { categoryId: _, ...rest } = prev;
+        return rest as Omit<typeof prev, "categoryId">;
+      }
+      return {
+        ...prev,
+        categoryId,
+      };
+    });
   };
 
   // Handle category selection
@@ -151,26 +168,9 @@ const ShopGridPage = () => {
     };
   }, [activeHandle, priceRange]);
 
-  // Handle category selection
-  const toggleCategoryId = async (categoryId: number) => {
-    setSelectedCategoriesIds((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((c) => c !== categoryId)
-        : [categoryId]
-    );
-
-    setProductQuery((prev) => {
-      if (prev.categoryId === categoryId) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { categoryId: _, ...rest } = prev;
-        return rest as Omit<typeof prev, "categoryId">;
-      }
-      return {
-        ...prev,
-        categoryId,
-      };
-    });
-  };
+  function handleSelectedCategory(category: Category) {
+    setSelectedCategory(category);
+  }
 
   // Reset all filters
   const resetFilters = () => {
@@ -183,6 +183,42 @@ const ShopGridPage = () => {
       page: 1,
       limit: 10,
     });
+  };
+
+  // Handle wishlist
+  useEffect(() => {
+    const stored = localStorage.getItem("wishlist");
+    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+
+    if (stored) {
+      const wishlistIDS = wishlist.flatMap((p) => p.id);
+      setLikedProducts(wishlistIDS);
+    }
+
+    const scrollY = sessionStorage.getItem("scrollY");
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY));
+      sessionStorage.removeItem("scrollY");
+    }
+  }, []);
+
+  const toggleLike = (product: FrontendProduct) => {
+    const stored = localStorage.getItem("wishlist");
+    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+
+    const exists = wishlist.some((p) => p.id === product.id);
+
+    if (exists) {
+      wishlist = wishlist.filter((p) => p.id !== product.id);
+    } else {
+      wishlist.push(product);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    setLikedProducts((prev) =>
+      prev.includes(product.id)
+        ? prev.filter((id) => id !== product.id)
+        : [...prev, product.id]
+    );
   };
 
   // Loading and error states
@@ -359,128 +395,44 @@ const ShopGridPage = () => {
               <div>
                 <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
                 <div className="space-y-2">
-                  {organizedCategories?.parentsWithChildren.map((category) => (
-                    <div key={category.description.name} className="space-y-1">
-                      <motion.button
-                        whileTap={{ scale: 0.98 }}
-                        className={`flex items-center justify-between w-full text-left ${
-                          category.children ? "font-semibold" : ""
-                        }`}
-                        onClick={() =>
-                          category.children
-                            ? toggleCategoryExpansion(category.description.name)
-                            : toggleCategoryId(category.id)
-                        }
+                  {organizedCategories?.allParent.map((category) => {
+                    return (
+                      <motion.label
+                        key={category.id}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center group cursor-pointer"
                       >
+                        <div className="relative">
+                          <input
+                            type="radio"
+                            name="categoryId"
+                            checked={selectedCategoriesIds.includes(
+                              category.id
+                            )}
+                            onChange={() => {
+                              toggleCategoryId(category.id);
+                              handleSelectedCategory(category);
+                            }}
+                            className="sr-only peer"
+                          />
+                          <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                            {selectedCategoriesIds.includes(category.id) && (
+                              <GoDotFill className="text-white" />
+                            )}
+                          </div>
+                        </div>
                         <span
-                          className={
+                          className={`ml-2 text-sm ${
                             selectedCategoriesIds.includes(category.id)
                               ? "text-blue-600"
-                              : "text-gray-700"
-                          }
+                              : "text-gray-600"
+                          } group-hover:text-gray-900 transition-colors`}
                         >
                           {category.description.name}
                         </span>
-                        {category.children && (
-                          <FiChevronRight
-                            className={`transition-transform ${
-                              expandedCategories[category.description.name]
-                                ? "transform rotate-90"
-                                : ""
-                            }`}
-                          />
-                        )}
-                      </motion.button>
-
-                      {category.children &&
-                        expandedCategories[category.description.name] && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="pl-4 space-y-1"
-                          >
-                            {category.children.map((subcategory) => {
-                              return (
-                                <motion.label
-                                  key={subcategory.id}
-                                  whileTap={{ scale: 0.95 }}
-                                  className="flex items-center group cursor-pointer"
-                                >
-                                  <div className="relative">
-                                    <input
-                                      id={`${subcategory.id}`}
-                                      type="radio"
-                                      name="categoryId"
-                                      checked={selectedCategoriesIds.includes(
-                                        subcategory.id
-                                      )}
-                                      onChange={() =>
-                                        toggleCategoryId(subcategory.id)
-                                      }
-                                      className="sr-only peer"
-                                    />
-                                    <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                                      {selectedCategoriesIds.includes(
-                                        subcategory.id
-                                      ) && <GoDotFill className="text-white" />}
-                                    </div>
-                                  </div>
-                                  <span
-                                    className={`ml-2 text-sm ${
-                                      selectedCategoriesIds.includes(
-                                        subcategory.id
-                                      )
-                                        ? "text-blue-600"
-                                        : "text-gray-600"
-                                    } group-hover:text-gray-900 transition-colors`}
-                                  >
-                                    {subcategory.description.name}
-                                  </span>
-                                </motion.label>
-                              );
-                            })}
-                          </motion.div>
-                        )}
-                    </div>
-                  ))}
-                  {organizedCategories?.parentsWithoutChildren.map(
-                    (category) => {
-                      return (
-                        <motion.label
-                          key={category.id}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex items-center group cursor-pointer"
-                        >
-                          <div className="relative">
-                            <input
-                              type="radio"
-                              name="categoryId"
-                              checked={selectedCategoriesIds.includes(
-                                category.id
-                              )}
-                              onChange={() => toggleCategoryId(category.id)}
-                              className="sr-only peer"
-                            />
-                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                              {selectedCategoriesIds.includes(category.id) && (
-                                <GoDotFill className="text-white" />
-                              )}
-                            </div>
-                          </div>
-                          <span
-                            className={`ml-2 text-sm ${
-                              selectedCategoriesIds.includes(category.id)
-                                ? "text-blue-600"
-                                : "text-gray-600"
-                            } group-hover:text-gray-900 transition-colors`}
-                          >
-                            {category.description.name}
-                          </span>
-                        </motion.label>
-                      );
-                    }
-                  )}
+                      </motion.label>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -497,8 +449,7 @@ const ShopGridPage = () => {
                 <div className="flex gap-2 flex-wrap justify-end">
                   {selectedCategoriesIds.map((categoryId) => {
                     const category = [
-                      ...(organizedCategories?.parentsWithChildren || []),
-                      ...(organizedCategories?.parentsWithoutChildren || []),
+                      ...(organizedCategories?.allWithSub || []),
                     ].find((c) => c.id === categoryId);
 
                     return category ? (
@@ -545,21 +496,77 @@ const ShopGridPage = () => {
                 ))}
               </div>
             ) : (displayProducts ?? []).length > 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              >
-                {(displayProducts ?? []).map((product) => (
-                  <ProductItem
-                    key={product.id}
-                    product={product}
-                    toggleLike={toggleLike}
-                    likedProducts={likedProducts}
-                  />
-                ))}
-              </motion.div>
+              <>
+                {selectedCategory?.subCategory && (
+                  <div>
+                    {/*Sub Category*/}
+
+                    <h1>Sub Categories</h1>
+                    {selectedCategory.subCategory.map((subC) => (
+                      <motion.label
+                        key={subC.id}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center group cursor-pointer my-5"
+                      >
+                        <div className="relative">
+                          <input
+                            type="radio"
+                            name="categoryId"
+                            checked={selectedCategoriesIds.includes(subC.id)}
+                            onChange={() => {
+                              toggleCategoryId(subC.id);
+                              handleSelectedCategory(subC);
+                            }}
+                            className="sr-only peer"
+                          />
+                          {/* <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                            {selectedCategoriesIds.includes(subC.id) && (
+                              <GoDotFill className="text-white" />
+                            )}
+                          </div> */}
+                        </div>
+                        <span
+                          className={`ml-2 text-sm ${
+                            selectedCategoriesIds.includes(subC.id)
+                              ? "text-blue-600"
+                              : "text-gray-600"
+                          } group-hover:text-gray-900 transition-colors`}
+                        >
+                          <div className="flex flex-col items-center text-center group">
+                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#219EBC] shadow-md group-hover:scale-105 transition-transform duration-300">
+                              <Image
+                                src={subC.description.image}
+                                alt={subC.description.name}
+                                width={96}
+                                height={96}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <span className="mt-2 text-sm md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
+                              {subC.description.name}
+                            </span>
+                          </div>
+                        </span>
+                      </motion.label>
+                    ))}
+                  </div>
+                )}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                  {(displayProducts ?? []).map((product) => (
+                    <ProductItem
+                      key={product.id}
+                      product={product}
+                      toggleLike={toggleLike}
+                      likedProducts={likedProducts}
+                    />
+                  ))}
+                </motion.div>
+              </>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -761,9 +768,10 @@ const ShopGridPage = () => {
                                           checked={selectedCategoriesIds.includes(
                                             subcategory.id
                                           )}
-                                          onChange={() =>
-                                            toggleCategoryId(subcategory.id)
-                                          }
+                                          onChange={() => {
+                                            toggleCategoryId(category.id);
+                                            handleSelectedCategory(category);
+                                          }}
                                           className="sr-only peer"
                                         />
                                         <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
@@ -820,7 +828,10 @@ const ShopGridPage = () => {
                                 checked={selectedCategoriesIds.includes(
                                   category.id
                                 )}
-                                onChange={() => toggleCategoryId(category.id)}
+                                onChange={() => {
+                                  toggleCategoryId(category.id);
+                                  handleSelectedCategory(category);
+                                }}
                                 className="sr-only peer"
                               />
                               <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">

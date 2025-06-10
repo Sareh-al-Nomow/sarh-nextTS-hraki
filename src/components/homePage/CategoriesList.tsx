@@ -53,7 +53,7 @@ export default function CategoriesList() {
           {categories &&
             categories.data.map((cat, index) => (
               <Link
-                href={"/shopGrid"}
+                href={`/shopGrid?categoryid=${cat.id}`}
                 key={index}
                 className="flex flex-col items-center text-center group"
               >

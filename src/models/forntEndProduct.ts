@@ -1,4 +1,6 @@
 export interface FrontendProduct {
+  categoryId: number;
+  createdAt: string | number | Date;
   id: number;
   uuid: string;
   name: string;

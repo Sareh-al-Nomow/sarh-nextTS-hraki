@@ -18,6 +18,7 @@ export interface Category {
   updated_at: string; // ISO date string
   description: CategoryDescription;
   products: Product[];
+  subCategory: Category[];
 }
 
 export interface CategoryDescription {

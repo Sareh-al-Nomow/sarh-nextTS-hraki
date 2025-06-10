@@ -11,8 +11,9 @@ import HorizontalProductList from "./HorizontalProductList";
 
 function transformProduct(product: Product): FrontendProduct {
   return {
-    id: product.product_id,
     uuid: product.uuid,
+    categoryId: product.category_id,
+    id: product.product_id,
     name: product.description?.name || "Unnamed Product",
     price: `$${product.price?.toFixed(2) || "0.00"}`,
     originalPrice: product.old_price
@@ -51,6 +52,7 @@ function transformProduct(product: Product): FrontendProduct {
       attribute_name: attr.attribute?.attribute_name,
       option_text: attr.option_text,
     })),
+    createdAt: product.created_at,
   };
 }
 
