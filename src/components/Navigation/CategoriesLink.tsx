@@ -4,10 +4,24 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiChevronRight, FiSearch, FiUser } from "react-icons/fi";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FaSearch } from "react-icons/fa";
 
 export default function PremiumNavWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const [term, setTerm] = useState<string | null>("");
+
+  const router = useRouter();
+
+  function handleSearchTerm() {
+    if (term) {
+      router.push(`/shopGrid?query=${encodeURIComponent(term)}`);
+      setIsOpen(false);
+      setTerm(null);
+    }
+  }
 
   const categories = [
     {
@@ -108,10 +122,26 @@ export default function PremiumNavWidget() {
                 <div className="relative">
                   <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
+                    value={term ?? ""}
+                    onChange={(e) => setTerm(e.target.value)}
                     type="text"
                     placeholder="Search products..."
                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all"
                   />
+                  <AnimatePresence>
+                    {term && (
+                      <motion.span
+                        className="absolute top-4 right-6 text-2xl text-gray-500 cursor-pointer"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.3 }}
+                        onClick={handleSearchTerm}
+                      >
+                        <FaSearch />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 

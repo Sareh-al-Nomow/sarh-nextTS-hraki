@@ -29,7 +29,6 @@ export default function SearchField() {
     return () => clearTimeout(timer); // يلغي المؤقت إذا المستخدم كتب من جديد
   }, [router, searchTerm]);
 
-  // function handleSearchTerm() {}
 
   return (
     <div className="w-full relative max-w-md">
