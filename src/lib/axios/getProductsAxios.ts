@@ -14,12 +14,13 @@ export interface GetProductsParams {
 }
 
 export const getProducts = async (
-  params: GetProductsParams = {}
+  params: GetProductsParams = {},
+  signal?: AbortSignal
 ): Promise<ProductsResponse> => {
   try {
     const response = await axios.get<ProductsResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
-      { params }
+      { params, signal }
     );
     return response.data;
   } catch (err) {
@@ -29,4 +30,3 @@ export const getProducts = async (
     throw new Error(message);
   }
 };
-

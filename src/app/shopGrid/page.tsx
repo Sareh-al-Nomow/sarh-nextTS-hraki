@@ -47,7 +47,7 @@ const ShopGridPage = () => {
     error,
   } = useQuery<ProductsResponse, Error>({
     queryKey: ["products", productQuery],
-    queryFn: () => getProducts(productQuery),
+    queryFn: ({ signal }) => getProducts(productQuery, signal),
   });
 
   // Fetch categories
