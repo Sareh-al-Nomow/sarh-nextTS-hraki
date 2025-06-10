@@ -121,10 +121,17 @@ const ShopGridPage = () => {
       (product) => Number(product.price) >= min && Number(product.price) <= max
     );
 
-    setProducts(filtered);
-  }, [productsData, priceRange]);
+    // Step 3: Sorting
+    if (sortOption === "price-low") {
+      filtered.sort((a, b) => Number(a.price) - Number(b.price));
+    } else if (sortOption === "price-high") {
+      filtered.sort((a, b) => Number(b.price) - Number(a.price));
+    }
 
-  console.log(priceRange);
+    setProducts(filtered);
+  }, [productsData, priceRange, sortOption]);
+
+  console.log(sortOption);
 
   // Handle category selection
   const toggleCategoryId = async (categoryId: number) => {
@@ -324,8 +331,8 @@ const ShopGridPage = () => {
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest</option>
+                {/* <option value="rating">Highest Rated</option>
+                <option value="newest">Newest</option> */}
               </select>
               <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none group-hover:text-gray-600 transition-colors" />
             </div>
