@@ -210,7 +210,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
               {/* Image Container with Close Button */}
               <div className="relative h-48 w-full">
                 <Image
-                  src={"/image/products/img-1.jpg"}
+                  src={product.image}
                   alt={quickViewProduct.name}
                   fill
                   className="object-cover"
