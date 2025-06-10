@@ -15,7 +15,7 @@ function transformProduct(product: Product): FrontendProduct {
     categoryId: product.category_id,
     id: product.product_id,
     name: product.description?.name || "Unnamed Product",
-    price: `$${product.price?.toFixed(2) || "0.00"}`,
+    price: product.price ?? 0,
     originalPrice: product.old_price
       ? `$${product.old_price.toFixed(2)}`
       : undefined,

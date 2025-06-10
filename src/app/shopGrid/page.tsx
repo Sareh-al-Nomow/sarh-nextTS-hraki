@@ -27,10 +27,14 @@ const MAX_PRICE = 1000;
 
 const ShopGridPage = () => {
   // State
+  const [products, setProducts] = useState<FrontendProduct[]>([]);
+  // const [filteredProducts, setFilteredProducts] = useState<FrontendProduct[]>(
+  //   []
+  // );
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >({});
@@ -72,6 +76,18 @@ const ShopGridPage = () => {
     ? organizeCategories(categoriesData.data)
     : null;
 
+  // Transform products data
+  // const displayProducts = productsData?.data.map((p) => transformProduct(p));
+
+  useEffect(() => {
+    const displayProducts = productsData?.data.map((p) => transformProduct(p));
+    if (displayProducts) {
+      setProducts(displayProducts);
+    }
+  }, [productsData?.data]);
+
+  console.log(products);
+
   useEffect(() => {
     const cateID = param.get("categoryid");
     console.log(cateID);
@@ -94,8 +110,21 @@ const ShopGridPage = () => {
     }
   }, [param]);
 
-  // Transform products data
-  const displayProducts = productsData?.data.map((p) => transformProduct(p));
+  // هذا التأثير يستقبل البيانات من API ويفلتر حسب السعر فقط
+  useEffect(() => {
+    if (!productsData?.data) return;
+
+    const allProducts = productsData.data.map((p) => transformProduct(p));
+    const [min, max] = priceRange;
+
+    const filtered = allProducts.filter(
+      (product) => Number(product.price) >= min && Number(product.price) <= max
+    );
+
+    setProducts(filtered);
+  }, [productsData, priceRange]);
+
+  console.log(priceRange);
 
   // Handle category selection
   const toggleCategoryId = async (categoryId: number) => {
@@ -346,7 +375,7 @@ const ShopGridPage = () => {
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
                       style={{ left: `${(priceRange[0] / MAX_PRICE) * 100}%` }}
-                      onMouseDown={() => setActiveHandle("min")}
+                      onMouseDown={() => "min"}
                     />
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
@@ -445,7 +474,7 @@ const ShopGridPage = () => {
             {/* Results Count */}
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
-                Showing {displayProducts?.length || 0} products
+                Showing {products?.length || 0} products
               </p>
               {selectedCategoriesIds.length > 0 && (
                 <div className="flex gap-2 flex-wrap justify-end">
@@ -497,7 +526,7 @@ const ShopGridPage = () => {
                   </motion.div>
                 ))}
               </div>
-            ) : (displayProducts ?? []).length > 0 ? (
+            ) : (products ?? []).length > 0 ? (
               <>
                 {selectedCategory?.subCategory && (
                   <div>
@@ -521,11 +550,6 @@ const ShopGridPage = () => {
                             }}
                             className="sr-only peer"
                           />
-                          {/* <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                            {selectedCategoriesIds.includes(subC.id) && (
-                              <GoDotFill className="text-white" />
-                            )}
-                          </div> */}
                         </div>
                         <span
                           className={`ml-2 text-sm ${
@@ -559,7 +583,7 @@ const ShopGridPage = () => {
                   transition={{ duration: 0.3 }}
                   className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {(displayProducts ?? []).map((product) => (
+                  {(products ?? []).map((product) => (
                     <ProductItem
                       key={product.id}
                       product={product}

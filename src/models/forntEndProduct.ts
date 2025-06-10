@@ -4,7 +4,7 @@ export interface FrontendProduct {
   id: number;
   uuid: string;
   name: string;
-  price: string;
+  price: number;
   originalPrice?: string;
   image: string;
   rating: number;

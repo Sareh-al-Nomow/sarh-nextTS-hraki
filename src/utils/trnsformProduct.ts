@@ -6,7 +6,7 @@ export function transformProduct(product: Product): FrontendProduct {
     id: product.product_id,
     uuid: product.uuid,
     name: product.description?.name || "Unnamed Product",
-    price: `$${product.price?.toFixed(2) || "0.00"}`,
+    price: product.price ?? 0,
     originalPrice: product.old_price
       ? `$${product.old_price.toFixed(2)}`
       : undefined,
