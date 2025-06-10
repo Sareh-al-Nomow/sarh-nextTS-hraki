@@ -315,7 +315,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                     <FiShoppingCart /> Add to Cart
                   </button>
                   <Link
-                    href={`/product/${quickViewProduct.name}`}
+                    href={`/product/${product.url_key}`}
                     className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
                   >
                     View Details

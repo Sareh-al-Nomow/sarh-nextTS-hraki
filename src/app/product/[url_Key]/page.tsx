@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiShoppingCart,
@@ -13,81 +13,97 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import AdditionalInformation from "@/components/productDetails/AddtionInformation";
+import { useQuery } from "@tanstack/react-query";
+import { getProductByUrlKey } from "@/lib/axios/getProductsAxios";
+import { transformProduct } from "@/utils/trnsformProduct";
+import { FrontendProduct } from "@/models/forntEndProduct";
+import Spinner from "@/components/UI/SpinnerLoading";
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  originalPrice: number;
-  rating: number;
-  reviewCount: number;
-  colors: { value: string; name: string }[];
-  sizes: string[];
-  features: string[];
-  images: string[];
-}
+type ProductDetailsProps = {
+  params: Promise<{ url_Key: string }>;
+};
 
-export default function ProductDetails() {
+export default function ProductDetails({ params }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(0);
+  const [product, setProduct] = useState<FrontendProduct | null>();
+  // const [selectedColor, setSelectedColor] = useState(0);
+  // const [selectedSize, setSelectedSize] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  // Sample product data
-  const product: Product = {
-    id: "prod-001",
-    name: "Premium Wireless Headphones",
-    description:
-      "Experience crystal-clear sound with our premium wireless headphones. Featuring active noise cancellation, 30-hour battery life, and ultra-comfortable ear cushions for extended listening sessions.",
-    price: 199.99,
-    originalPrice: 249.99,
-    rating: 4.7,
-    reviewCount: 128,
-    colors: [
-      { value: "#3b82f6", name: "Blue" },
-      { value: "#ef4444", name: "Red" },
-      { value: "#10b981", name: "Green" },
-      { value: "#000000", name: "Black" },
-    ],
-    sizes: ["S", "M", "L", "XL"],
-    features: [
-      "Active Noise Cancellation",
-      "30-hour battery life",
-      "Bluetooth 5.0",
-      "Built-in microphone",
-      "Foldable design",
-    ],
-    images: [
-      "/image/products/img-1.jpg",
-      "/image/products/img-2.jpg",
-      "/image/products/img-3.jpg",
-      "/image/products/img-4.jpg",
-    ],
-  };
+  const { url_Key } = use(params);
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [""],
+    queryFn: ({ signal }) => getProductByUrlKey(url_Key, signal),
+  });
+
+  useEffect(() => {
+    if (data) {
+      console.log(data.data);
+      const formatedProduct = data?.data?.map(transformProduct);
+      setProduct(formatedProduct[0]);
+    }
+  }, [data]);
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   const toggleFavorite = () => setIsFavorite(!isFavorite);
 
-  const discountPercentage = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
+  const discountPercentage =
+    product &&
+    typeof product.price === "number" &&
+    typeof product.originalPrice === "number"
+      ? Math.round(
+          ((product.originalPrice - product.price) / product.originalPrice) *
+            100
+        )
+      : 0;
 
   const nextImage = () => {
     setCurrentImage((prev) =>
-      prev === product.images.length - 1 ? 0 : prev + 1
+      product && product.images && product.images.length > 0
+        ? prev === product.images.length - 1
+          ? 0
+          : prev + 1
+        : prev
     );
   };
 
   const prevImage = () => {
     setCurrentImage((prev) =>
-      prev === 0 ? product.images.length - 1 : prev - 1
+      product && product.images && product.images.length > 0
+        ? prev === 0
+          ? product.images.length - 1
+          : prev - 1
+        : prev
     );
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-10">
+        <h1 className="text-red-500"> {error.name}</h1>
+        <p className="text-red-200"> {error.message}</p>
+        <button
+          onClick={() => refetch()}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -144,8 +160,11 @@ export default function ProductDetails() {
                     className="w-full h-full flex items-center justify-center"
                   >
                     <Image
-                      src={product.images[currentImage]}
-                      alt={product.name}
+                      src={
+                        product?.image ??
+                        "data:image/jpeg;base64,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"
+                      }
+                      alt={product?.name ?? "Product image"}
                       width={600}
                       height={600}
                       className="object-contain w-full h-full"
@@ -209,27 +228,35 @@ export default function ProductDetails() {
               </div>
 
               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                {product.images.map((image, index) => (
-                  <motion.button
-                    key={index}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setCurrentImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      currentImage === index
-                        ? "border-blue-500 ring-2 ring-blue-200"
-                        : "border-transparent hover:border-gray-300"
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`Thumbnail ${index + 1}`}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.button>
-                ))}
+                {product &&
+                  product.images &&
+                  product.images.map((image, index) => (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setCurrentImage(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                        currentImage === index
+                          ? "border-blue-500 ring-2 ring-blue-200"
+                          : "border-transparent hover:border-gray-300"
+                      }`}
+                    >
+                      <Image
+                        src={
+                          typeof image === "string"
+                            ? image
+                            : typeof image === "object" && image.single_image
+                            ? image.single_image
+                            : "/placeholder.png"
+                        }
+                        alt={`Thumbnail ${index + 1}`}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.button>
+                  ))}
               </div>
             </motion.div>
           </div>
@@ -247,7 +274,7 @@ export default function ProductDetails() {
                   whileHover={{ x: 2 }}
                   className="text-2xl font-bold text-gray-800"
                 >
-                  {product.name}
+                  {product?.name}
                 </motion.h2>
               </div>
 
@@ -257,27 +284,27 @@ export default function ProductDetails() {
                     <FiStar
                       key={i}
                       className={`${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(product?.rating ?? 0)
                           ? "fill-current"
                           : "text-yellow-200"
                       }`}
                     />
                   ))}
                 </div>
-                <span className="text-gray-500 text-sm">
-                  {product.rating.toFixed(1)} ({product.reviewCount} reviews)
-                </span>
+                {/* <span className="text-gray-500 text-sm">
+                  {product?.rating?.toFixed(1)} ({product?.reviews?.length ?? 0} reviews)
+                </span> */}
               </div>
 
               <motion.p
                 whileHover={{ backgroundColor: "#f9fafb" }}
                 className="text-gray-600 mb-6 p-3 rounded-lg bg-gray-50"
               >
-                {product.description}
+                {product?.description}
               </motion.p>
 
               {/* Color Selection */}
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
                   Color:{" "}
                   <span className="font-normal">
@@ -310,10 +337,10 @@ export default function ProductDetails() {
                     </motion.button>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Size Selection */}
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
                   Size
                 </h3>
@@ -334,7 +361,7 @@ export default function ProductDetails() {
                     </motion.button>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Features */}
               <div className="mb-6">
@@ -342,18 +369,20 @@ export default function ProductDetails() {
                   Key Features
                 </h3>
                 <ul className="space-y-2">
-                  {product.features.map((feature, index) => (
-                    <motion.li
-                      key={index}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.1 * index }}
-                      className="flex items-start text-gray-600"
-                    >
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
+                  {product &&
+                    Array.isArray(product.features) &&
+                    product.features.map((feature, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.1 * index }}
+                        className="flex items-start text-gray-600"
+                      >
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
                 </ul>
               </div>
 
@@ -361,19 +390,22 @@ export default function ProductDetails() {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-end gap-2">
                   <span className="text-2xl font-bold text-gray-800">
-                    ${product.price.toFixed(2)}
+                    {product ? `$${product.price.toFixed(2)}` : "--"}
                   </span>
-                  {product.originalPrice > product.price && (
-                    <>
-                      <span className="text-gray-500 line-through text-sm">
-                        ${product.originalPrice.toFixed(2)}
-                      </span>
-                      <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
-                        Save $
-                        {(product.originalPrice - product.price).toFixed(2)}
-                      </span>
-                    </>
-                  )}
+                  {product &&
+                    typeof product.originalPrice === "number" &&
+                    typeof product.price === "number" &&
+                    product.originalPrice > product.price && (
+                      <>
+                        <span className="text-gray-500 line-through text-sm">
+                          ${product.originalPrice}
+                        </span>
+                        <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
+                          Save $
+                          {(product.originalPrice - product.price).toFixed(2)}
+                        </span>
+                      </>
+                    )}
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">

@@ -153,3 +153,11 @@ interface Review {
   created_at: string;
   updated_at: string;
 }
+
+export interface ProductResponse {
+  data: Product;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

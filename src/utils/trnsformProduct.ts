@@ -36,8 +36,15 @@ export function transformProduct(product: Product): FrontendProduct {
       qty: product.inventory?.qty || 0,
     },
     images: product.images?.map((img) => ({
+      product_image_id: img.product_image_id,
+      product_image_product_id: img.product_image_product_id,
       single_image: img.single_image,
       thumb_image: img.thumb_image,
+      origin_image: img.origin_image,
+      listing_image: img.listing_image,
+      is_main: img.is_main,
+      created_at: img.created_at,
+      updated_at: img.updated_at,
     })),
     attributes: product.attributes?.map((attr) => ({
       attribute_name: attr.attribute?.attribute_name,
@@ -45,5 +52,7 @@ export function transformProduct(product: Product): FrontendProduct {
     })),
     categoryId: product.category_id,
     createdAt: product.created_at,
+    url_key: product.description.url_key,
+    // reviews: product.reviews
   };
 }

@@ -8,7 +8,7 @@ import {
   FiX,
   FiChevronDown,
   FiSearch,
-  FiChevronRight,
+  // FiChevronRight,
 } from "react-icons/fi";
 import ProductItem from "@/components/homePage/products/ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
@@ -35,9 +35,9 @@ const ShopGridPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [expandedCategories, setExpandedCategories] = useState<
-    Record<string, boolean>
-  >({});
+  // const [expandedCategories, setExpandedCategories] = useState<
+  //   Record<string, boolean>
+  // >({});
   const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null);
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
@@ -161,12 +161,12 @@ const ShopGridPage = () => {
   };
 
   // Handle category selection
-  const toggleCategoryExpansion = (categoryName: string) => {
-    setExpandedCategories((prev) => ({
-      ...prev,
-      [categoryName]: !prev[categoryName],
-    }));
-  };
+  // const toggleCategoryExpansion = (categoryName: string) => {
+  //   setExpandedCategories((prev) => ({
+  //     ...prev,
+  //     [categoryName]: !prev[categoryName],
+  //   }));
+  // };
 
   // Handle price range slider
   useEffect(() => {
@@ -216,7 +216,7 @@ const ShopGridPage = () => {
     setSortOption("featured");
     setPriceRange([0, 500]);
     setSelectedCategoriesIds([]);
-    setExpandedCategories({});
+    // setExpandedCategories({});
     setProductQuery({
       page: 1,
       limit: 10,
@@ -740,166 +740,44 @@ const ShopGridPage = () => {
                 <div>
                   <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
                   <div className="space-y-2">
-                    {organizedCategories?.parentsWithChildren.map(
-                      (category) => (
-                        <div
-                          key={category.description.name}
-                          className="space-y-1"
+                    {organizedCategories?.allParent.map((category) => {
+                      return (
+                        <motion.label
+                          key={category.id}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center group cursor-pointer"
                         >
-                          <motion.button
-                            whileTap={{ scale: 0.98 }}
-                            className={`flex items-center justify-between w-full text-left ${
-                              category.children ? "font-semibold" : ""
-                            }`}
-                            onClick={() =>
-                              category.children
-                                ? toggleCategoryExpansion(
-                                    category.description.name
-                                  )
-                                : toggleCategoryId(category.id)
-                            }
-                          >
-                            <span
-                              className={
-                                selectedCategoriesIds.includes(category.id)
-                                  ? "text-blue-600"
-                                  : "text-gray-700"
-                              }
-                            >
-                              {category.description.name}
-                            </span>
-                            {category.children && (
-                              <FiChevronRight
-                                className={`transition-transform ${
-                                  expandedCategories[category.description.name]
-                                    ? "transform rotate-90"
-                                    : ""
-                                }`}
-                              />
-                            )}
-                          </motion.button>
-
-                          {category.children &&
-                            expandedCategories[category.description.name] && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="pl-4 space-y-1"
-                              >
-                                {category.children.map((subcategory) => {
-                                  return (
-                                    <motion.label
-                                      key={subcategory.id}
-                                      whileTap={{ scale: 0.95 }}
-                                      className="flex items-center group cursor-pointer"
-                                    >
-                                      <div className="relative">
-                                        <input
-                                          type="radio"
-                                          name="categoryId"
-                                          checked={selectedCategoriesIds.includes(
-                                            subcategory.id
-                                          )}
-                                          onChange={() => {
-                                            toggleCategoryId(category.id);
-                                            handleSelectedCategory(category);
-                                          }}
-                                          className="sr-only peer"
-                                        />
-                                        <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                                          {selectedCategoriesIds.includes(
-                                            subcategory.id
-                                          ) && (
-                                            <svg
-                                              className="w-2.5 h-2.5 text-white"
-                                              fill="none"
-                                              viewBox="0 0 24 24"
-                                              stroke="currentColor"
-                                            >
-                                              <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={3}
-                                                d="M5 13l4 4L19 7"
-                                              />
-                                            </svg>
-                                          )}
-                                        </div>
-                                      </div>
-                                      <span
-                                        className={`ml-2 text-sm ${
-                                          selectedCategoriesIds.includes(
-                                            subcategory.id
-                                          )
-                                            ? "text-blue-600"
-                                            : "text-gray-600"
-                                        } group-hover:text-gray-900 transition-colors`}
-                                      >
-                                        {subcategory.description.name}
-                                      </span>
-                                    </motion.label>
-                                  );
-                                })}
-                              </motion.div>
-                            )}
-                        </div>
-                      )
-                    )}
-                    {organizedCategories?.parentsWithoutChildren.map(
-                      (category) => {
-                        return (
-                          <motion.label
-                            key={category.id}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center group cursor-pointer"
-                          >
-                            <div className="relative">
-                              <input
-                                type="radio"
-                                name="categoryId"
-                                checked={selectedCategoriesIds.includes(
-                                  category.id
-                                )}
-                                onChange={() => {
-                                  toggleCategoryId(category.id);
-                                  handleSelectedCategory(category);
-                                }}
-                                className="sr-only peer"
-                              />
-                              <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                                {selectedCategoriesIds.includes(
-                                  category.id
-                                ) && (
-                                  <svg
-                                    className="w-2.5 h-2.5 text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={3}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                )}
-                              </div>
+                          <div className="relative">
+                            <input
+                              type="radio"
+                              name="categoryId"
+                              checked={selectedCategoriesIds.includes(
+                                category.id
+                              )}
+                              onChange={() => {
+                                toggleCategoryId(category.id);
+                                handleSelectedCategory(category);
+                              }}
+                              className="sr-only peer"
+                            />
+                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                              {selectedCategoriesIds.includes(category.id) && (
+                                <GoDotFill className="text-white" />
+                              )}
                             </div>
-                            <span
-                              className={`ml-2 text-sm ${
-                                selectedCategoriesIds.includes(category.id)
-                                  ? "text-blue-600"
-                                  : "text-gray-600"
-                              } group-hover:text-gray-900 transition-colors`}
-                            >
-                              {category.description.name}
-                            </span>
-                          </motion.label>
-                        );
-                      }
-                    )}
+                          </div>
+                          <span
+                            className={`ml-2 text-sm ${
+                              selectedCategoriesIds.includes(category.id)
+                                ? "text-blue-600"
+                                : "text-gray-600"
+                            } group-hover:text-gray-900 transition-colors`}
+                          >
+                            {category.description.name}
+                          </span>
+                        </motion.label>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
