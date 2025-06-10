@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import {
@@ -22,6 +22,7 @@ import { transformProduct } from "@/utils/trnsformProduct";
 import { GoDotFill } from "react-icons/go";
 import { Category } from "@/lib/models/categoryModal";
 import { useSearchParams } from "next/navigation";
+import { SearchContext } from "@/store/SearchContext";
 
 const MAX_PRICE = 1000;
 
@@ -47,9 +48,11 @@ const ShopGridPage = () => {
   const [productQuery, setProductQuery] = useState<GetProductsParams>({
     page: 1,
     limit: 10,
+    name: "",
   });
 
   const param = useSearchParams();
+  const { clearSearchTerm } = useContext(SearchContext);
 
   // Fetch products
   const {
@@ -86,10 +89,9 @@ const ShopGridPage = () => {
     }
   }, [productsData?.data]);
 
-  console.log(products);
-
   useEffect(() => {
     const cateID = param.get("categoryid");
+    const searchTerm = param.get("query");
     console.log(cateID);
     if (cateID) {
       console.log("param is here", cateID);
@@ -108,7 +110,11 @@ const ShopGridPage = () => {
         handleSelectedCategory(c);
       }
     }
-  }, [param]);
+    if (searchTerm) {
+      setSearchQuery(searchTerm);
+      clearSearchTerm();
+    }
+  }, [param, clearSearchTerm]);
 
   // هذا التأثير يستقبل البيانات من API ويفلتر حسب السعر فقط
   useEffect(() => {
@@ -131,7 +137,16 @@ const ShopGridPage = () => {
     setProducts(filtered);
   }, [productsData, priceRange, sortOption]);
 
-  console.log(sortOption);
+  useEffect(() => {
+    if (searchQuery) {
+      setProductQuery((prev) => {
+        return {
+          ...prev,
+          name: searchQuery,
+        };
+      });
+    }
+  }, [searchQuery]);
 
   // Handle category selection
   const toggleCategoryId = async (categoryId: number) => {
@@ -159,14 +174,6 @@ const ShopGridPage = () => {
       };
     });
   };
-
-  // Handle category selection
-  // const toggleCategoryExpansion = (categoryName: string) => {
-  //   setExpandedCategories((prev) => ({
-  //     ...prev,
-  //     [categoryName]: !prev[categoryName],
-  //   }));
-  // };
 
   // Handle price range slider
   useEffect(() => {

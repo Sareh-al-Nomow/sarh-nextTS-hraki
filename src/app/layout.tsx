@@ -9,6 +9,7 @@ import Navbar from "@/components/Navigation/Navbar";
 import Footer from "@/components/footer/footer";
 import CartContextProvider from "@/store/CartContext";
 import { AuthModalProvider } from "@/store/AuthModalContext";
+import { SearchProvider } from "@/store/SearchContext";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -31,15 +32,17 @@ export default function RootLayout({
       <body className={`${dosis.variable} antialiased`}>
         <QueryClientProvider client={queryClient}>
           <AuthModalProvider>
-            <AuthProvider>
-              <CartContextProvider>
-                <Toaster />
-                <Navbar />
-                <div id="root-modal"></div>
-                {children}
-                <Footer />
-              </CartContextProvider>
-            </AuthProvider>
+            <SearchProvider>
+              <AuthProvider>
+                <CartContextProvider>
+                  <Toaster />
+                  <Navbar />
+                  <div id="root-modal"></div>
+                  {children}
+                  <Footer />
+                </CartContextProvider>
+              </AuthProvider>
+            </SearchProvider>
           </AuthModalProvider>
         </QueryClientProvider>
       </body>
