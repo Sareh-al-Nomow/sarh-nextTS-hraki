@@ -24,7 +24,7 @@ import { Category } from "@/lib/models/categoryModal";
 import { useSearchParams } from "next/navigation";
 import { SearchContext } from "@/store/SearchContext";
 
-const MAX_PRICE = 1000;
+const MAX_PRICE = 5000;
 
 const ShopGridPage = () => {
   // State
@@ -681,7 +681,7 @@ const ShopGridPage = () => {
                     Price Range
                   </h4>
                   <div className="space-y-4">
-                    <div className="relative h-2 bg-gray-200 rounded-full">
+                    {/* <div className="relative h-2 bg-gray-200 rounded-full">
                       <div
                         className="absolute h-2 bg-blue-500 rounded-full"
                         style={{
@@ -703,40 +703,32 @@ const ShopGridPage = () => {
                         }}
                         onMouseDown={() => setActiveHandle("max")}
                       />
-                    </div>
-                    <div className="flex justify-between">
+                    </div> */}
+                    <div className="flex justify-between gap-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Min:</span>
                         <input
                           type="number"
                           min="0"
-                          max={priceRange[1] - 10}
                           value={priceRange[0]}
                           onChange={(e) => {
-                            const value = Math.min(
-                              parseInt(e.target.value) || 0,
-                              priceRange[1] - 10
-                            );
+                            const value = parseInt(e.target.value) || 0;
                             setPriceRange([value, priceRange[1]]);
                           }}
-                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
                         />
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Max:</span>
                         <input
                           type="number"
-                          min={priceRange[0] + 10}
-                          max={MAX_PRICE}
+                          min="0"
                           value={priceRange[1]}
                           onChange={(e) => {
-                            const value = Math.max(
-                              parseInt(e.target.value) || MAX_PRICE,
-                              priceRange[0] + 10
-                            );
+                            const value = parseInt(e.target.value) || 0;
                             setPriceRange([priceRange[0], value]);
                           }}
-                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
                         />
                       </div>
                     </div>
