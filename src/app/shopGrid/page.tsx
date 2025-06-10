@@ -85,12 +85,14 @@ const ShopGridPage = () => {
           categoryId,
         };
       });
+      const c = organizedCategories?.allWithSub.find(
+        (c) => c.id === categoryId
+      );
+      if (c) {
+        handleSelectedCategory(c);
+      }
     }
   }, [param]);
-
-  console.log(selectedCategoriesIds);
-
-  console.log(organizedCategories);
 
   // Transform products data
   const displayProducts = productsData?.data.map((p) => transformProduct(p));
