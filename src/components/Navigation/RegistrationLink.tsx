@@ -11,6 +11,7 @@ import { login, loginRequest } from "@/lib/axios/loginAxios";
 import { otpRequest, otpVerify } from "@/lib/axios/otpAxios";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
+import Link from "next/link";
 
 export default function RegistrationLink() {
   const { login: loginCxt } = useContext(AuthContext);
@@ -273,10 +274,15 @@ export default function RegistrationLink() {
               </div>
 
               <div className="text-center">
-                <button className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded">
+                <Link
+                  href={
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                  }
+                  className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
+                >
                   <FcGoogle className="text-xl" />
                   <span>تسجيل الدخول عبر Google</span>
-                </button>
+                </Link>
               </div>
             </>
           )}
@@ -414,10 +420,15 @@ export default function RegistrationLink() {
               </form>
 
               <div className="text-center mt-4">
-                <button className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded">
+                <Link
+                  href={
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                  }
+                  className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
+                >
                   <FcGoogle className="text-xl" />
                   <span>تسجيل الدخول عبر Google</span>
-                </button>
+                </Link>
               </div>
 
               <div className="text-center mt-4 text-sm">
