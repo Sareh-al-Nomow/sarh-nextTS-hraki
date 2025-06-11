@@ -157,6 +157,10 @@ export default function RegistrationLink() {
     }
   };
 
+  function handleForgetPassword() {
+    console.log(formInput.email);
+  }
+
   // handle close modal and rest it ...
   function handleCloseModal() {
     closeAuthModal();
@@ -259,18 +263,30 @@ export default function RegistrationLink() {
                   {isPendingLogin ? "... تسجيل الدخول" : "تسجيل الدخول"}
                 </button>
               </form>
-
-              <div className="text-center my-4 text-sm">
-                ليس لديك حساب؟{" "}
-                <button
-                  onClick={() => {
-                    setContentView("signup");
-                    setErrors({});
-                  }}
-                  className="text-blue-400 hover:underline"
-                >
-                  إنشاء حساب
-                </button>
+              <div className="flex justify-between">
+                <div className="text-center my-4 text-sm">
+                  <button
+                    onClick={() => {
+                      setContentView("forgetPssword");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    نسيان كلمة المرور
+                  </button>
+                </div>
+                <div className="text-center my-4 text-sm">
+                  ليس لديك حساب؟{" "}
+                  <button
+                    onClick={() => {
+                      setContentView("signup");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    إنشاء حساب
+                  </button>
+                </div>
               </div>
 
               <div className="text-center">
@@ -430,18 +446,30 @@ export default function RegistrationLink() {
                   <span>تسجيل الدخول عبر Google</span>
                 </Link>
               </div>
-
-              <div className="text-center mt-4 text-sm">
-                لديك حساب؟{" "}
-                <button
-                  onClick={() => {
-                    setContentView("login");
-                    setErrors({});
-                  }}
-                  className="text-green-400 hover:underline"
-                >
-                  تسجيل الدخول
-                </button>
+              <div className="flex justify-between">
+                <div className="text-center my-4 text-sm">
+                  <button
+                    onClick={() => {
+                      setContentView("forgetPssword");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    نسيان كلمة المرور
+                  </button>
+                </div>
+                <div className="text-center mt-4 text-sm">
+                  لديك حساب؟{" "}
+                  <button
+                    onClick={() => {
+                      setContentView("login");
+                      setErrors({});
+                    }}
+                    className="text-green-400 hover:underline"
+                  >
+                    تسجيل الدخول
+                  </button>
+                </div>
               </div>
             </>
           )}
@@ -490,6 +518,64 @@ export default function RegistrationLink() {
                 >
                   {isPendingOtp ? "... تأكيد" : "تأكيد"}
                 </button>
+              </form>
+            </>
+          )}
+
+          {contentView === "forgetPssword" && (
+            <>
+              <h2 className="text-xl font-bold mb-4 text-center ">
+                Forget Password
+              </h2>
+              <form
+                className="space-y-4 text-center"
+                onSubmit={handleForgetPassword}
+              >
+                <div>
+                  <div className="flex justify-center">
+                    <label className="block mb-2 text-gray-300">
+                      Please Enter Your Email
+                    </label>
+                    {errors.otp && (
+                      <span className="text-red-400 text-sm mt-1">
+                        {errors.otp}
+                      </span>
+                    )}
+                  </div>
+
+                  <input
+                    name="email"
+                    type="string"
+                    onChange={handleInputChange}
+                    value={formInput.email}
+                    className={`w-full p-2 rounded bg-slate-700 text-center border ${
+                      errors.email
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-slate-600 focus:ring-blue-500"
+                    } focus:outline-none focus:ring-2`}
+                    placeholder="ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر"
+                  />
+                </div>
+
+                <button
+                  disabled={isPendingOtp}
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
+                >
+                  {isPendingOtp ? "... ارسال" : "ارسال"}
+                </button>
+                <div className="text-center my-4 text-sm">
+                  ليس لديك حساب؟{" "}
+                  <button
+                    onClick={() => {
+                      setContentView("signup");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    إنشاء حساب
+                  </button>
+                </div>
               </form>
             </>
           )}
