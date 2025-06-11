@@ -2,11 +2,13 @@ import { placeOrder } from "@/lib/axios/paymentAxios";
 import { CartContext } from "@/store/CartContext";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 const PaymentTap: React.FC = () => {
   const { updateCart } = useContext(CartContext);
+  const router = useRouter();
 
   const { summaryCart } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<
@@ -23,7 +25,11 @@ const PaymentTap: React.FC = () => {
     onSuccess: (data) => {
       console.log(data.paymentUrl);
       updateCart();
-      window.location.href = data.paymentUrl;
+      if (paymentMethod === "stripe") {
+        window.location.href = data.paymentUrl;
+      } else {
+        router.push("/success");
+      }
     },
     onError: (error) => {
       toast.error(error?.message || "Stripe payment failed.");
