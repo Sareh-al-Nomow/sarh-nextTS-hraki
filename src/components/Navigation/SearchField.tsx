@@ -2,11 +2,10 @@
 
 import { SearchContext } from "@/store/SearchContext";
 import { usePathname, useRouter } from "next/navigation";
-import {  useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 
 export default function SearchField() {
-
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
   const pathname = usePathname();
@@ -19,25 +18,24 @@ export default function SearchField() {
   }, [pathname, setSearchTerm]);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") return; // تجاهل لو فاضي
+    if (searchTerm.trim() === "") return;
 
     const timer = setTimeout(() => {
       console.log("Search:", searchTerm);
       router.push(`/shopGrid?query=${encodeURIComponent(searchTerm)}`);
     }, 500); // نصف ثانية
 
-    return () => clearTimeout(timer); // يلغي المؤقت إذا المستخدم كتب من جديد
+    return () => clearTimeout(timer);
   }, [router, searchTerm]);
 
-
   return (
-    <div className="w-full relative max-w-md">
+    <div className="w-full relative ">
       <input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         type="text"
         placeholder="ابحث عن المنتجات..."
-        className="w-full p-3 text-xl shadow rounded-full focus:shadow-black/60 transition-all duration-200"
+        className="w-full p-3 text-xl bg-white shadow rounded-lg focus:shadow-black/60 transition-all duration-200"
       />
       <CiSearch className=" absolute top-4 right-5 text-2xl" />
     </div>

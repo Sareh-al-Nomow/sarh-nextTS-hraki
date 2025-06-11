@@ -43,14 +43,15 @@ export default function PremiumNavWidget() {
       {/* Premium Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 group"
+        className="p-2 group relative w-10 h-10 flex items-center justify-center"
         aria-label="Open navigation"
       >
-        <div className="flex flex-col gap-1 items-center">
+        {/* الخطوط الثلاثة للأيقونة */}
+        <div className="flex flex-col gap-1.5 items-center">
           {[1, 2, 3].map((i) => (
             <motion.span
               key={i}
-              className="w-6 h-0.5 bg-gray-800 block"
+              className="w-6 h-0.75 bg-gray-800 block"
               animate={{
                 width: isOpen ? 0 : 24,
                 opacity: isOpen ? 0 : 1,
@@ -61,25 +62,28 @@ export default function PremiumNavWidget() {
               }}
             />
           ))}
-          <motion.span
-            className="absolute w-6 h-0.5 bg-gray-800 origin-center"
-            animate={{
-              rotate: isOpen ? 45 : 0,
-              y: isOpen ? 1 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.span
-            className="absolute w-6 h-0.5 bg-gray-800 origin-center"
-            animate={{
-              rotate: isOpen ? -45 : 0,
-              y: isOpen ? -1 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-          />
         </div>
-      </button>
 
+        {/* الخطين اللذين يشكلان علامة X */}
+        <motion.span
+          className="absolute w-6 h-0.5 bg-gray-800"
+          animate={{
+            rotate: isOpen ? 45 : 0,
+            y: isOpen ? 0 : -8,
+            opacity: isOpen ? 1 : 0,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+        <motion.span
+          className="absolute w-6 h-0.5 bg-gray-800"
+          animate={{
+            rotate: isOpen ? -45 : 0,
+            y: isOpen ? 0 : 8,
+            opacity: isOpen ? 1 : 0,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+      </button>
       {/* Luxury Off-Canvas Menu */}
       <AnimatePresence>
         {isOpen && (

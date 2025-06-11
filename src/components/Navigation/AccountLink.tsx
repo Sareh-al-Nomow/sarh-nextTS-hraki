@@ -19,9 +19,17 @@ export default function PremiumUserMenu() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Close menu when clicking outside
+  // Check screen size and handle outside clicks
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
@@ -29,13 +37,16 @@ export default function PremiumUserMenu() {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const menuItems = [
     { icon: <FiUser size={18} />, label: "Profile", path: "/profile" },
     { icon: <FiShoppingBag size={18} />, label: "Orders", path: "/orders" },
-    { icon: <FiHeart size={18} />, label: "wishlist", path: "/wishlist" },
+    { icon: <FiHeart size={18} />, label: "Wishlist", path: "/wishlist" },
   ];
 
   const handleLogout = () => {
@@ -50,8 +61,10 @@ export default function PremiumUserMenu() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1 rounded-full transition-all"
+        className="flex items-center gap-2 p-1 rounded-full transition-all focus:outline-none"
         aria-label="User menu"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
       >
         <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
           {user?.avatar ? (
@@ -60,6 +73,7 @@ export default function PremiumUserMenu() {
               alt="User avatar"
               fill
               className="object-cover"
+              sizes="36px"
             />
           ) : (
             <FiUser className="text-gray-600" size={23} />
@@ -81,17 +95,20 @@ export default function PremiumUserMenu() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+            className={`absolute ${
+              isMobile ? "left-0" : "right-0"
+            } mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50`}
           >
             {/* User Profile Section */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-              <div className="relative w-10 h-[29px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div className="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                 {user?.avatar ? (
                   <Image
                     src={user.avatar}
                     alt="User avatar"
                     fill
                     className="object-cover"
+                    sizes="40px"
                   />
                 ) : (
                   <FiUser className="text-gray-600" size={18} />

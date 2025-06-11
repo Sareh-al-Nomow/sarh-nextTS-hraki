@@ -10,6 +10,7 @@ import Footer from "@/components/footer/footer";
 import CartContextProvider from "@/store/CartContext";
 import { AuthModalProvider } from "@/store/AuthModalContext";
 import { SearchProvider } from "@/store/SearchContext";
+import TopHeader from "@/components/Navigation/TopHeader";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -36,6 +37,7 @@ export default function RootLayout({
               <AuthProvider>
                 <CartContextProvider>
                   <Toaster />
+                  <TopHeader />
                   <Navbar />
                   <div id="root-modal"></div>
                   {children}
