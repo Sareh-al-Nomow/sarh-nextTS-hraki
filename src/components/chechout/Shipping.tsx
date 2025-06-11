@@ -3,19 +3,23 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import React from "react";
 import Spinner from "../UI/SpinnerLoading";
+import toast from "react-hot-toast";
 
 const Shipping: React.FC<{
   countryId: number;
   updateOrderData: (name: string, data: number | null) => void;
   startPayment: () => void;
-  selecteDelevaryMethodId: (id: number | null) => void;
-  selectedDelevaryMethodId: number | null;
+  selectedShippingMethod: number | null;
+  orderData: {
+    addressId: number | null;
+    delevaryMethodId: number | null;
+  };
 }> = ({
   countryId,
   updateOrderData,
+  orderData,
+  selectedShippingMethod,
   startPayment,
-  selecteDelevaryMethodId,
-  selectedDelevaryMethodId,
 }) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["shipping"],
@@ -26,17 +30,17 @@ const Shipping: React.FC<{
     console.log(data.ShippingZone[0].zone_methods);
   }
 
-  console.log("SHIPPING COMPONENT");
-
   function handleSelectDelevaryMethod(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedValue = e.target.value;
-    console.log("Selected delivery method:", selectedValue);
-    selecteDelevaryMethodId(Number(selectedValue));
+    console.log("Selected delivery method:", selectedValue ?? null);
+    updateOrderData("delevaryMethodId", Number(selectedValue) ?? null);
   }
-
   function handleFinishSelectDelevary() {
-    updateOrderData("delevaryMethodId", selectedDelevaryMethodId ?? null);
-    startPayment();
+    if (orderData.delevaryMethodId !== null) {
+      startPayment();
+    } else {
+      toast.error("Please select Delevary method!");
+    }
   }
 
   if (isLoading) {
@@ -88,8 +92,8 @@ const Shipping: React.FC<{
                     onChange={handleSelectDelevaryMethod}
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 "
                     defaultChecked={
-                      selectedDelevaryMethodId !== null &&
-                      selectedDelevaryMethodId === method.shipping_zone_method_id
+                      selectedShippingMethod !== null &&
+                      selectedShippingMethod === method.shipping_zone_method_id
                     }
                   />
                   <label

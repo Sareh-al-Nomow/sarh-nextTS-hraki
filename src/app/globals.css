@@ -10,8 +10,7 @@ html {
 }
 
 body {
-  font-family: "Tan";
-  transition: 0.3s;
+  font-family: var(--font-dosis), sans-serif;
 }
 
 input:focus {

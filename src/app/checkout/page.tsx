@@ -13,20 +13,21 @@ import { getCountries } from "@/lib/axios/countryAxios";
 import { Country } from "@/models/forntEndCountry";
 import Spinner from "@/components/UI/SpinnerLoading";
 import Shipping from "@/components/chechout/Shipping";
+import PaymentTap from "@/components/chechout/PaymentTap";
 
 const CheckoutPage = () => {
   const [activeTab, setActiveTab] = useState<
     "information" | "shipping" | "payment"
   >("information");
-  const [paymentMethod, setPaymentMethod] = useState<
-    "credit-card" | "paypal" | "apple-pay"
-  >("credit-card");
+
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-  const [selectedDelevaryMethodId, setSelectedDelevaryMethodId] = useState<
-    number | null
-  >(null);
+
+  const [dataReady, setDataready] = useState({
+    addressReady: false,
+    shippingReady: false,
+  });
 
   interface OrderDataShape {
     addressId: number | null;
@@ -37,7 +38,13 @@ const CheckoutPage = () => {
     delevaryMethodId: null,
   });
 
-  const { margeItems, summaryCart } = useContext(CartContext);
+  const {
+    margeItems,
+    summaryCart,
+    saveOrderInfo,
+    isLoadingSaveOrderData,
+    isErrorSaveOrderData,
+  } = useContext(CartContext);
 
   const {
     data: dataCountries,
@@ -47,9 +54,6 @@ const CheckoutPage = () => {
     queryKey: ["countries"],
     queryFn: getCountries,
   });
-
-
-  
 
   useEffect(() => {
     setCountries(dataCountries ?? null);
@@ -78,12 +82,27 @@ const CheckoutPage = () => {
     setSelectedCountry(country);
   }
 
-  function handleSelectedDelevaryMethodId(country: number | null) {
-    setSelectedDelevaryMethodId(country);
+  function handleDataReady(data: string, state: boolean) {
+    setDataready((prev) => ({
+      ...prev,
+      [data]: state,
+    }));
   }
 
   function handleStartPayment() {
+    if (orderData.addressId && orderData.delevaryMethodId) {
+      console.log(" save order");
+      saveOrderInfo(
+        summaryCart.cart_id,
+        orderData.addressId,
+        orderData.delevaryMethodId
+      );
+    }
+
     console.log(orderData);
+
+    if (isErrorSaveOrderData) return;
+
     setActiveTab("payment");
   }
 
@@ -93,7 +112,7 @@ const CheckoutPage = () => {
     redirect("/");
   }
 
-  if (isLoadingGetCountries) {
+  if (isLoadingGetCountries || isLoadingSaveOrderData) {
     return (
       <div className="my-20 mb-56">
         <Spinner />
@@ -109,6 +128,21 @@ const CheckoutPage = () => {
       </div>
     );
   }
+
+  // if (isErrorSaveOrderData) {
+  //   return (
+  //     <div className=" my-20 text-center">
+  //       <h1 className="p-5">Save Order Data Faild</h1>
+  //       <p className="p-5">try to add your address and develary method again</p>
+  //       <button
+  //         onClick={() => router.push("/cart")}
+  //         className="py-4 px-5 rounded-2xl bg-red-400 text-white"
+  //       >
+  //         Try Again
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -200,18 +234,20 @@ const CheckoutPage = () => {
                   countries={countries}
                   selectCountry={handleSelectCountry}
                   selectedCountry={selectedCountry}
+                  handleDataReady={handleDataReady}
+                  dataReady={dataReady}
                 />
               )}
 
               {/* Shipping Tab */}
               {activeTab === "shipping" &&
-                (selectedCountry ? (
+                (selectedCountry && orderData.addressId ? (
                   <Shipping
                     countryId={selectedCountry.id}
                     updateOrderData={handleUpdateOrderData}
-                    selecteDelevaryMethodId={handleSelectedDelevaryMethodId}
-                    selectedDelevaryMethodId={selectedDelevaryMethodId}
                     startPayment={handleStartPayment}
+                    selectedShippingMethod={orderData.delevaryMethodId}
+                    orderData={orderData}
                   />
                 ) : (
                   <div className="text-center my-20">
@@ -220,142 +256,7 @@ const CheckoutPage = () => {
                 ))}
 
               {/* Payment Tab */}
-              {activeTab === "payment" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white shadow-sm rounded-lg p-6 space-y-6"
-                >
-                  <h2 className="text-xl font-medium text-gray-900">
-                    Payment Method
-                  </h2>
-
-                  <div className="space-y-4">
-                    <div
-                      onClick={() => setPaymentMethod("credit-card")}
-                      className={`p-4 border rounded-md cursor-pointer ${
-                        paymentMethod === "credit-card"
-                          ? "border-indigo-500 bg-indigo-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="credit-card"
-                          name="payment"
-                          checked={paymentMethod === "credit-card"}
-                          onChange={() => {}}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor="credit-card"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          Credit Card
-                        </label>
-                      </div>
-                    </div>
-
-                    <div
-                      onClick={() => setPaymentMethod("paypal")}
-                      className={`p-4 border rounded-md cursor-pointer ${
-                        paymentMethod === "paypal"
-                          ? "border-indigo-500 bg-indigo-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="paypal"
-                          name="payment"
-                          checked={paymentMethod === "paypal"}
-                          onChange={() => {}}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor="paypal"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          PayPal
-                        </label>
-                      </div>
-                    </div>
-
-                    <div
-                      onClick={() => setPaymentMethod("apple-pay")}
-                      className={`p-4 border rounded-md cursor-pointer ${
-                        paymentMethod === "apple-pay"
-                          ? "border-indigo-500 bg-indigo-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="apple-pay"
-                          name="payment"
-                          checked={paymentMethod === "apple-pay"}
-                          onChange={() => {}}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor="apple-pay"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          Apple Pay
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="terms"
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="ml-2 block text-sm text-gray-700"
-                      >
-                        I agree to the{" "}
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-500"
-                        >
-                          Terms of Service
-                        </a>{" "}
-                        and{" "}
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-500"
-                        >
-                          Privacy Policy
-                        </a>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between pt-4">
-                    <button
-                      onClick={() => setActiveTab("shipping")}
-                      className="text-indigo-600 hover:text-indigo-500 font-medium"
-                    >
-                      ← Back to Shipping
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition font-medium"
-                    >
-                      Complete Order
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
+              {activeTab === "payment" && <PaymentTap></PaymentTap>}
             </div>
 
             {/* Order Summary */}

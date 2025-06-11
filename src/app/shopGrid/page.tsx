@@ -156,6 +156,10 @@ const ShopGridPage = () => {
     if (cate) {
       handleSelectedCategory(cate);
     }
+
+    if (selectedCategory?.id === categoryId) {
+      setSelectedCategory(null);
+    }
     setSelectedCategoriesIds((prev) =>
       prev.includes(categoryId)
         ? prev.filter((c) => c !== categoryId)
