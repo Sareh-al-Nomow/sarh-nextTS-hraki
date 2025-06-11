@@ -49,7 +49,6 @@ export const saveOrderData = async ({
   }
 };
 
-
 export const placeOrder = async (payload: OrderPayload) => {
   const token = localStorage.getItem("token");
 
@@ -82,3 +81,5 @@ export const placeOrder = async (payload: OrderPayload) => {
     throw new Error(message);
   }
 };
+
+console.log("hi");
