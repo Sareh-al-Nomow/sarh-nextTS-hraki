@@ -8,6 +8,7 @@ import {
   getCartByToken,
   UpdateCartItemQuantity,
 } from "@/lib/axios/CartAxios";
+import { saveOrderData } from "@/lib/axios/OrderAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -103,6 +104,13 @@ interface CartContextType {
   deleteCartItem: (cart_item_id: number) => void;
   applyCoupon: (coupon_code: string) => void;
   deleteAppliedCoupon: (coupon_code: number) => void;
+  saveOrderInfo: (
+    cartId: number,
+    addressId: number,
+    DelevaryMethodId: number
+  ) => void;
+  updateCart: () => void;
+
   cartError: string | null;
   getCartError: Error | null;
   isLoadingCart: boolean;
@@ -111,6 +119,9 @@ interface CartContextType {
   isLoadingDeleteCartItem: boolean;
   isLoadingApplyCoupon: boolean;
   isLoadingdeleteAppliedCoupon: boolean;
+
+  isLoadingSaveOrderData: boolean;
+  isErrorSaveOrderData: boolean;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -131,6 +142,8 @@ export const CartContext = createContext<CartContextType>({
   deleteCartItem: () => {},
   applyCoupon: () => {},
   deleteAppliedCoupon: () => {},
+  saveOrderInfo: () => {},
+  updateCart: () => {},
   cartError: null,
   getCartError: null,
   isLoadingCart: false,
@@ -139,6 +152,8 @@ export const CartContext = createContext<CartContextType>({
   isLoadingDeleteCartItem: false,
   isLoadingApplyCoupon: false,
   isLoadingdeleteAppliedCoupon: false,
+  isLoadingSaveOrderData: false,
+  isErrorSaveOrderData: false,
 });
 
 type CartContextProviderProps = {
@@ -271,6 +286,22 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     },
   });
 
+  // Save order data (strat payment) Mutation
+  const {
+    mutate: saveOrderDataMutate,
+    isPending: isLoadingSaveOrderData,
+    isError: isErrorSaveOrderData,
+  } = useMutation({
+    mutationFn: saveOrderData,
+    onSuccess: () => {
+      refetch();
+      toast.success("Address and Payment successflly!");
+    },
+    onError: (error: Error) => {
+      setCartError(error.message);
+    },
+  });
+
   // ****************************** end mutate section
 
   // ****************************** strat actions section
@@ -309,6 +340,19 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
   const deleteAppliedCoupon = (cartId: number) => {
     console.log("coupon at Context : ", cartId);
     deleteAppliedCouponMutate({ cartId });
+  };
+
+  const saveOrderInfo = (
+    cartId: number,
+    addressId: number,
+    DelevaryMethodId: number
+  ) => {
+    console.log("coupon at Context : ", cartId);
+    saveOrderDataMutate({ cartId, addressId, DelevaryMethodId });
+  };
+
+  const updateCart = () => {
+    refetch();
   };
 
   // ****************************** end actions section
@@ -351,15 +395,19 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
         deleteCartItem,
         applyCoupon,
         deleteAppliedCoupon,
+        saveOrderInfo,
+        updateCart,
         isLoadingCart,
         isLoadingAddToCart,
         isLoadingUpdateCartQuantity,
         isLoadingDeleteCartItem,
         isLoadingApplyCoupon,
         isLoadingdeleteAppliedCoupon,
+        isLoadingSaveOrderData,
         cartError,
         getCartError,
         margeItems,
+        isErrorSaveOrderData,
       }}
     >
       {children}

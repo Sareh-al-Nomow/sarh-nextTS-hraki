@@ -15,6 +15,7 @@ const dosis = Dosis({
   variable: "--font-dosis",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "700"], // أضف الأوزان التي تحتاجها
 });
 
 export const metadata: Metadata = {

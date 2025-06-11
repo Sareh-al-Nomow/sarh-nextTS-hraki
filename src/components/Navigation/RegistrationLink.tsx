@@ -48,8 +48,12 @@ export default function RegistrationLink() {
     onSuccess: (data) => {
       console.log("تم إنشاء الحساب بنجاح", data);
       console.log(data);
-      loginCxt(data.token, data.user);
-      handlerResetForm();
+      if (data.requiresVerification) {
+        setContentView("otp");
+      } else {
+        loginCxt(data.token, data.user);
+        handlerResetForm();
+      }
     },
     onError: (error: Error) => {
       console.log("خطأ أثناء التسجيل:", error.message);

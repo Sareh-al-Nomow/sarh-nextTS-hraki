@@ -23,6 +23,8 @@ const AddressTap: React.FC<{
   countries: Country[] | null;
   selectCountry: (country: Country) => void;
   selectedCountry: Country | null;
+  dataReady: { addressReady: boolean; shippingReady: boolean };
+  handleDataReady: (data: string, state: boolean) => void;
 }> = ({
   setActiveTab,
   UpdateOrderData,
@@ -31,6 +33,8 @@ const AddressTap: React.FC<{
   countries,
   selectCountry,
   selectedCountry,
+  dataReady,
+  handleDataReady,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState<Address>(
@@ -46,10 +50,9 @@ const AddressTap: React.FC<{
     }
   );
 
-  const [addressReady, setSAddressReady] = useState<boolean>(false);
   const [addressError, setAddressError] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isEditing, setIsEditing] = useState<boolean>(true);
+  const [isEditing, setIsEditing] = useState<boolean>(!dataReady.addressReady);
   const [showCancelButton, setShowCancelButton] = useState<boolean>(false);
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -123,7 +126,7 @@ const AddressTap: React.FC<{
       return;
     }
     addNewAddress(payload);
-    setSAddressReady(true);
+    handleDataReady("addressReady", true);
   };
 
   function handleSelectAddress(address: Address) {
@@ -147,14 +150,14 @@ const AddressTap: React.FC<{
     if (filteredCountry) {
       selectCountry(filteredCountry);
     }
-    setSAddressReady(true);
+    handleDataReady("addressReady", true);
     setIsEditing(false);
     setShowCancelButton(false);
   }
 
   function handleStartEdit() {
     setIsEditing(true);
-    setSAddressReady(false);
+    handleDataReady("addressReady", false);
     setShowCancelButton(true);
     UpdateOrderData("addressId", null);
   }
@@ -178,7 +181,8 @@ const AddressTap: React.FC<{
     }
 
     setIsEditing(false);
-    setSAddressReady(true);
+    handleDataReady("addressReady", true);
+
     setShowCancelButton(false);
   }
 
@@ -207,6 +211,7 @@ const AddressTap: React.FC<{
       setAddressError((prev) => [...prev, "please select your address"]);
       setIsModalOpen(true);
     }
+    console.log(selectedAddress?.id);
   }
 
   if (isLoading || isLoadingAddAddress)
@@ -273,7 +278,7 @@ const AddressTap: React.FC<{
             <FaChevronDown className="text-gray-500 ml-2" />
           </button>
 
-          {dropdownOpen && (
+          {dropdownOpen && data && (
             <div className="absolute w-full bg-white border border-gray-300 rounded-md mt-2 shadow-md max-h-60 overflow-auto">
               {data &&
                 data.map((addr) => (
@@ -495,11 +500,13 @@ const AddressTap: React.FC<{
           <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            type={addressReady ? `button` : `submit`}
-            onClick={addressReady ? handleFinishAddressFiled : () => {}}
+            type={dataReady.addressReady ? `button` : `submit`}
+            onClick={
+              dataReady.addressReady ? handleFinishAddressFiled : () => {}
+            }
             className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium"
           >
-            {addressReady ? "Continue to Shipping" : "Save Address"}
+            {dataReady.addressReady ? "Continue to Shipping" : "Save Address"}
           </motion.button>
         </div>
       </motion.form>
