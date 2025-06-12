@@ -10,7 +10,7 @@ export default function CartLink() {
 
   return (
     <Link href={"/cart"} className="relative mt-1">
-      <IoCartOutline className={`pr-text text-4xl cursor-pointer`} />
+      <IoCartOutline className={`text-black text-4xl cursor-pointer`} />
       <div className="text-white absolute text-[13px]  -top-1 left-0 pr-bg rounded-full w-5 h-5 flex justify-center items-center">
         {cartQuantity ? cartQuantity : 0}
       </div>

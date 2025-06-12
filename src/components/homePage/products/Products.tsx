@@ -11,7 +11,6 @@ import { FrontendProduct } from "@/models/forntEndProduct";
 import { getProducts } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
 
-
 export default function Products() {
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
 
@@ -96,9 +95,11 @@ export default function Products() {
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="px-6 py-8 bg-gradient-to-r from-blue-50 to-cyan-50"
+        className="px-6 py-1 bg-gradient-to-r from-blue-50 to-cyan-50"
       >
-        <h1 className="text-3xl font-bold text-gray-900 pr-text">Premium Collection</h1>
+        <h1 className="text-3xl font-bold text-gray-900 pr-text">
+          Premium Collection
+        </h1>
         <p className="text-gray-600 mt-2">Showing {data?.total} products</p>
       </motion.header>
 
@@ -107,7 +108,7 @@ export default function Products() {
         <motion.div
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center md:justify-items-start gap-4"
         >
           {displayedProducts.map((product: FrontendProduct) => (
             <ProductItem

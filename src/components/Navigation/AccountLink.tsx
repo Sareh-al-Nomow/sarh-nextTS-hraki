@@ -69,7 +69,7 @@ export default function PremiumUserMenu() {
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <FiChevronDown className="text-gray-500" size={16} />
+          <FiChevronDown className="text-white" size={16} />
         </motion.div>
       </motion.button>
 

@@ -45,7 +45,7 @@ export default function CategoriesList() {
           Browse Categories
         </h2>
         {!categories && (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-6">
             <h1>There is No Avilable Categories</h1>
           </div>
         )}
@@ -57,7 +57,7 @@ export default function CategoriesList() {
                 key={index}
                 className="flex flex-col items-center text-center group"
               >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#219EBC] shadow-md group-hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Image
                     src={cat.description.image}
                     alt={cat.description.name}
@@ -66,7 +66,7 @@ export default function CategoriesList() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="mt-2 text-sm md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
+                <span className="mt-2 text-lg font-bold text-gray-100 md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
                   {cat.description.name}
                 </span>
               </Link>

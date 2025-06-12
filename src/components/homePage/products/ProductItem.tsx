@@ -73,7 +73,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
         initial="hidden"
         animate="visible"
         whileHover="hover"
-        className="flex-shrink-0 w-48 md:w-60 lg:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
+        className="flex-shrink-0 w-48 md:w-60 lg:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-5 group cursor-pointer"
       >
         {/* Product Image */}
         <div
@@ -123,7 +123,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
         {/* Product Info */}
         <div className="p-4">
-          <h3 className="font-medium text-gray-900 line-clamp-2 text-sm md:text-base">
+          <h3 className="font-bold text-gray-900 line-clamp-2 text-sm md:text-base">
             {product.name}
           </h3>
 
