@@ -23,6 +23,7 @@ import { GoDotFill } from "react-icons/go";
 import { Category } from "@/lib/models/categoryModal";
 import { useSearchParams } from "next/navigation";
 import { SearchContext } from "@/store/SearchContext";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 const MAX_PRICE = 5000;
 
@@ -246,9 +247,9 @@ const ShopGridPage = () => {
     }
   }, []);
 
-  const toggleLike = (product: FrontendProduct) => {
+  const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 
