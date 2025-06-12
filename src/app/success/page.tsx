@@ -33,7 +33,7 @@ const OrderSuccessPage = () => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => router.push("/profile/orders")}
+            onClick={() => router.push("/orders")}
             className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
           >
             View My Orders

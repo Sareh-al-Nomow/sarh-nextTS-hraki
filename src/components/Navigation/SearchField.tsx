@@ -2,11 +2,10 @@
 
 import { SearchContext } from "@/store/SearchContext";
 import { usePathname, useRouter } from "next/navigation";
-import {  useContext, useEffect } from "react";
-import { CiSearch } from "react-icons/ci";
+import { useContext, useEffect } from "react";
+import { FiSearch } from "react-icons/fi";
 
 export default function SearchField() {
-
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
   const pathname = usePathname();
@@ -29,7 +28,6 @@ export default function SearchField() {
     return () => clearTimeout(timer); // يلغي المؤقت إذا المستخدم كتب من جديد
   }, [router, searchTerm]);
 
-
   return (
     <div className="w-full relative max-w-md">
       <input
@@ -39,7 +37,7 @@ export default function SearchField() {
         placeholder="ابحث عن المنتجات..."
         className="w-full p-3 text-xl shadow rounded-full focus:shadow-black/60 transition-all duration-200"
       />
-      <CiSearch className=" absolute top-4 right-5 text-2xl" />
+      <FiSearch className="absolute top-4 right-5 text-gray-400" />
     </div>
   );
 }

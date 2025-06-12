@@ -85,7 +85,7 @@ export default function PremiumUserMenu() {
           >
             {/* User Profile Section */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-              <div className="relative w-10 h-[29px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div className="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                 {user?.avatar ? (
                   <Image
                     src={user.avatar}

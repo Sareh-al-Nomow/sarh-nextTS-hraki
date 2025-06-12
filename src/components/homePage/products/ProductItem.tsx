@@ -180,7 +180,11 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   isLoadingAddToCart ? "opacity-40" : ""
                 }`}
                 aria-label="Add to cart"
-                onClick={handleAddToCart}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setQuickViewProduct(product);
+                }}
                 disabled={isLoadingAddToCart}
               >
                 <FiShoppingCart size={16} />
