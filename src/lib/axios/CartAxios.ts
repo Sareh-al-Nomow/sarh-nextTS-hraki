@@ -262,14 +262,13 @@ export const DeleteAppliedCoupon = async ({
   }
 
   try {
-    const response = await axios.delete(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupons/remove`,
+      { cartId },
       {
-        data: {
-          cartId,
-        },
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );
@@ -282,5 +281,3 @@ export const DeleteAppliedCoupon = async ({
     throw new Error(message);
   }
 };
-
-

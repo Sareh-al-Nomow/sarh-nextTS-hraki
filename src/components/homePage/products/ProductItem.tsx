@@ -5,10 +5,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
 import Link from "next/link";
-import { FrontendProduct } from "@/models/forntEndProduct";
 import { CartContext } from "@/store/CartContext";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,8 +28,8 @@ const itemVariants = {
 };
 
 type ProductItemProp = {
-  product: FrontendProduct;
-  toggleLike: (product: FrontendProduct) => void;
+  product: FrontEndProductCartItem;
+  toggleLike: (product: FrontEndProductCartItem) => void;
   likedProducts: number[];
 };
 
@@ -42,7 +42,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
   const { isAuthenticated } = useContext(AuthContext);
 
   const [quickViewProduct, setQuickViewProduct] =
-    useState<FrontendProduct | null>(null);
+    useState<FrontEndProductCartItem | null>(null);
 
   const { openAuthModal } = useContext(AuthModalContext);
 
@@ -282,7 +282,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   </p>
                 )}
 
-                {/* Features */}
+                {/* Features
                 {quickViewProduct.features && (
                   <ul className="space-y-1">
                     {quickViewProduct.features.map((feature, index) => (
@@ -292,7 +292,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                       </li>
                     ))}
                   </ul>
-                )}
+                )} */}
 
                 {/* Color Options */}
                 {quickViewProduct.colors && (

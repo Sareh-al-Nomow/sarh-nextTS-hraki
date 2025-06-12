@@ -7,7 +7,7 @@ import Spinner from "../../UI/SpinnerLoading";
 import { getProducts } from "@/lib/axios/getProductsAxios";
 
 import HorizontalProductList from "./HorizontalProductList";
-import { transformProduct } from "@/utils/trnsformProduct";
+import { transformProductCartItem } from "@/utils/trnsformProductCartItem";
 
 export default function ProductsLists() {
   const { data, isLoading, isError, refetch } = useQuery<
@@ -18,7 +18,8 @@ export default function ProductsLists() {
     queryFn: ({ signal }) => getProducts(undefined, signal),
   });
 
-  const displayedProducts = data?.data?.map(transformProduct).reverse() || [];
+  const displayedProducts =
+    data?.data?.map(transformProductCartItem).reverse() || [];
 
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollY");
@@ -60,7 +61,10 @@ export default function ProductsLists() {
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-cyan-50">
-      <HorizontalProductList title="Best  Saller" products={displayedProducts} />
+      <HorizontalProductList
+        title="Best  Saller"
+        products={displayedProducts}
+      />
       <HorizontalProductList
         title="Suggestion for you"
         products={displayedProducts}

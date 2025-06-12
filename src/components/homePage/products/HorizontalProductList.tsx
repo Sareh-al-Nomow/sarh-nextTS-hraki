@@ -5,6 +5,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 import ProductItem from "./ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 // const itemVariants = {
 //   hidden: { opacity: 0, x: 20 },
@@ -28,7 +29,7 @@ export default function HorizontalProductList({
   products,
 }: {
   title?: string;
-  products: FrontendProduct[];
+  products: FrontEndProductCartItem[];
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -77,9 +78,9 @@ export default function HorizontalProductList({
     }
   };
 
-  const toggleLike = (product: FrontendProduct) => {
+  const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 

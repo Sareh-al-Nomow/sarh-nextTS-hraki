@@ -10,6 +10,7 @@ import Spinner from "../../UI/SpinnerLoading";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { getProducts } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 export default function Products() {
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
@@ -40,9 +41,9 @@ export default function Products() {
     }
   }, []);
 
-  const toggleLike = (product: FrontendProduct) => {
+  const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 
@@ -110,7 +111,7 @@ export default function Products() {
           animate="visible"
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center md:justify-items-start gap-4"
         >
-          {displayedProducts.map((product: FrontendProduct) => (
+          {displayedProducts.map((product: FrontEndProductCartItem) => (
             <ProductItem
               key={product.id}
               product={product}
