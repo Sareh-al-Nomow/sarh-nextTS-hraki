@@ -46,10 +46,10 @@ export function transformProduct(product: Product): FrontendProduct {
       created_at: img.created_at,
       updated_at: img.updated_at,
     })),
-    attributes: product.attributes?.map((attr) => ({
-      attribute_name: attr.attribute?.attribute_name,
-      option_text: attr.option_text,
-    })),
+    // attributes: product.attributes?.map((attr) => ({
+    //   attribute_name: attr.attribute?.attribute_name,
+    //   option_text: attr.option_text,
+    // })),
     categoryId: product.category_id,
     createdAt: product.created_at,
     url_key: product.description.url_key,
