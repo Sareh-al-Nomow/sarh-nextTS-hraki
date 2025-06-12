@@ -29,16 +29,11 @@ const MAX_PRICE = 5000;
 const ShopGridPage = () => {
   // State
   const [products, setProducts] = useState<FrontendProduct[]>([]);
-  // const [filteredProducts, setFilteredProducts] = useState<FrontendProduct[]>(
-  //   []
-  // );
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  // const [expandedCategories, setExpandedCategories] = useState<
-  //   Record<string, boolean>
-  // >({});
+
   const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null);
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(

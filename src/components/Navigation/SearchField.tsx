@@ -5,6 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 
+import { FiSearch } from "react-icons/fi";
+
+
 export default function SearchField() {
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
@@ -37,7 +40,7 @@ export default function SearchField() {
         placeholder="ابحث عن المنتجات..."
         className="w-full p-3 text-xl bg-white shadow rounded-lg focus:shadow-black/60 transition-all duration-200"
       />
-      <CiSearch className=" absolute top-4 right-5 text-2xl" />
+      <FiSearch className="absolute top-4 right-5 text-gray-400" />
     </div>
   );
 }

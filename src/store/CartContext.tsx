@@ -8,7 +8,7 @@ import {
   getCartByToken,
   UpdateCartItemQuantity,
 } from "@/lib/axios/CartAxios";
-import { saveOrderData } from "../lib/axios/OrderAxios";
+import { saveOrderData } from "@/lib/axios/OrderAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";

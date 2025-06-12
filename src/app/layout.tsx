@@ -11,6 +11,7 @@ import CartContextProvider from "@/store/CartContext";
 import { AuthModalProvider } from "@/store/AuthModalContext";
 import { SearchProvider } from "@/store/SearchContext";
 import TopHeader from "@/components/Navigation/TopHeader";
+import ClientLayoutPart from "./ClientLayoutPart";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -41,6 +42,7 @@ export default function RootLayout({
                   <TopHeader />
                   <Navbar />
                   <div id="root-modal"></div>
+                  <ClientLayoutPart />
                   {children}
                   <Footer />
                 </CartContextProvider>

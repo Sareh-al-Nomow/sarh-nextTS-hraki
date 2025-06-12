@@ -11,6 +11,8 @@ import { login, loginRequest } from "@/lib/axios/loginAxios";
 import { otpRequest, otpVerify } from "@/lib/axios/otpAxios";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
+import Link from "next/link";
+import { restPasswordRequest } from "@/lib/axios/resetPasswordAxios";
 
 export default function RegistrationLink() {
   const { login: loginCxt } = useContext(AuthContext);
@@ -28,6 +30,9 @@ export default function RegistrationLink() {
     agreePolicy: false,
     otp: "",
   });
+
+  const [successResetPasswordRequest, setSuccessResetPasswordRequest] =
+    useState<string | null>(null);
 
   // signup mutation field .....
   const { mutate: mutateSignup, isPending: isPendingSignup } = useMutation({
@@ -76,6 +81,23 @@ export default function RegistrationLink() {
     },
   });
 
+  // otp mutation field .....
+  const {
+    mutate: mutateRequestResetPassword,
+    isPending: isPendingResetPassword,
+  } = useMutation({
+    mutationFn: restPasswordRequest,
+    onSuccess: (data) => {
+      setSuccessResetPasswordRequest(data.message);
+      console.log("تم ارسال otp", data);
+    },
+    onError: (error: Error) => {
+      console.log("خطأ أثناء rest password:", error.message);
+      toast.error(error.message);
+      setErrors({ restPassword: error.message });
+    },
+  });
+
   // update state data every change ...
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -86,7 +108,6 @@ export default function RegistrationLink() {
   };
 
   // forms actions field ....
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
@@ -156,10 +177,18 @@ export default function RegistrationLink() {
     }
   };
 
+  // send aplly to change password  ...
+  function handleForgetPassword() {
+    console.log(formInput.email);
+    mutateRequestResetPassword({ email: formInput.email });
+  }
+
   // handle close modal and rest it ...
   function handleCloseModal() {
+    handlerResetForm();
     closeAuthModal();
     setContentView("login");
+    setSuccessResetPasswordRequest(null);
   }
 
   // handle reset and clear inputs form ...
@@ -189,7 +218,7 @@ export default function RegistrationLink() {
           {/* زر الإغلاق */}
           <button
             onClick={handleCloseModal}
-            className="absolute top-3 right-3 text-2xl text-gray-300 hover:text-white"
+            className="absolute top-3 right-3 text-5xl text-gray-300 hover:text-white"
             aria-label="إغلاق"
           >
             &times;
@@ -258,25 +287,42 @@ export default function RegistrationLink() {
                   {isPendingLogin ? "... تسجيل الدخول" : "تسجيل الدخول"}
                 </button>
               </form>
-
-              <div className="text-center my-4 text-sm">
-                ليس لديك حساب؟{" "}
-                <button
-                  onClick={() => {
-                    setContentView("signup");
-                    setErrors({});
-                  }}
-                  className="text-blue-400 hover:underline"
-                >
-                  إنشاء حساب
-                </button>
+              <div className="flex justify-between">
+                <div className="text-center my-4 text-sm">
+                  <button
+                    onClick={() => {
+                      setContentView("forgetPssword");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    نسيان كلمة المرور
+                  </button>
+                </div>
+                <div className="text-center my-4 text-sm">
+                  ليس لديك حساب؟{" "}
+                  <button
+                    onClick={() => {
+                      setContentView("signup");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    إنشاء حساب
+                  </button>
+                </div>
               </div>
 
               <div className="text-center">
-                <button className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded">
+                <Link
+                  href={
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                  }
+                  className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
+                >
                   <FcGoogle className="text-xl" />
                   <span>تسجيل الدخول عبر Google</span>
-                </button>
+                </Link>
               </div>
             </>
           )}
@@ -414,23 +460,40 @@ export default function RegistrationLink() {
               </form>
 
               <div className="text-center mt-4">
-                <button className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded">
+                <Link
+                  href={
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                  }
+                  className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
+                >
                   <FcGoogle className="text-xl" />
                   <span>تسجيل الدخول عبر Google</span>
-                </button>
+                </Link>
               </div>
-
-              <div className="text-center mt-4 text-sm">
-                لديك حساب؟{" "}
-                <button
-                  onClick={() => {
-                    setContentView("login");
-                    setErrors({});
-                  }}
-                  className="text-green-400 hover:underline"
-                >
-                  تسجيل الدخول
-                </button>
+              <div className="flex justify-between">
+                <div className="text-center my-4 text-sm">
+                  <button
+                    onClick={() => {
+                      setContentView("forgetPssword");
+                      setErrors({});
+                    }}
+                    className="text-blue-400 hover:underline"
+                  >
+                    نسيان كلمة المرور
+                  </button>
+                </div>
+                <div className="text-center mt-4 text-sm">
+                  لديك حساب؟{" "}
+                  <button
+                    onClick={() => {
+                      setContentView("login");
+                      setErrors({});
+                    }}
+                    className="text-green-400 hover:underline"
+                  >
+                    تسجيل الدخول
+                  </button>
+                </div>
               </div>
             </>
           )}
@@ -480,6 +543,95 @@ export default function RegistrationLink() {
                   {isPendingOtp ? "... تأكيد" : "تأكيد"}
                 </button>
               </form>
+            </>
+          )}
+
+          {contentView === "forgetPssword" && (
+            <>
+              {successResetPasswordRequest ? (
+                <div>
+                  <h2 className="text-xl font-bold mb-4 text-center ">
+                    Forget Password
+                  </h2>
+                  <div className="space-y-4 text-center">
+                    <div>
+                      <div className="flex justify-center">
+                        <label className="block mb-2 text-gray-300">
+                          We Send Reset Password Link to Your email
+                        </label>
+                        {errors.otp && (
+                          <span className="text-red-400 text-sm mt-1">
+                            {errors.restPassword}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
+                    >
+                      Done
+                    </button>
+                    <div className="text-center my-4 text-sm"></div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-xl font-bold mb-4 text-center ">
+                    Forget Password
+                  </h2>
+                  <div className="space-y-4 text-center">
+                    <div>
+                      <div className="flex justify-center">
+                        <label className="block mb-2 text-gray-300">
+                          Please Enter Your Email
+                        </label>
+                        {errors.otp && (
+                          <span className="text-red-400 text-sm mt-1">
+                            {errors.otp}
+                          </span>
+                        )}
+                      </div>
+
+                      <input
+                        name="email"
+                        type="string"
+                        onChange={handleInputChange}
+                        value={formInput.email}
+                        className={`w-full p-2 rounded bg-slate-700 text-center border ${
+                          errors.email
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-slate-600 focus:ring-blue-500"
+                        } focus:outline-none focus:ring-2`}
+                        placeholder="ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر"
+                      />
+                    </div>
+
+                    <button
+                      disabled={isPendingResetPassword}
+                      type="button"
+                      onClick={handleForgetPassword}
+                      className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
+                    >
+                      {isPendingResetPassword ? "... ارسال" : "ارسال"}
+                    </button>
+                    <div className="text-center my-4 text-sm">
+                      ليس لديك حساب؟{" "}
+                      <button
+                        onClick={() => {
+                          setContentView("signup");
+                          setErrors({});
+                        }}
+                        className="text-blue-400 hover:underline"
+                      >
+                        إنشاء حساب
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
