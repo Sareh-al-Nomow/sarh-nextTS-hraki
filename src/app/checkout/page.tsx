@@ -23,6 +23,7 @@ const CheckoutPage = () => {
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [readyToPay, setReadyToPay] = useState<boolean>(false);
 
   const [dataReady, setDataready] = useState({
     addressReady: false,
@@ -102,7 +103,7 @@ const CheckoutPage = () => {
     console.log(orderData);
 
     if (isErrorSaveOrderData) return;
-
+    setReadyToPay(true);
     setActiveTab("payment");
   }
 
@@ -256,7 +257,7 @@ const CheckoutPage = () => {
                 ))}
 
               {/* Payment Tab */}
-              {activeTab === "payment" && <PaymentTap></PaymentTap>}
+              {activeTab === "payment" && readyToPay && <PaymentTap />}
             </div>
 
             {/* Order Summary */}

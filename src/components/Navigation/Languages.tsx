@@ -3,16 +3,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
+import { getLanguages } from "@/lib/axios/languagesAxios";
 
 export default function Language() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const languages = [
-    { code: "en", label: "English" },
-    { code: "ar", label: "العربية" },
-  ];
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["languages"],
+    queryFn: getLanguages,
+  });
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -33,6 +35,14 @@ export default function Language() {
     setIsOpen(false);
     // هنا يمكنك إضافة منطق تغيير اللغة الفعلي
   };
+
+  if (isLoading) {
+    return <p>Loading ....</p>;
+  }
+
+  if (error) {
+    return <p className="py-10">{error.message}</p>;
+  }
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -64,19 +74,19 @@ export default function Language() {
               window.innerWidth < 768 ? "left-0" : "right-0"
             } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
           >
-            {languages.map((lang) => (
+            {data?.data.map((lang) => (
               <motion.button
-                key={lang.code}
+                key={lang.languageCode}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleSelectLanguage(lang.label)}
+                onClick={() => handleSelectLanguage(lang.languageName)}
                 className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                  selectedLanguage === lang.label
+                  selectedLanguage === lang.languageName
                     ? "bg-gray-100 font-semibold"
                     : ""
                 }`}
                 role="menuitem"
               >
-                {lang.label}
+                {lang.languageName}
               </motion.button>
             ))}
           </motion.div>

@@ -268,6 +268,7 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
       },
       onError: (error: Error) => {
         setCartError(error.message);
+        toast.error(error.message);
       },
     });
 

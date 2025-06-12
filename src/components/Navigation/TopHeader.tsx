@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import Language from "./Language";
+import Language from "./Languages";
 
 const TopHeader: React.FC = () => {
   return (
