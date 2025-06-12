@@ -206,7 +206,7 @@ export default function RegistrationLink() {
   return (
     <>
       <GoSignIn
-        className="text-white text-2xl cursor-pointer"
+        className="pr-text text-2xl cursor-pointer"
         onClick={() => {
           openAuthModal();
           setErrors({});

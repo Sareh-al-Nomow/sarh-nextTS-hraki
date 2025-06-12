@@ -41,7 +41,9 @@ export default function RootLayout({
                   <Toaster />
                   <div id="root-modal"></div>
                   <ClientLayoutPart />
-                  <TopHeader />
+                  <div className=" hidden md:block">
+                    <TopHeader />
+                  </div>
                   <Navbar />
                   {children}
                   <Footer />
