@@ -357,7 +357,6 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
   };
 
   // ****************************** end actions section
-
   const mergeCartItems = (items: CartItem[]): CartItem[] => {
     const merged: CartItem[] = [];
 
