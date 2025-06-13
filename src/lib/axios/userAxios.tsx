@@ -1,15 +1,23 @@
 import axios, { AxiosError } from "axios";
-import { Collection } from "../models/collectionModal";
+import User from "../models/userModel";
 
-export interface CollectionResponse {
-  collections: Collection[];
+export interface UpdateUserRequest {
+  full_name?: string;
+  phone_number?: string;
+  birthday?: string;
 }
 
-export const getCollections = async (): Promise<CollectionResponse> => {
+export const updateProfile = async (
+  userData: UpdateUserRequest,
+  userId: number
+): Promise<User> => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get<CollectionResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/collections`,
+    const response = await axios.put<User>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/profile/${userId}`,
+      {
+        ...userData,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,

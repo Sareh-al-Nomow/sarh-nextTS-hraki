@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { Order } from "../models/orderModal";
 
 interface OrderPayload {
   cartId: number;
@@ -82,4 +83,23 @@ export const placeOrder = async (payload: OrderPayload) => {
   }
 };
 
-console.log("hi");
+export const getOrders = async (): Promise<Order[]> => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get<Order[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};

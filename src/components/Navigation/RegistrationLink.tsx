@@ -81,7 +81,7 @@ export default function RegistrationLink() {
     },
   });
 
-  // otp mutation field .....
+  // rest Password mutation field .....
   const {
     mutate: mutateRequestResetPassword,
     isPending: isPendingResetPassword,
@@ -566,7 +566,6 @@ export default function RegistrationLink() {
                         )}
                       </div>
                     </div>
-
                     <button
                       type="button"
                       onClick={handleCloseModal}
