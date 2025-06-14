@@ -32,16 +32,16 @@ const StarRating: React.FC<StarRatingProps> = ({
             className={`mr-1 transition-colors ${
               interactive ? "cursor-pointer" : "cursor-default"
             } ${isActive ? "text-yellow-400" : "text-gray-300"}`}
-            onMouseEnter={
-              interactive
-                ? () => onRatingChange?.setHoveredStar(star)
-                : undefined
-            }
-            onMouseLeave={
-              interactive
-                ? () => onRatingChange?.setHoveredStar(null)
-                : undefined
-            }
+            // onMouseEnter={
+            //   interactive
+            //     ? () => onRatingChange?.setHoveredStar(star)
+            //     : undefined
+            // }
+            // onMouseLeave={
+            //   interactive
+            //     ? () => onRatingChange?.setHoveredStar(null)
+            //     : undefined
+            // }
             onClick={
               interactive
                 ? () => onRatingChange?.handleStarClick(star)
