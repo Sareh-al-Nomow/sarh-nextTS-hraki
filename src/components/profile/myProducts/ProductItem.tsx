@@ -169,7 +169,7 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
               Your Rating
             </label>
             <StarRating
-              rating={hoveredStar || rating}
+              rating={rating}
               onRatingChange={{ setHoveredStar, handleStarClick }}
               size={24}
             />
