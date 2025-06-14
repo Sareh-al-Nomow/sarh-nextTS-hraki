@@ -6,45 +6,6 @@ import StarRating from "../shared/StarRating";
 const ReviewsSection: React.FC<{ productReviews: ProductReview[] }> = ({
   productReviews,
 }) => {
-  // if (isLoading) {
-  //   return (
-  //     <div className="my-40 mt-56">
-  //       <Spinner />
-  //     </div>
-  //   );
-  // }
-
-  // if (error) {
-  //   return (
-  //     <div className="text-center py-10">
-  //       <h3 className="text-red-500"> {error.name}</h3>
-  //       <p className="py-10">{error.message}</p>
-  //       <button
-  //         onClick={() => refetch()}
-  //         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-  //       >
-  //         Retry
-  //       </button>
-  //     </div>
-  //   );
-  // }
-
-  // if (!userReview) {
-  //   return (
-  //     <div className="text-center py-10">
-  //       <p>No Data available</p>
-  //     </div>
-  //   );
-  // }
-
-  // if (userReview?.length === 0) {
-  //   return (
-  //     <div className="text-center py-10">
-  //       <p>No Reviews yet!</p>
-  //     </div>
-  //   );
-  // }
-
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}

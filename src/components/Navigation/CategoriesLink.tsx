@@ -25,15 +25,15 @@ export default function PremiumNavWidget() {
 
   const categories = [
     {
-      name: "Electronics",
+      name: "Categories",
       subcategories: ["Smartphones", "Laptops", "Audio", "Wearables"],
     },
     {
-      name: "Fashion",
+      name: "brands",
       subcategories: ["Men", "Women", "Accessories", "Footwear"],
     },
     {
-      name: "Home",
+      name: "Collections",
       subcategories: ["Furniture", "Lighting", "Decor", "Kitchen"],
     },
   ];

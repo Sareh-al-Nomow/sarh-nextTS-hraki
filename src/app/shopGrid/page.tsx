@@ -108,7 +108,7 @@ const ShopGridPage = () => {
     }
     if (searchTerm) {
       setSearchQuery(searchTerm);
-      clearSearchTerm();
+      // clearSearchTerm();
     }
   }, [param, clearSearchTerm]);
 

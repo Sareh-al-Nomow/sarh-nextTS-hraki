@@ -1,5 +1,6 @@
 import {
   AddressResponse,
+  deleteAddress,
   updateAddress,
   UpdateAddressRequest,
 } from "@/lib/axios/addressAxios";
@@ -9,6 +10,7 @@ import Modal from "../UI/Modal";
 import { validateUpdateAddressForm } from "@/utils/valiadtion/validateUpdateAddressForm";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 
 interface AddressInfoProp {
   address: AddressResponse;
@@ -32,6 +34,7 @@ const AddressInfo: React.FC<AddressInfoProp> = ({ address }) => {
       // refetch();
       toast.success("Address Updated successfully!");
       setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ["addresses"] });
     },
     onError: (error: Error) => {
       setAddressError((prev) =>
@@ -39,6 +42,22 @@ const AddressInfo: React.FC<AddressInfoProp> = ({ address }) => {
       );
     },
   });
+
+  const { mutate: deleteAddressMutation, isPending: isPendingDeleteAddress } =
+    useMutation({
+      mutationFn: deleteAddress,
+      onSuccess: () => {
+        // refetch();
+        toast.success("Address Updated successfully!");
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      },
+      onError: (error: Error) => {
+        setAddressError((prev) =>
+          prev ? [...prev, error.message] : [error.message]
+        );
+      },
+    });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,18 +104,54 @@ const AddressInfo: React.FC<AddressInfoProp> = ({ address }) => {
   function handleToggleOpenEdit() {
     setIsEditing((prev) => !prev);
   }
+
+  function handleDeleteAddress() {
+    deleteAddressMutation(address.id);
+  }
+
   return (
     <div className="p-3 grid gap-2">
+      <Modal open={isModalOpen}>
+        <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
+          <h2 className="text-xl font-bold mb-4 text-center">
+            Delete Address :
+            <span className=" text-red-300">{" " + address.address_1}</span>
+          </h2>
+
+          <div className="flex gap-5 justify-center text-center mt-4 text-sm">
+            <button
+              onClick={handleDeleteAddress}
+              className="px-4 py-2 rounded-2xl bg-red-600"
+            >
+              {isPendingDeleteAddress ? "Deleteing ..." : "Delete"}
+            </button>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="px-4 py-2 rounded-2xl bg-amber-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
       {!isEdtitng ? (
         <div className="p-4 border border-gray-200 rounded-lg">
           <div className="flex justify-between items-start">
             <h3 className="font-medium mb-2">{address.address_1}</h3>
-            <button
-              onClick={handleToggleOpenEdit}
-              className="text-blue-600 hover:text-blue-800 text-sm"
-            >
-              Edit
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleToggleOpenEdit}
+                className="text-blue-600 hover:text-blue-800 text-sm cursor-pointer"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="text-red-600 hover:text-red-800 text-sm cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
           </div>
           <p className="text-gray-700 whitespace-pre-line">
             {address.address_1 +

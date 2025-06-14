@@ -1,27 +1,19 @@
 "use client";
 
 import { SearchContext } from "@/store/SearchContext";
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 
 export default function SearchField() {
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
-  const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    if (pathname.startsWith("/search")) {
-      setSearchTerm("");
-    }
-  }, [pathname, setSearchTerm]);
 
   useEffect(() => {
     if (searchTerm.trim() === "") return; // تجاهل لو فاضي
 
     const timer = setTimeout(() => {
-      console.log("Search:", searchTerm);
       router.push(`/shopGrid?query=${encodeURIComponent(searchTerm)}`);
     }, 500); // نصف ثانية
 

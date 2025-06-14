@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { FiUser, FiLock, FiMapPin, FiBell, FiLogOut } from "react-icons/fi";
+import { FiUser, FiLock, FiMapPin, FiBell } from "react-icons/fi";
 import Image from "next/image";
 import { AuthContext } from "@/store/AuthContext";
 import ProfileInfo from "@/components/profile/ProfileInfo";
@@ -60,10 +60,10 @@ export default function AccountPage() {
               Manage your personal information and preferences
             </p>
           </div>
-          <button className="flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors">
+          {/* <button className="flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors">
             <FiLogOut size={18} />
             <span>Sign Out</span>
-          </button>
+          </button> */}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
