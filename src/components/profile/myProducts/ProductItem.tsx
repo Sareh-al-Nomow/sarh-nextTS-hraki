@@ -39,6 +39,8 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
     enabled: !!item.product.product_id,
   });
 
+  console.log(hoveredStar);
+
   const { mutate, isPending } = useMutation({
     mutationFn: addReview,
     mutationKey: ["reviews", item.product.product_id],
