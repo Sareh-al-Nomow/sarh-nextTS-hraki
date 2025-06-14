@@ -158,7 +158,14 @@ const Carousel: React.FC<CarouselProps> = ({ collections }) => {
                     </svg>
                   </span>
                 </button>
-
+                <div
+                  onClick={() =>
+                    router.push(
+                      `/shopGrid?collections=${collections[activeIndex].collection_id}`
+                    )
+                  }
+                  className=" cursor-pointer bg-transparent flex-1"
+                ></div>
                 <button
                   type="button"
                   className="flex items-center justify-center h-full px-4 cursor-pointer group"

@@ -9,7 +9,7 @@ import SecurityInfo from "@/components/profile/SecurityInfo";
 import AddressesInfo from "@/components/profile/Addresses";
 import { AiFillProduct } from "react-icons/ai";
 import Settings from "@/components/profile/Settings";
-import MyProducts from "@/components/profile/MyProdcuts";
+import MyProducts from "@/components/profile/myProducts/MyProducts";
 
 export default function AccountPage() {
   const { user } = useContext(AuthContext);
