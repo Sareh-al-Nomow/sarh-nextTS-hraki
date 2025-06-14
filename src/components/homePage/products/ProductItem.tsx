@@ -148,10 +148,10 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
           <div className="mt-3 flex justify-between items-center">
             <div>
-              <span className="font-bold text-gray-900">{product.price}</span>
+              <span className="font-bold text-gray-900">${product.price}</span>
               {product.originalPrice && (
                 <span className="text-xs text-gray-500 line-through ml-2">
-                  {product.originalPrice}
+                  ${product.originalPrice}
                 </span>
               )}
             </div>
@@ -266,11 +266,11 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 {/* Price */}
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold">
-                    {quickViewProduct.price}
+                    ${quickViewProduct.price}
                   </span>
                   {quickViewProduct.originalPrice && (
                     <span className="text-sm text-gray-500 line-through">
-                      {quickViewProduct.originalPrice}
+                      ${quickViewProduct.originalPrice}
                     </span>
                   )}
                 </div>
