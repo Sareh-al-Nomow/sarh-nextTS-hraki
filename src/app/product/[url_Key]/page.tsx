@@ -125,13 +125,13 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     );
   }
 
-  const totalRate =
-    productReviews?.reduce((acc, re) => acc + re.rating, 0) || 0;
+  // const totalRate =
+  //   productReviews?.reduce((acc, re) => acc + re.rating, 0) || 0;
 
-  const averageRate =
-    productReviews && productReviews.length > 0
-      ? totalRate / productReviews.length
-      : 0;
+  // const averageRate =
+  //   productReviews && productReviews.length > 0
+  //     ? totalRate / productReviews.length
+  //     : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -303,7 +303,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
               <div className="flex items-center mb-4">
                 <div className="flex text-yellow-400 mr-2">
-                  <StarRating rating={averageRate ?? 0} />
+                  <StarRating rating={product?.meanRating ?? 0} />
                 </div>
                 {/* <span className="text-gray-500 text-sm">
                   {product?.rating?.toFixed(1)} ({product?.reviews?.length ?? 0} reviews)

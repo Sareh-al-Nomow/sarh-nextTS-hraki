@@ -111,7 +111,7 @@ const AddressInfo: React.FC<AddressInfoProp> = ({ address }) => {
 
   return (
     <div className="p-3 grid gap-2">
-      <Modal open={isModalOpen}>
+      <Modal open={isModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
           <h2 className="text-xl font-bold mb-4 text-center">
             Delete Address :
@@ -165,7 +165,7 @@ const AddressInfo: React.FC<AddressInfoProp> = ({ address }) => {
         </div>
       ) : (
         <>
-          <Modal open={isModalOpen}>
+          <Modal open={isModalOpen} classesName="pr-bg">
             <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
               <h2 className="text-xl font-bold mb-4 text-center">
                 Address input errors

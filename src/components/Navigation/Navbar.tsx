@@ -5,7 +5,7 @@ import CartLink from "./CartLink";
 import RegistrationLink from "./RegistrationLink";
 import AccountLink from "./AccountLink";
 
-import CategoriesLink from "./CategoriesLink";
+import PremiumNavWidget from "./PremiumNavWidget";
 import { BsList } from "react-icons/bs";
 import { useContext } from "react";
 import { AuthContext } from "@/store/AuthContext";
@@ -49,7 +49,7 @@ export default function Navbar() {
           <span className="hidden md:flex cursor-pointer pr-text hover:text-[#219EBC] text-[20px] mt-1">
             Home
           </span>
-          <CategoriesLink />
+          <PremiumNavWidget />
         </div>
       </nav>
     </div>

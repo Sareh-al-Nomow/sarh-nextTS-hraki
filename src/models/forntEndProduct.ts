@@ -36,4 +36,5 @@ export interface FrontendProduct {
     option_text: string;
   }[];
   // reviews: string[];
+  meanRating: number | null;
 }

@@ -51,7 +51,7 @@ const SecurityInfo = () => {
 
   return (
     <>
-      <Modal open={isOpenModal}>
+      <Modal open={isOpenModal} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative z-[1500]">
           <button
             onClick={toggleOpenCloseModal}

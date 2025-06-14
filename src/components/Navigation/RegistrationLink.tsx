@@ -213,7 +213,7 @@ export default function RegistrationLink() {
         }}
       />
 
-      <Modal open={isAuthModalOpen}>
+      <Modal open={isAuthModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative z-[1500]">
           {/* زر الإغلاق */}
           <button

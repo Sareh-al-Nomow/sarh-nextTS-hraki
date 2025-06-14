@@ -148,7 +148,7 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
         )}
       </div>
 
-      <Modal open={isModalOpen}>
+      <Modal open={isModalOpen} classesName="pr-bg">
         <div className="p-4">
           <h2 className="text-lg font-semibold mb-4 text-white">
             Leave a review for {item.product_name}

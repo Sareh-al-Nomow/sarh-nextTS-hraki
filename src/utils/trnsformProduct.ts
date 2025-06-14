@@ -54,5 +54,6 @@ export function transformProduct(product: Product): FrontendProduct {
     createdAt: product.created_at,
     url_key: product.description.url_key,
     // reviews: product.reviews
+    meanRating: product.meanRating,
   };
 }

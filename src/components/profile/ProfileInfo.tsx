@@ -84,7 +84,7 @@ const ProfileInfo: React.FC = () => {
   };
   return (
     <>
-      <Modal open={isModalOpen}>
+      <Modal open={isModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
           <h2 className="text-xl font-bold mb-4 text-center">
             Address input errors

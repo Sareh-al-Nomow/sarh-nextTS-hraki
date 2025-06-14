@@ -46,8 +46,6 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
   const { openAuthModal } = useContext(AuthModalContext);
 
-  console.log(product);
-
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollY");
     if (scrollY) {

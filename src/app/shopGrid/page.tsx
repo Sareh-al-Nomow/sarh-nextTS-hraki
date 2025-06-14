@@ -42,7 +42,7 @@ const ShopGridPage = () => {
   );
   const [selectedCategory, setSelectedCategory] = useState<Category | null>();
   const [productQuery, setProductQuery] = useState<GetProductsParams>({
-    page: 1,
+    page: 2,
     limit: 10,
     name: "",
   });
