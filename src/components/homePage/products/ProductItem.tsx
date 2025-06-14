@@ -46,6 +46,8 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
   const { openAuthModal } = useContext(AuthModalContext);
 
+  console.log(product);
+
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollY");
     if (scrollY) {
@@ -319,7 +321,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                     <FiShoppingCart /> Add to Cart
                   </button>
                   <Link
-                    href={`/product/${product.url_key}`}
+                    href={`/product/${quickViewProduct.url_key}`}
                     className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
                   >
                     View Details

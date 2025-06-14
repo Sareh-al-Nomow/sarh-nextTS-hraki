@@ -1,14 +1,14 @@
 import axios, { AxiosError } from "axios";
-import { ProductReview } from "../models/reviewModal";
+import { ProductReviewProfile ,ProductReview } from "../models/reviewModal";
 
 export const getReviewsForProduct = async (
   productId: number,
   signal?: AbortSignal
-): Promise<ProductReview[]> => {
+): Promise<ProductReviewProfile[]> => {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await axios.get<ProductReview[]>(
+    const response = await axios.get<ProductReviewProfile[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reviews/product/${productId}/customer`,
       {
         signal,
@@ -56,3 +56,29 @@ export const addReview = async (
     throw new Error(message);
   }
 };
+
+export const getReviewsForProductById = async (
+  productId: number,
+  signal?: AbortSignal
+): Promise<ProductReview[]> => {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.get<ProductReview[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reviews/product/${productId}`,
+      {
+        signal,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const message =
+      error.response?.data?.message || "An unexpected error occurred";
+    throw new Error(message);
+  }
+};
+

@@ -7,7 +7,6 @@ import {
   FiHeart,
   FiShare2,
   FiChevronLeft,
-  FiStar,
   FiChevronRight,
 } from "react-icons/fi";
 import Link from "next/link";
@@ -18,6 +17,9 @@ import { getProductByUrlKey } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import Spinner from "@/components/UI/SpinnerLoading";
+import ReviewsSection from "@/components/productDetails/ReviewsSection";
+import StarRating from "@/components/shared/StarRating";
+import { getReviewsForProductById } from "@/lib/axios/reviewAxiox";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
@@ -38,6 +40,20 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     queryKey: ["product", url_Key],
     queryFn: ({ signal }) => getProductByUrlKey(url_Key, signal),
     enabled: !!url_Key,
+  });
+
+  // eazar one
+  const {
+    data: productReviews,
+    isLoading: isLoadingReviews,
+    error: errorReviews,
+  } = useQuery({
+    queryKey: ["product-reviews", product?.id],
+    queryFn: ({ signal }) =>
+      product
+        ? getReviewsForProductById(product.id, signal)
+        : Promise.resolve([]),
+    enabled: !!product?.id,
   });
 
   useEffect(() => {
@@ -85,17 +101,20 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
   if (isLoading) {
     return (
-      <div>
+      <div className="my-40">
         <Spinner />
       </div>
     );
   }
 
-  if (error) {
+  if (error || errorReviews) {
     return (
       <div className="text-center py-10">
-        <h1 className="text-red-500"> {error.name}</h1>
-        <p className="text-red-200"> {error.message}</p>
+        <h1 className="text-red-500"> {error?.name || errorReviews?.name}</h1>
+        <p className="text-red-200">
+          {" "}
+          {error?.message || errorReviews?.message}
+        </p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -105,6 +124,14 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       </div>
     );
   }
+
+  const totalRate =
+    productReviews?.reduce((acc, re) => acc + re.rating, 0) || 0;
+
+  const averageRate =
+    productReviews && productReviews.length > 0
+      ? totalRate / productReviews.length
+      : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -162,7 +189,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                   >
                     <Image
                       src={
-                        (product?.images && product.images[currentImage].single_image) ??
+                        (product?.images &&
+                          product.images[currentImage].single_image) ??
                         "data:image/jpeg;base64,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"
                       }
                       alt={product?.name ?? "Product image"}
@@ -275,16 +303,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
               <div className="flex items-center mb-4">
                 <div className="flex text-yellow-400 mr-2">
-                  {[...Array(5)].map((_, i) => (
-                    <FiStar
-                      key={i}
-                      className={`${
-                        i < Math.floor(product?.rating ?? 0)
-                          ? "fill-current"
-                          : "text-yellow-200"
-                      }`}
-                    />
-                  ))}
+                  <StarRating rating={averageRate ?? 0} />
                 </div>
                 {/* <span className="text-gray-500 text-sm">
                   {product?.rating?.toFixed(1)} ({product?.reviews?.length ?? 0} reviews)
@@ -456,57 +475,11 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
         <AdditionalInformation />
 
         {/* Reviews Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-12 bg-white rounded-xl shadow-sm p-6"
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-800">
-              Customer Reviews
-            </h2>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-            >
-              View all reviews
-            </motion.button>
-          </div>
-
-          <div className="space-y-6">
-            {[1, 2, 3].map((review) => (
-              <motion.div
-                key={review}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 * review }}
-                className="border-b border-gray-200 pb-6 last:border-0"
-              >
-                <div className="flex justify-between mb-2">
-                  <div>
-                    <h3 className="font-medium">John Doe</h3>
-                    <div className="flex text-yellow-400 mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <FiStar
-                          key={i}
-                          className={i < 5 ? "fill-current" : ""}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <span className="text-gray-500 text-sm">2 days ago</span>
-                </div>
-                <p className="text-gray-600 mt-2">
-                  These headphones are amazing! The sound quality is exceptional
-                  and the noise cancellation works perfectly. Very comfortable
-                  for long listening sessions.
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+        {isLoadingReviews ? (
+          <Spinner />
+        ) : (
+          <ReviewsSection productReviews={productReviews ?? []} />
+        )}
       </main>
     </div>
   );

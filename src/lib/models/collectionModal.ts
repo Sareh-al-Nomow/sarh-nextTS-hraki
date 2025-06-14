@@ -8,6 +8,7 @@ interface ProductDescription {
   name: string;
   description: string;
   short_description: string;
+  url_key: string;
 }
 
 // Inventory interface
