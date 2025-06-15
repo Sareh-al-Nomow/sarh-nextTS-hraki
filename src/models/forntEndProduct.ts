@@ -24,7 +24,7 @@ export interface FrontendProduct {
   tags?: string[];
   isNew?: boolean;
   description?: string;
-  shortDescription?: string;
+  short_description?: string;
   features?: string[];
   inventory?: {
     stock_availability: boolean;
@@ -37,4 +37,5 @@ export interface FrontendProduct {
   }[];
   // reviews: string[];
   meanRating: number | null;
+  stock_availability: boolean;
 }

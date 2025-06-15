@@ -1,7 +1,9 @@
 import { Product } from "@/lib/models/productsModal";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
-export function transformProductCartItem(product: Product ): FrontEndProductCartItem {
+export function transformProductCartItem(
+  product: Product
+): FrontEndProductCartItem {
   return {
     id: product.product_id,
     name: product.description?.name || "Unnamed Product",
@@ -24,12 +26,14 @@ export function transformProductCartItem(product: Product ): FrontEndProductCart
         ? "NEW"
         : undefined,
     ].filter(Boolean) as string[],
-    description: product.description?.description || "",
+    short_description: product.description.short_description,
     features: product.attributes
       ?.filter((attr) => attr.attribute?.attribute_code === "feature")
       .map((attr) => attr.option_text),
     colors: product.attributes
       ?.filter((attr) => attr.attribute?.attribute_code === "color")
       .map((attr) => attr.option_text),
+    stock_availability: product.inventory.stock_availability,
+    description: product.description.description,
   };
 }

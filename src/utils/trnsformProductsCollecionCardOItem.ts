@@ -19,5 +19,7 @@ export function transformProductToCollectionCartItem(
     description: product.description.short_description,
     features: [], // Add features logic if needed
     colors: [], // Add color logic if available
+    stock_availability: product.inventory.stock_availability,
+    short_description: product.description.short_description,
   };
 }

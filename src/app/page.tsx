@@ -4,6 +4,7 @@ import Carousel from "@/components/homePage/Carousel";
 import CategoriesList from "@/components/homePage/CategoriesList";
 import Collections from "@/components/homePage/products/Collections";
 import Products from "@/components/homePage/products/Products";
+import ModernHelpButton from "@/components/shared/HelpButton";
 import Spinner from "@/components/UI/SpinnerLoading";
 import { getCollections } from "@/lib/axios/collectionsAxios";
 import { useQuery } from "@tanstack/react-query";
@@ -70,6 +71,7 @@ export default function Home() {
       <CategoriesList />
       <Collections collections={collections} />
       <Products />
+      <ModernHelpButton />
     </>
   );
 }

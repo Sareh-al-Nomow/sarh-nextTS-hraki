@@ -16,7 +16,7 @@ export function transformProduct(product: Product): FrontendProduct {
       "/placeholder-product.jpg",
     rating: product.meanRating || 0,
     description: product.description?.description || "",
-    shortDescription: product.description?.short_description || "",
+    short_description: product.description?.short_description || "",
     isNew:
       new Date(product.created_at) >
       new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
@@ -55,5 +55,6 @@ export function transformProduct(product: Product): FrontendProduct {
     url_key: product.description.url_key,
     // reviews: product.reviews
     meanRating: product.meanRating,
+    stock_availability: product.inventory.stock_availability ?? true, // or set appropriate default/fallback
   };
 }

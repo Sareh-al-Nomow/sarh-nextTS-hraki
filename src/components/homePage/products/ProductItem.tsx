@@ -9,6 +9,7 @@ import { CartContext } from "@/store/CartContext";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
+import StarRating from "@/components/shared/StarRating";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -45,7 +46,6 @@ const ProductItem: React.FC<ProductItemProp> = ({
     useState<FrontEndProductCartItem | null>(null);
 
   const { openAuthModal } = useContext(AuthModalContext);
-
 
   function handleAddToCart() {
     if (isAuthenticated) {
@@ -167,21 +167,34 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   }`}
                 />
               </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                className={`p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition cursor-pointer ${
-                  isLoadingAddToCart ? "opacity-40" : ""
-                }`}
-                aria-label="Add to cart"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setQuickViewProduct(product);
-                }}
-                disabled={isLoadingAddToCart}
-              >
-                <FiShoppingCart size={16} />
-              </motion.button>
+              {product.stock_availability ? (
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className={`p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition cursor-pointer ${
+                    isLoadingAddToCart ? "opacity-40" : ""
+                  }`}
+                  aria-label="Add to cart"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQuickViewProduct(product);
+                  }}
+                  disabled={isLoadingAddToCart}
+                >
+                  <FiShoppingCart size={16} />
+                </motion.button>
+              ) : (
+                <button
+                  disabled
+                  className="cursor-not-allowed bg-gray-200 text-gray-600 py-1 px-2 rounded-lg flex items-center justify-center transition"
+                  aria-label="This item is currently out of stock"
+                >
+                  {/* <FiShoppingCart className="opacity-50" /> */}
+                  <span className="flex items-center text-[12px] sm:text-sm">
+                    Out of Stock
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -250,10 +263,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
               <div className="p-5 space-y-4">
                 <div className="flex justify-between items-start">
                   <h2 className="text-xl font-bold">{quickViewProduct.name}</h2>
-                  <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
-                    <FiStar className="text-yellow-400 mr-1" size={14} />
-                    <span className="text-sm">{quickViewProduct.rating}</span>
-                  </div>
+                  <StarRating rating={quickViewProduct.rating} />
                 </div>
 
                 {/* Price */}
@@ -269,9 +279,9 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 </div>
 
                 {/* Description */}
-                {quickViewProduct.description && (
+                {quickViewProduct.short_description && (
                   <p className="text-gray-600">
-                    {quickViewProduct.description}
+                    {quickViewProduct.short_description}
                   </p>
                 )}
 
@@ -288,7 +298,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 )} */}
 
                 {/* Color Options */}
-                {quickViewProduct.colors && (
+                {/* {quickViewProduct.colors && (
                   <div>
                     <h3 className="font-medium mb-1">Colors:</h3>
                     <div className="flex gap-2">
@@ -301,16 +311,30 @@ const ProductItem: React.FC<ProductItemProp> = ({
                       ))}
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
-                  <button
-                    onClick={handleAddToCart}
-                    className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition"
-                  >
-                    <FiShoppingCart /> Add to Cart
-                  </button>
+                  {quickViewProduct.stock_availability ? (
+                    <button
+                      onClick={handleAddToCart}
+                      className=" cursor-pointer bg-black text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition"
+                    >
+                      <FiShoppingCart /> Add to Cart
+                    </button>
+                  ) : (
+                    <button
+                      disabled
+                      className="cursor-not-allowed bg-gray-200 text-gray-600 py-3 rounded-lg flex items-center justify-center gap-2 transition"
+                      aria-label="This item is currently out of stock"
+                    >
+                      <FiShoppingCart className="opacity-50" />
+                      <span className="flex items-center gap-1">
+                        Out of Stock
+                      </span>
+                    </button>
+                  )}
+
                   <Link
                     href={`/product/${quickViewProduct.url_key}`}
                     className="border border-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"

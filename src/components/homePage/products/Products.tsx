@@ -36,7 +36,9 @@ export default function Products() {
   // Handle successful query response
   useEffect(() => {
     if (data) {
-      const newProducts = data.data.map(transformProduct);
+      const newProducts = data.data.map(
+        transformProduct
+      ) as FrontEndProductCartItem[];
       setAllProducts((prev) => [...prev, ...newProducts]);
       setHasMore(currentPage < (data.totalPages || 1));
     }
@@ -91,6 +93,8 @@ export default function Products() {
       </div>
     );
   }
+
+  console.log(allProducts);
   return (
     <div className="bg-gray-50 min-h-screen bg-gradient-to-r from-blue-50 to-cyan-50">
       {/* Header */}

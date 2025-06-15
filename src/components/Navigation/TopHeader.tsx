@@ -33,7 +33,7 @@ const TopHeader: React.FC = () => {
             </a>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="ml-5 flex items-center space-x-3">
             <Language />
           </div>
         </div>
