@@ -12,25 +12,25 @@ import {
 } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
-import { FrontendProduct } from "@/models/forntEndProduct";
+import ProductItem from "@/components/homePage/products/ProductItem";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
-
-const itemVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 10,
-    },
-  },
-  hover: {
-    y: -5,
-    transition: { duration: 0.2 },
-  },
-};
+// const itemVariants = {
+//   hidden: { opacity: 0, x: 20 },
+//   visible: {
+//     opacity: 1,
+//     x: 0,
+//     transition: {
+//       type: "spring",
+//       stiffness: 100,
+//       damping: 10,
+//     },
+//   },
+//   hover: {
+//     y: -5,
+//     transition: { duration: 0.2 },
+//   },
+// };
 
 export default function WishlistPage() {
   const [sortBy, setSortBy] = useState<"recent" | "price-low" | "price-high">(
@@ -38,15 +38,16 @@ export default function WishlistPage() {
   );
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [wishlist, setWishlist] = useState<FrontendProduct[]>([]);
-  const [quickViewProduct, setQuickViewProduct] = useState<FrontendProduct | null>(
-    null
-  );
+  const [wishlist, setWishlist] = useState<FrontEndProductCartItem[]>([]);
+  const [quickViewProduct, setQuickViewProduct] =
+    useState<FrontEndProductCartItem | null>(null);
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("wishlist");
-    const wishlistLocal: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+    const wishlistLocal: FrontEndProductCartItem[] = stored
+      ? JSON.parse(stored)
+      : [];
     if (stored) {
       const wishlistIDS = wishlistLocal.flatMap((p) => p.id);
       setLikedProducts(wishlistIDS);
@@ -54,9 +55,9 @@ export default function WishlistPage() {
     }
   }, []);
 
-  const toggleLike = (product: FrontendProduct) => {
+  const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
-    let wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+    let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
 
@@ -71,15 +72,26 @@ export default function WishlistPage() {
         ? prev.filter((id) => id !== product.id)
         : [...prev, product.id]
     );
+    const storedWishList = localStorage.getItem("wishlist");
+    const wishlistLocal: FrontEndProductCartItem[] = storedWishList
+      ? JSON.parse(storedWishList)
+      : [];
+    if (storedWishList) {
+      const wishlistIDS = wishlistLocal.flatMap((p) => p.id);
+      setLikedProducts(wishlistIDS);
+      setWishlist(wishlistLocal);
+    }
   };
 
-  const sortedWishlist = [...wishlist].sort((a, b) => {
-    const priceA = Number(a.price);
-    const priceB = Number(b.price);
-    if (sortBy === "price-low") return priceA - priceB;
-    if (sortBy === "price-high") return priceB - priceA;
-    return 0; // recent added stays in original order
-  });
+  const sortedWishlist: FrontEndProductCartItem[] = [...wishlist].sort(
+    (a, b) => {
+      const priceA = Number(a.price);
+      const priceB = Number(b.price);
+      if (sortBy === "price-low") return priceA - priceB;
+      if (sortBy === "price-high") return priceB - priceA;
+      return 0; // recent added stays in original order
+    }
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -188,126 +200,132 @@ export default function WishlistPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
             {sortedWishlist.map((product) => (
-              <motion.div
+              <ProductItem
                 key={product.id}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-                className="flex-shrink-0 w-48 md:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
-              >
-                {/* Product Image */}
-                <div
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setQuickViewProduct(product);
-                  }}
-                  className="relative aspect-square"
-                >
-                  <Image
-                    src={"/image/products/img-1.jpg"}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                  />
+                product={product}
+                toggleLike={toggleLike}
+                likedProducts={likedProducts}
+              />
+              // <motion.div
+              //   key={product.id}
+              //   variants={itemVariants}
+              //   initial="hidden"
+              //   animate="visible"
+              //   whileHover="hover"
+              //   className="flex-shrink-0 w-48 md:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative group cursor-pointer"
+              // >
+              //   {/* Product Image */}
+              //   <div
+              //     onClick={(e) => {
+              //       e.preventDefault();
+              //       e.stopPropagation();
+              //       setQuickViewProduct(product);
+              //     }}
+              //     className="relative aspect-square"
+              //   >
+              //     <Image
+              //       src={"/image/products/img-1.jpg"}
+              //       alt={product.name}
+              //       fill
+              //       className="object-cover transition-transform duration-500 group-hover:scale-105"
+              //       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+              //     />
 
-                  {/* Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col items-start gap-1">
-                    {product.isNew && (
-                      <span className="bg-black text-white text-xs px-2 py-1 rounded-full">
-                        NEW
-                      </span>
-                    )}
-                    {product.tags?.map((tag, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          tag === "HOT"
-                            ? "bg-red-500"
-                            : tag === "BESTSELLER"
-                            ? "bg-purple-500"
-                            : tag === "NEW"
-                            ? "bg-blue-500"
-                            : "bg-green-500"
-                        } text-white`}
-                      >
-                        {tag}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
+              //     {/* Badges */}
+              //     <div className="absolute top-3 left-3 flex flex-col items-start gap-1">
+              //       {product.isNew && (
+              //         <span className="bg-black text-white text-xs px-2 py-1 rounded-full">
+              //           NEW
+              //         </span>
+              //       )}
+              //       {product.tags?.map((tag, i) => (
+              //         <motion.span
+              //           key={i}
+              //           initial={{ scale: 0 }}
+              //           animate={{ scale: 1 }}
+              //           transition={{ delay: i * 0.1 }}
+              //           className={`text-xs px-2 py-1 rounded-full ${
+              //             tag === "HOT"
+              //               ? "bg-red-500"
+              //               : tag === "BESTSELLER"
+              //               ? "bg-purple-500"
+              //               : tag === "NEW"
+              //               ? "bg-blue-500"
+              //               : "bg-green-500"
+              //           } text-white`}
+              //         >
+              //           {tag}
+              //         </motion.span>
+              //       ))}
+              //     </div>
+              //   </div>
 
-                {/* Product Info */}
-                <div className="p-4">
-                  <h3 className="font-medium text-gray-900 line-clamp-2 text-sm md:text-base">
-                    {product.name}
-                  </h3>
+              //   {/* Product Info */}
+              //   <div className="p-4">
+              //     <h3 className="font-medium text-gray-900 line-clamp-2 text-sm md:text-base">
+              //       {product.name}
+              //     </h3>
 
-                  <div className="flex items-center mt-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <FiStar
-                          key={i}
-                          className={`${
-                            i < Math.floor(product.rating)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                          size={14}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-500 ml-1">
-                      ({product.rating.toFixed(1)})
-                    </span>
-                  </div>
+              //     <div className="flex items-center mt-2">
+              //       <div className="flex">
+              //         {[...Array(5)].map((_, i) => (
+              //           <FiStar
+              //             key={i}
+              //             className={`${
+              //               i < Math.floor(product.rating)
+              //                 ? "text-yellow-400 fill-yellow-400"
+              //                 : "text-gray-300"
+              //             }`}
+              //             size={14}
+              //           />
+              //         ))}
+              //       </div>
+              //       <span className="text-xs text-gray-500 ml-1">
+              //         ({product.rating.toFixed(1)})
+              //       </span>
+              //     </div>
 
-                  <div className="mt-3 flex justify-between items-center">
-                    <div>
-                      <span className="font-bold text-gray-900">
-                        {product.price}
-                      </span>
-                      {product.originalPrice && (
-                        <span className="text-xs text-gray-500 line-through ml-2">
-                          {product.originalPrice}
-                        </span>
-                      )}
-                    </div>
+              //     <div className="mt-3 flex justify-between items-center">
+              //       <div>
+              //         <span className="font-bold text-gray-900">
+              //           {product.price}
+              //         </span>
+              //         {product.originalPrice && (
+              //           <span className="text-xs text-gray-500 line-through ml-2">
+              //             {product.originalPrice}
+              //           </span>
+              //         )}
+              //       </div>
 
-                    <div className="flex gap-4">
-                      {/* Like Button */}
-                      <motion.button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLike(product);
-                        }}
-                        className=" p-2 bg-[#FFF] rounded-full shadow-md hover:bg-gray-100 transition"
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <FiHeart
-                          className={`${
-                            likedProducts.includes(product.id)
-                              ? "fill-red-500 text-red-500"
-                              : "text-gray-700"
-                          }`}
-                        />
-                      </motion.button>
-                      <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
-                        aria-label="Add to cart"
-                      >
-                        <FiShoppingCart size={16} />
-                      </motion.button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              //       <div className="flex gap-4">
+              //         {/* Like Button */}
+              //         <motion.button
+              //           onClick={(e) => {
+              //             e.stopPropagation();
+              //             toggleLike(product);
+              //           }}
+              //           className=" p-2 bg-[#FFF] rounded-full shadow-md hover:bg-gray-100 transition"
+              //           whileTap={{ scale: 0.9 }}
+              //         >
+              //           <FiHeart
+              //             className={`${
+              //               likedProducts.includes(product.id)
+              //                 ? "fill-red-500 text-red-500"
+              //                 : "text-gray-700"
+              //             }`}
+              //           />
+              //         </motion.button>
+              //         <motion.button
+              //           whileTap={{ scale: 0.9 }}
+              //           className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+              //           aria-label="Add to cart"
+              //         >
+              //           <FiShoppingCart size={16} />
+              //         </motion.button>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </motion.div>
             ))}
           </div>
         )}

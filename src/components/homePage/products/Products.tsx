@@ -64,7 +64,7 @@ export default function Products() {
 
   if (isLoading && currentPage === 1) {
     return (
-      <div>
+      <div className="mb-40">
         <Spinner />
       </div>
     );
@@ -114,14 +114,16 @@ export default function Products() {
           animate="visible"
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center md:justify-items-start gap-4"
         >
-          {allProducts.map((product: FrontEndProductCartItem ,index : number) => (
-            <ProductItem
-              key={index}
-              product={product}
-              toggleLike={toggleLike}
-              likedProducts={likedProducts}
-            />
-          ))}
+          {allProducts.map(
+            (product: FrontEndProductCartItem, index: number) => (
+              <ProductItem
+                key={index}
+                product={product}
+                toggleLike={toggleLike}
+                likedProducts={likedProducts}
+              />
+            )
+          )}
         </motion.div>
       </div>
 

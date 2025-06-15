@@ -112,6 +112,7 @@ const ShopGridPage = () => {
     if (displayProducts) {
       setProducts(displayProducts);
     }
+    window.scrollTo(0, 400);
   }, [productsData?.data]);
 
   // Handle initial URL params
@@ -347,7 +348,7 @@ const ShopGridPage = () => {
             })}
 
             <button
-              onClick={() => handlePageChange(pagination.page)}
+              onClick={() => handlePageChange(pagination.page + 1)}
               disabled={pagination.page === count}
               className="px-4 py-2 border rounded disabled:opacity-50"
             >
