@@ -269,8 +269,8 @@ const ShopGridPage = () => {
       setLikedProducts(wishlistIDS);
     }
 
-    // const scrollY = sessionStorage.getItem("scrollY");
-    // if (scrollY) window.scrollTo(0, parseInt(scrollY));
+    const scrollY = sessionStorage.getItem("scrollY");
+    if (scrollY) window.scrollTo(0, parseInt(scrollY));
   }, []);
 
   const toggleLike = (product: FrontEndProductCartItem) => {
