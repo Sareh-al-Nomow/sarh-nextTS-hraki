@@ -2,45 +2,47 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
 import { useQuery } from "@tanstack/react-query";
 import { ProductsResponse } from "@/lib/models/productsModal";
 import ProductItem from "./ProductItem";
 import Spinner from "../../UI/SpinnerLoading";
-import { FrontendProduct } from "@/models/forntEndProduct";
 import { getProducts } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
+const ITEMS_PER_PAGE = 10;
+
 export default function Products() {
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allProducts, setAllProducts] = useState<FrontEndProductCartItem[]>([]);
+  const [hasMore, setHasMore] = useState(true);
 
   const { data, isLoading, isError, refetch } = useQuery<
     ProductsResponse,
     Error
   >({
-    queryKey: ["products"],
-    queryFn: ({ signal }) => getProducts(undefined, signal),
+    queryKey: ["products", currentPage],
+    queryFn: ({ signal }) =>
+      getProducts(
+        {
+          page: currentPage,
+          limit: ITEMS_PER_PAGE,
+        },
+        signal
+      ),
   });
 
-  const displayedProducts = data?.data?.map(transformProduct) || [];
-
+  // Handle successful query response
   useEffect(() => {
-    const stored = localStorage.getItem("wishlist");
-    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
-
-    if (stored) {
-      const wishlistIDS = wishlist.flatMap((p) => p.id);
-      setLikedProducts(wishlistIDS);
+    if (data) {
+      const newProducts = data.data.map(transformProduct);
+      setAllProducts((prev) => [...prev, ...newProducts]);
+      setHasMore(currentPage < (data.totalPages || 1));
     }
+  }, [data, currentPage]);
 
-    const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
-  }, []);
-
+  // Rest of your component remains the same...
   const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
     let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
@@ -60,7 +62,7 @@ export default function Products() {
     );
   };
 
-  if (isLoading) {
+  if (isLoading && currentPage === 1) {
     return (
       <div>
         <Spinner />
@@ -71,7 +73,7 @@ export default function Products() {
   if (isError) {
     return (
       <div className="text-center py-10">
-        <p className="text-red-500"> Failed to load products</p>
+        <p className="text-red-500">Failed to load products</p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -82,14 +84,13 @@ export default function Products() {
     );
   }
 
-  if (displayedProducts.length === 0) {
+  if (allProducts.length === 0 && !isLoading) {
     return (
       <div className="text-center py-10">
         <p>No products available</p>
       </div>
     );
   }
-
   return (
     <div className="bg-gray-50 min-h-screen bg-gradient-to-r from-blue-50 to-cyan-50">
       {/* Header */}
@@ -101,7 +102,9 @@ export default function Products() {
         <h1 className="text-3xl font-bold text-gray-900 pr-text">
           Premium Collection
         </h1>
-        <p className="text-gray-600 mt-2">Showing {data?.total} products</p>
+        <p className="text-gray-600 mt-2">
+          Showing {allProducts.length} of {data?.total || 0} products
+        </p>
       </motion.header>
 
       {/* Product Grid */}
@@ -111,7 +114,7 @@ export default function Products() {
           animate="visible"
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center md:justify-items-start gap-4"
         >
-          {displayedProducts.map((product: FrontEndProductCartItem) => (
+          {allProducts.map((product: FrontEndProductCartItem) => (
             <ProductItem
               key={product.id}
               product={product}
@@ -122,8 +125,15 @@ export default function Products() {
         </motion.div>
       </div>
 
-      {/* Load More Button */}
-      {data && data.page < data.totalPages && (
+      {/* Loading spinner when loading more */}
+      {isLoading && currentPage > 1 && (
+        <div className="flex justify-center py-6">
+          <Spinner />
+        </div>
+      )}
+
+      {/* View More Button */}
+      {hasMore && !isLoading && (
         <motion.div
           className="mt-6 sm:mt-12 text-center pb-12"
           initial={{ opacity: 0 }}
@@ -134,11 +144,10 @@ export default function Products() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             className="px-8 py-3 mb-8 bg-gradient-to-r from-[#219EBC] to-[#2EC4B6] text-white rounded-full font-medium shadow-md hover:shadow-lg transition"
-            onClick={() => {
-              // Implement load more functionality
-            }}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
           >
-            Load More ({data.total - displayedProducts.length} remaining)
+            View More ({data?.total ? data.total - allProducts.length : 0}{" "}
+            remaining)
           </motion.button>
         </motion.div>
       )}

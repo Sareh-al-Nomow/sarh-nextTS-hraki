@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsResponse } from "@/lib/models/productsModal";
 import Spinner from "../../UI/SpinnerLoading";
@@ -21,13 +21,13 @@ export default function ProductsLists() {
   const displayedProducts =
     data?.data?.map(transformProductCartItem).reverse() || [];
 
-  useEffect(() => {
-    const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const scrollY = sessionStorage.getItem("scrollY");
+  //   if (scrollY) {
+  //     window.scrollTo(0, parseInt(scrollY));
+  //     sessionStorage.removeItem("scrollY");
+  //   }
+  // }, []);
 
   if (isLoading) {
     return (

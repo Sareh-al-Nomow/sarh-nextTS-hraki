@@ -46,13 +46,6 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
   const { openAuthModal } = useContext(AuthModalContext);
 
-  useEffect(() => {
-    const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
-  }, []);
 
   function handleAddToCart() {
     if (isAuthenticated) {
