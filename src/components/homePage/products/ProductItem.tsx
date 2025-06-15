@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
 import Link from "next/link";
