@@ -18,6 +18,8 @@ import { Category } from "@/lib/models/categoryModal";
 import { useSearchParams } from "next/navigation";
 import { SearchContext } from "@/store/SearchContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
+import { getBrands } from "@/lib/axios/brandsAxios";
+import { organizeBrands } from "@/utils/organizeBrands";
 
 const MAX_PRICE = 5000;
 
@@ -33,7 +35,9 @@ const ShopGridPage = () => {
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>();
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -42,21 +46,24 @@ const ShopGridPage = () => {
     total: 0,
   });
 
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [showAllBrands, setShowAllBrands] = useState(false);
+  const [selectedBrandIds, setSelectedBrandIds] = useState<number[]>([]);
+
   const param = useSearchParams();
   const { clearSearchTerm } = useContext(SearchContext);
 
-  // Helper function to determine limit per page
-
   // Product query with pagination
   const [productQuery, setProductQuery] = useState<
-    Omit<GetProductsParams, "name" | "limit"> & {
+    Omit<GetProductsParams, "name" | "limit" | "brandId"> & {
       name?: string;
       limit?: number;
+      brandId?: number[];
     }
   >({
     page: 1,
-    // No limit or name by default
   });
+
   // Fetch products
   const {
     data: productsData,
@@ -65,32 +72,46 @@ const ShopGridPage = () => {
   } = useQuery<ProductsResponse, Error>({
     queryKey: ["products", productQuery],
     queryFn: ({ signal }) => {
-      const query: GetProductsParams = { page: productQuery.page };
+      const query: GetProductsParams = {
+        page: productQuery.page,
+        limit: productQuery.limit || 10,
+      };
 
-      // Only add non-empty fields
+      // Add filters if they exist
       if (productQuery.name?.trim()) query.name = productQuery.name.trim();
       if (productQuery.categoryId) query.categoryId = productQuery.categoryId;
+      if (productQuery.brandId && productQuery.brandId.length > 0) {
+        // If GetProductsParams expects a single number, use the first brandId
+        query.brandId = productQuery.brandId[0];
+      }
 
       return getProducts(query, signal);
     },
   });
-  console.log(pagination);
 
-  // Update pagination only when productsData changes
+  // Update pagination when productsData changes
   useEffect(() => {
     if (productsData) {
-      setPagination((prev) => {
-        // Only update if values actually changed
-        if (prev.total === productsData.total) {
-          return prev;
-        }
-        return {
-          ...prev,
-          total: productsData.total,
-        };
-      });
+      setPagination((prev) => ({
+        ...prev,
+        total: productsData.total,
+      }));
     }
-  }, [productsData]); // Removed productQuery.page from dependencies
+  }, [productsData]);
+
+  // Fetch brands
+  const {
+    data: brandsData,
+    // isLoading: isLoadingBrands,
+    // error: errorBrands,
+  } = useQuery({
+    queryKey: ["brands"],
+    queryFn: getBrands,
+  });
+
+  // Safely map and organize brands
+  const organizedBrands = brandsData?.data?.map(organizeBrands) || [];
+
   // Fetch categories
   const {
     data: categoriesData,
@@ -118,16 +139,22 @@ const ShopGridPage = () => {
   // Handle initial URL params
   useEffect(() => {
     const cateID = param.get("categoryid");
+    const brandID = param.get("brandid");
     const searchTerm = param.get("query");
+
+    const initialQuery: Omit<
+      GetProductsParams,
+      "name" | "limit" | "brandId"
+    > & {
+      name?: string;
+      limit?: number;
+      brandId?: number[];
+    } = { page: 1 };
 
     if (cateID) {
       const categoryId = Number(cateID);
       setSelectedCategoriesIds([categoryId]);
-      setProductQuery((prev) => ({
-        ...prev,
-        categoryId,
-        page: 1,
-      }));
+      initialQuery.categoryId = categoryId;
 
       const c = organizedCategories?.allWithSub.find(
         (c) => c.id === categoryId
@@ -135,7 +162,20 @@ const ShopGridPage = () => {
       if (c) handleSelectedCategory(c);
     }
 
-    if (searchTerm) setSearchQuery(searchTerm);
+    if (brandID) {
+      const brandId = Number(brandID);
+      setSelectedBrandIds([brandId]);
+      initialQuery.brandId = [brandId];
+    }
+
+    if (searchTerm) {
+      setSearchQuery(searchTerm);
+      initialQuery.name = searchTerm;
+    }
+
+    if (cateID || brandID || searchTerm) {
+      setProductQuery(initialQuery);
+    }
   }, [param, clearSearchTerm]);
 
   // Filter and sort products
@@ -160,13 +200,26 @@ const ShopGridPage = () => {
 
   // Handle search query changes
   useEffect(() => {
-    if (searchQuery) {
-      setProductQuery((prev) => ({
-        ...prev,
-        name: searchQuery,
-        page: 1,
-      }));
-    }
+    const timer = setTimeout(() => {
+      if (searchQuery) {
+        setProductQuery((prev) => ({
+          ...prev,
+          name: searchQuery,
+          page: 1,
+        }));
+      } else {
+        setProductQuery((prev) => {
+          const rest = { ...prev };
+          delete rest.name;
+          return {
+            ...rest,
+            page: 1,
+          };
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [searchQuery]);
 
   // Handle category selection
@@ -175,8 +228,6 @@ const ShopGridPage = () => {
       (c) => c.id === categoryId
     );
     if (cate) handleSelectedCategory(cate);
-
-    if (selectedCategory?.id === categoryId) setSelectedCategory(null);
 
     setSelectedCategoriesIds((prev) =>
       prev.includes(categoryId)
@@ -198,6 +249,24 @@ const ShopGridPage = () => {
         categoryId,
         page: 1,
       };
+    });
+  };
+
+  // Handle brand selection
+  const toggleBrandId = (brandId: number) => {
+    setSelectedBrandIds((prev) => {
+      const newBrandIds = prev.includes(brandId)
+        ? prev.filter((id) => id !== brandId)
+        : [...prev, brandId];
+
+      // Update product query
+      setProductQuery((prev) => ({
+        ...prev,
+        brandId: newBrandIds.length > 0 ? newBrandIds : undefined,
+        page: 1,
+      }));
+
+      return newBrandIds;
     });
   };
 
@@ -249,15 +318,15 @@ const ShopGridPage = () => {
     setSortOption("featured");
     setPriceRange([0, 5000]);
     setSelectedCategoriesIds([]);
+    setSelectedBrandIds([]);
     setSelectedCategory(null);
     setPagination((prev) => ({
       ...prev,
       page: 1,
     }));
-    setProductQuery((prev) => ({
-      ...prev,
+    setProductQuery({
       page: 1,
-    }));
+    });
   };
 
   // Handle wishlist
@@ -295,10 +364,12 @@ const ShopGridPage = () => {
 
   // Handle page changes
   const handlePageChange = (newPage: number) => {
-    const page = Math.max(1, Math.min(newPage, 3));
+    const page = Math.max(
+      1,
+      Math.min(newPage, Math.ceil(pagination.total / 10))
+    );
     const limit = productQuery.limit ?? 10;
 
-    // Only update if page actually changed
     if (page !== pagination.page) {
       setPagination((prev) => ({
         ...prev,
@@ -317,8 +388,6 @@ const ShopGridPage = () => {
   // Pagination Controls Component
   const PaginationControls = () => {
     const count = productsData?.total ? Math.ceil(productsData.total / 10) : 1;
-
-    console.log(count);
 
     return (
       <div className="flex justify-center mt-8 gap-2">
@@ -342,7 +411,7 @@ const ShopGridPage = () => {
                     pagination.page === page ? "bg-blue-500 text-white" : ""
                   }`}
                 >
-                  {page}{" "}
+                  {page}
                 </button>
               );
             })}
@@ -528,48 +597,114 @@ const ShopGridPage = () => {
                 </div>
               </div>
 
-              {/* Categories */}
+              {/* Categories && Brands */}
               <div>
-                <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
-                <div className="space-y-2">
-                  {organizedCategories?.allParent.map((category) => {
-                    return (
-                      <motion.label
-                        key={category.id}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center group cursor-pointer"
-                      >
-                        <div className="relative">
-                          <input
-                            type="radio"
-                            name="categoryId"
-                            checked={selectedCategoriesIds.includes(
-                              category.id
-                            )}
-                            onChange={() => {
-                              toggleCategoryId(category.id);
-                              handleSelectedCategory(category);
-                            }}
-                            className="sr-only peer"
-                          />
-                          <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                            {selectedCategoriesIds.includes(category.id) && (
-                              <GoDotFill className="text-white" />
-                            )}
-                          </div>
-                        </div>
-                        <span
-                          className={`ml-2 text-sm ${
-                            selectedCategoriesIds.includes(category.id)
-                              ? "text-blue-600"
-                              : "text-gray-600"
-                          } group-hover:text-gray-900 transition-colors`}
+                {/* Categories Section */}
+                <div className="mb-6">
+                  <h4 className="font-medium mb-4 text-gray-700 flex items-center justify-between">
+                    <span>Categories</span>
+                    <button
+                      onClick={() => setShowAllCategories(!showAllCategories)}
+                      className="text-xs text-blue-500 hover:text-blue-700"
+                    >
+                      {showAllCategories ? "Show Less" : "Show All"}
+                    </button>
+                  </h4>
+
+                  <div className="space-y-2">
+                    {organizedCategories?.allParent
+                      .slice(
+                        0,
+                        showAllCategories
+                          ? organizedCategories.allParent.length
+                          : 5
+                      )
+                      .map((category) => (
+                        <motion.label
+                          key={category.id}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center group cursor-pointer"
                         >
-                          {category.description.name}
-                        </span>
-                      </motion.label>
-                    );
-                  })}
+                          <div className="relative">
+                            <input
+                              type="checkbox"
+                              name="categoryId"
+                              checked={selectedCategoriesIds.includes(
+                                category.id
+                              )}
+                              onChange={() => {
+                                toggleCategoryId(category.id);
+                                handleSelectedCategory(category);
+                              }}
+                              className="sr-only peer"
+                            />
+                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                              {selectedCategoriesIds.includes(category.id) && (
+                                <GoDotFill className="text-white" />
+                              )}
+                            </div>
+                          </div>
+                          <span
+                            className={`ml-2 text-sm ${
+                              selectedCategoriesIds.includes(category.id)
+                                ? "text-blue-600"
+                                : "text-gray-600"
+                            } group-hover:text-gray-900 transition-colors`}
+                          >
+                            {category.description.name}
+                          </span>
+                        </motion.label>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Brands Section */}
+                <div className="mb-6">
+                  <h4 className="font-medium mb-4 text-gray-700 flex items-center justify-between">
+                    <span>Brands</span>
+                    <button
+                      onClick={() => setShowAllBrands(!showAllBrands)}
+                      className="text-xs text-blue-500 hover:text-blue-700"
+                    >
+                      {showAllBrands ? "Show Less" : "Show All"}
+                    </button>
+                  </h4>
+
+                  <div className="space-y-2">
+                    {organizedBrands
+                      ?.slice(0, showAllBrands ? organizedBrands.length : 5)
+                      .map((brand) => (
+                        <motion.label
+                          key={brand.id}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center group cursor-pointer"
+                        >
+                          <div className="relative">
+                            <input
+                              type="checkbox"
+                              name="brandId"
+                              checked={selectedBrandIds.includes(brand.id)}
+                              onChange={() => toggleBrandId(brand.id)}
+                              className="sr-only peer"
+                            />
+                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                              {selectedBrandIds.includes(brand.id) && (
+                                <GoDotFill className="text-white" />
+                              )}
+                            </div>
+                          </div>
+                          <span
+                            className={`ml-2 text-sm ${
+                              selectedBrandIds.includes(brand.id)
+                                ? "text-blue-600"
+                                : "text-gray-600"
+                            } group-hover:text-gray-900 transition-colors`}
+                          >
+                            {brand.name}
+                          </span>
+                        </motion.label>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -580,35 +715,52 @@ const ShopGridPage = () => {
             {/* Results Count */}
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
-                Showing {products?.length || 0} products (Page {pagination.page}
-                )
+                Showing {products?.length || 0} of {productsData?.total || 0}{" "}
+                products (Page {pagination.page})
               </p>
-              {selectedCategoriesIds.length > 0 && (
-                <div className="flex gap-2 flex-wrap justify-end">
-                  {selectedCategoriesIds.map((categoryId) => {
-                    const category = [
-                      ...(organizedCategories?.allWithSub || []),
-                    ].find((c) => c.id === categoryId);
+              <div className="flex gap-2 flex-wrap justify-end">
+                {selectedCategoriesIds.map((categoryId) => {
+                  const category = [
+                    ...(organizedCategories?.allWithSub || []),
+                  ].find((c) => c.id === categoryId);
 
-                    return category ? (
-                      <motion.span
-                        key={categoryId}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full flex items-center"
+                  return category ? (
+                    <motion.span
+                      key={categoryId}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full flex items-center"
+                    >
+                      {category.description.name}
+                      <button
+                        onClick={() => toggleCategoryId(categoryId)}
+                        className="ml-1.5 text-blue-500 hover:text-blue-700"
                       >
-                        {category.description.name}
-                        <button
-                          onClick={() => toggleCategoryId(categoryId)}
-                          className="ml-1.5 text-blue-500 hover:text-blue-700"
-                        >
-                          <FiX size={14} />
-                        </button>
-                      </motion.span>
-                    ) : null;
-                  })}
-                </div>
-              )}
+                        <FiX size={14} />
+                      </button>
+                    </motion.span>
+                  ) : null;
+                })}
+                {selectedBrandIds.map((brandId) => {
+                  const brand = organizedBrands.find((b) => b.id === brandId);
+                  return brand ? (
+                    <motion.span
+                      key={brandId}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full flex items-center"
+                    >
+                      {brand.name}
+                      <button
+                        onClick={() => toggleBrandId(brandId)}
+                        className="ml-1.5 text-green-500 hover:text-green-700"
+                      >
+                        <FiX size={14} />
+                      </button>
+                    </motion.span>
+                  ) : null;
+                })}
+              </div>
             </div>
 
             {/* Products */}
@@ -695,7 +847,7 @@ const ShopGridPage = () => {
               </>
             ) : pagination.page > 1 ? (
               <div className="text-center py-8">
-                <p>No products found on page {pagination.page + 1}</p>
+                <p>No products found on page {pagination.page}</p>
                 <button
                   onClick={() => handlePageChange(1)}
                   className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -811,46 +963,117 @@ const ShopGridPage = () => {
 
                 {/* Categories */}
                 <div>
-                  <h4 className="font-medium mb-4 text-gray-700">Categories</h4>
-                  <div className="space-y-2">
-                    {organizedCategories?.allParent.map((category) => {
-                      return (
-                        <motion.label
-                          key={category.id}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex items-center group cursor-pointer"
+                  {/* Categories && Brands */}
+                  <div>
+                    {/* Categories Section */}
+                    <div className="mb-6">
+                      <h4 className="font-medium mb-4 text-gray-700 flex items-center justify-between">
+                        <span>Categories</span>
+                        <button
+                          onClick={() =>
+                            setShowAllCategories(!showAllCategories)
+                          }
+                          className="text-xs text-blue-500 hover:text-blue-700"
                         >
-                          <div className="relative">
-                            <input
-                              type="radio"
-                              name="categoryId"
-                              checked={selectedCategoriesIds.includes(
-                                category.id
-                              )}
-                              onChange={() => {
-                                toggleCategoryId(category.id);
-                                handleSelectedCategory(category);
-                              }}
-                              className="sr-only peer"
-                            />
-                            <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
-                              {selectedCategoriesIds.includes(category.id) && (
-                                <GoDotFill className="text-white" />
-                              )}
-                            </div>
-                          </div>
-                          <span
-                            className={`ml-2 text-sm ${
-                              selectedCategoriesIds.includes(category.id)
-                                ? "text-blue-600"
-                                : "text-gray-600"
-                            } group-hover:text-gray-900 transition-colors`}
-                          >
-                            {category.description.name}
-                          </span>
-                        </motion.label>
-                      );
-                    })}
+                          {showAllCategories ? "Show Less" : "Show All"}
+                        </button>
+                      </h4>
+
+                      <div className="space-y-2">
+                        {organizedCategories?.allParent
+                          .slice(
+                            0,
+                            showAllCategories
+                              ? organizedCategories.allParent.length
+                              : 3
+                          )
+                          .map((category) => (
+                            <motion.label
+                              key={category.id}
+                              whileTap={{ scale: 0.95 }}
+                              className="flex items-center group cursor-pointer"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  name="categoryId"
+                                  checked={selectedCategoriesIds.includes(
+                                    category.id
+                                  )}
+                                  onChange={() => {
+                                    toggleCategoryId(category.id);
+                                    handleSelectedCategory(category);
+                                  }}
+                                  className="sr-only peer"
+                                />
+                                <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                  {selectedCategoriesIds.includes(
+                                    category.id
+                                  ) && <GoDotFill className="text-white" />}
+                                </div>
+                              </div>
+                              <span
+                                className={`ml-2 text-sm ${
+                                  selectedCategoriesIds.includes(category.id)
+                                    ? "text-blue-600"
+                                    : "text-gray-600"
+                                } group-hover:text-gray-900 transition-colors`}
+                              >
+                                {category.description.name}
+                              </span>
+                            </motion.label>
+                          ))}
+                      </div>
+                    </div>
+
+                    {/* Brands Section */}
+                    <div className="mb-6">
+                      <h4 className="font-medium mb-4 text-gray-700 flex items-center justify-between">
+                        <span>Brands</span>
+                        <button
+                          onClick={() => setShowAllBrands(!showAllBrands)}
+                          className="text-xs text-blue-500 hover:text-blue-700"
+                        >
+                          {showAllBrands ? "Show Less" : "Show All"}
+                        </button>
+                      </h4>
+
+                      <div className="space-y-2">
+                        {organizedBrands
+                          ?.slice(0, showAllBrands ? organizedBrands.length : 3)
+                          .map((brand) => (
+                            <motion.label
+                              key={brand.id}
+                              whileTap={{ scale: 0.95 }}
+                              className="flex items-center group cursor-pointer"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  name="brandId"
+                                  checked={selectedBrandIds.includes(brand.id)}
+                                  onChange={() => toggleBrandId(brand.id)}
+                                  className="sr-only peer"
+                                />
+                                <div className="w-4 h-4 border-2 border-gray-300 rounded-md flex items-center justify-center transition-all group-hover:border-blue-400 peer-checked:bg-blue-500 peer-checked:border-blue-500">
+                                  {selectedBrandIds.includes(brand.id) && (
+                                    <GoDotFill className="text-white" />
+                                  )}
+                                </div>
+                              </div>
+                              <span
+                                className={`ml-2 text-sm ${
+                                  selectedBrandIds.includes(brand.id)
+                                    ? "text-blue-600"
+                                    : "text-gray-600"
+                                } group-hover:text-gray-900 transition-colors`}
+                              >
+                                {brand.name}
+                              </span>
+                            </motion.label>
+                          ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
