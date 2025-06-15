@@ -12,7 +12,6 @@ export const getBrands = async (): Promise<BrandsResponse> => {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;

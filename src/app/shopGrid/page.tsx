@@ -3,13 +3,7 @@
 import { useState, useEffect, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import {
-  FiFilter,
-  FiX,
-  FiChevronDown,
-  FiSearch,
-  // FiChevronRight,
-} from "react-icons/fi";
+import { FiFilter, FiX, FiChevronDown, FiSearch } from "react-icons/fi";
 import ProductItem from "@/components/homePage/products/ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { ProductsResponse } from "@/lib/models/productsModal";
@@ -34,22 +28,35 @@ const ShopGridPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-
   const [activeHandle, setActiveHandle] = useState<null | "min" | "max">(null);
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
   const [selectedCategory, setSelectedCategory] = useState<Category | null>();
-  const [productQuery, setProductQuery] = useState<GetProductsParams>({
-    page: 2,
+
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    page: 1,
     limit: 10,
-    name: "",
+    total: 0,
   });
 
   const param = useSearchParams();
   const { clearSearchTerm } = useContext(SearchContext);
 
+  // Helper function to determine limit per page
+
+  // Product query with pagination
+  const [productQuery, setProductQuery] = useState<
+    Omit<GetProductsParams, "name" | "limit"> & {
+      name?: string;
+      limit?: number;
+    }
+  >({
+    page: 1,
+    // No limit or name by default
+  });
   // Fetch products
   const {
     data: productsData,
@@ -57,9 +64,33 @@ const ShopGridPage = () => {
     error,
   } = useQuery<ProductsResponse, Error>({
     queryKey: ["products", productQuery],
-    queryFn: ({ signal }) => getProducts(productQuery, signal),
-  });
+    queryFn: ({ signal }) => {
+      const query: GetProductsParams = { page: productQuery.page };
 
+      // Only add non-empty fields
+      if (productQuery.name?.trim()) query.name = productQuery.name.trim();
+      if (productQuery.categoryId) query.categoryId = productQuery.categoryId;
+
+      return getProducts(query, signal);
+    },
+  });
+  console.log(pagination);
+
+  // Update pagination only when productsData changes
+  useEffect(() => {
+    if (productsData) {
+      setPagination((prev) => {
+        // Only update if values actually changed
+        if (prev.total === productsData.total) {
+          return prev;
+        }
+        return {
+          ...prev,
+          total: productsData.total,
+        };
+      });
+    }
+  }, [productsData]); // Removed productQuery.page from dependencies
   // Fetch categories
   const {
     data: categoriesData,
@@ -76,8 +107,6 @@ const ShopGridPage = () => {
     : null;
 
   // Transform products data
-  // const displayProducts = productsData?.data.map((p) => transformProduct(p));
-
   useEffect(() => {
     const displayProducts = productsData?.data.map((p) => transformProduct(p));
     if (displayProducts) {
@@ -85,34 +114,30 @@ const ShopGridPage = () => {
     }
   }, [productsData?.data]);
 
+  // Handle initial URL params
   useEffect(() => {
     const cateID = param.get("categoryid");
     const searchTerm = param.get("query");
-    console.log(cateID);
+
     if (cateID) {
-      console.log("param is here", cateID);
       const categoryId = Number(cateID);
       setSelectedCategoriesIds([categoryId]);
-      setProductQuery((prev) => {
-        return {
-          ...prev,
-          categoryId,
-        };
-      });
+      setProductQuery((prev) => ({
+        ...prev,
+        categoryId,
+        page: 1,
+      }));
+
       const c = organizedCategories?.allWithSub.find(
         (c) => c.id === categoryId
       );
-      if (c) {
-        handleSelectedCategory(c);
-      }
+      if (c) handleSelectedCategory(c);
     }
-    if (searchTerm) {
-      setSearchQuery(searchTerm);
-      // clearSearchTerm();
-    }
+
+    if (searchTerm) setSearchQuery(searchTerm);
   }, [param, clearSearchTerm]);
 
-  // هذا التأثير يستقبل البيانات من API ويفلتر حسب السعر فقط
+  // Filter and sort products
   useEffect(() => {
     if (!productsData?.data) return;
 
@@ -123,7 +148,6 @@ const ShopGridPage = () => {
       (product) => Number(product.price) >= min && Number(product.price) <= max
     );
 
-    // Step 3: Sorting
     if (sortOption === "price-low") {
       filtered.sort((a, b) => Number(a.price) - Number(b.price));
     } else if (sortOption === "price-high") {
@@ -133,14 +157,14 @@ const ShopGridPage = () => {
     setProducts(filtered);
   }, [productsData, priceRange, sortOption]);
 
+  // Handle search query changes
   useEffect(() => {
     if (searchQuery) {
-      setProductQuery((prev) => {
-        return {
-          ...prev,
-          name: searchQuery,
-        };
-      });
+      setProductQuery((prev) => ({
+        ...prev,
+        name: searchQuery,
+        page: 1,
+      }));
     }
   }, [searchQuery]);
 
@@ -149,13 +173,10 @@ const ShopGridPage = () => {
     const cate = organizedCategories?.allWithSub.find(
       (c) => c.id === categoryId
     );
-    if (cate) {
-      handleSelectedCategory(cate);
-    }
+    if (cate) handleSelectedCategory(cate);
 
-    if (selectedCategory?.id === categoryId) {
-      setSelectedCategory(null);
-    }
+    if (selectedCategory?.id === categoryId) setSelectedCategory(null);
+
     setSelectedCategoriesIds((prev) =>
       prev.includes(categoryId)
         ? prev.filter((c) => c !== categoryId)
@@ -164,13 +185,17 @@ const ShopGridPage = () => {
 
     setProductQuery((prev) => {
       if (prev.categoryId === categoryId) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { categoryId: _, ...rest } = prev;
-        return rest as Omit<typeof prev, "categoryId">;
+        console.log(_);
+        return {
+          ...rest,
+          page: 1,
+        };
       }
       return {
         ...prev,
         categoryId,
+        page: 1,
       };
     });
   };
@@ -223,11 +248,15 @@ const ShopGridPage = () => {
     setSortOption("featured");
     setPriceRange([0, 5000]);
     setSelectedCategoriesIds([]);
-    // setExpandedCategories({});
-    setProductQuery({
+    setSelectedCategory(null);
+    setPagination((prev) => ({
+      ...prev,
       page: 1,
-      limit: 10,
-    });
+    }));
+    setProductQuery((prev) => ({
+      ...prev,
+      page: 1,
+    }));
   };
 
   // Handle wishlist
@@ -241,10 +270,7 @@ const ShopGridPage = () => {
     }
 
     const scrollY = sessionStorage.getItem("scrollY");
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem("scrollY");
-    }
+    if (scrollY) window.scrollTo(0, parseInt(scrollY));
   }, []);
 
   const toggleLike = (product: FrontEndProductCartItem) => {
@@ -263,6 +289,73 @@ const ShopGridPage = () => {
       prev.includes(product.id)
         ? prev.filter((id) => id !== product.id)
         : [...prev, product.id]
+    );
+  };
+
+  // Handle page changes
+  const handlePageChange = (newPage: number) => {
+    const page = Math.max(1, Math.min(newPage, 3));
+    const limit = productQuery.limit ?? 10;
+
+    // Only update if page actually changed
+    if (page !== pagination.page) {
+      setPagination((prev) => ({
+        ...prev,
+        page,
+        limit,
+      }));
+
+      setProductQuery((prev) => ({
+        ...prev,
+        page,
+        limit,
+      }));
+    }
+  };
+
+  // Pagination Controls Component
+  const PaginationControls = () => {
+    const count = productsData?.total ? Math.ceil(productsData.total / 10) : 1;
+
+    console.log(count);
+
+    return (
+      <div className="flex justify-center mt-8 gap-2">
+        {count > 1 && (
+          <>
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={pagination.page === 1}
+              className="px-4 py-2 border rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            {[...Array(count)].map((_, idx) => {
+              const page = idx + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 py-2 border rounded ${
+                    pagination.page === page ? "bg-blue-500 text-white" : ""
+                  }`}
+                >
+                  {page}{" "}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => handlePageChange(pagination.page)}
+              disabled={pagination.page === count}
+              className="px-4 py-2 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </>
+        )}
+      </div>
     );
   };
 
@@ -338,8 +431,6 @@ const ShopGridPage = () => {
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
-                {/* <option value="rating">Highest Rated</option>
-                <option value="newest">Newest</option> */}
               </select>
               <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none group-hover:text-gray-600 transition-colors" />
             </div>
@@ -389,7 +480,7 @@ const ShopGridPage = () => {
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
                       style={{ left: `${(priceRange[0] / MAX_PRICE) * 100}%` }}
-                      onMouseDown={() => "min"}
+                      onMouseDown={() => setActiveHandle("min")}
                     />
                     <div
                       className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
@@ -488,7 +579,8 @@ const ShopGridPage = () => {
             {/* Results Count */}
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
-                Showing {products?.length || 0} products
+                Showing {products?.length || 0} products (Page {pagination.page}
+                )
               </p>
               {selectedCategoriesIds.length > 0 && (
                 <div className="flex gap-2 flex-wrap justify-end">
@@ -543,52 +635,42 @@ const ShopGridPage = () => {
             ) : (products ?? []).length > 0 ? (
               <>
                 {selectedCategory?.subCategory && (
-                  <div>
-                    {/*Sub Category*/}
-
-                    <h1>Sub Categories</h1>
-                    {selectedCategory.subCategory.map((subC) => (
-                      <motion.label
-                        key={subC.id}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center group cursor-pointer my-5"
-                      >
-                        <div className="relative">
-                          <input
-                            type="radio"
-                            name="categoryId"
-                            checked={selectedCategoriesIds.includes(subC.id)}
-                            onChange={() => {
+                  <div className="mb-8">
+                    <h2 className="text-lg font-semibold mb-4">
+                      Subcategories
+                    </h2>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                      {selectedCategory.subCategory.map((subC) => (
+                        <div
+                          key={subC.id}
+                          className="flex flex-col items-center"
+                        >
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            className={`p-2 rounded-full border-2 ${
+                              selectedCategoriesIds.includes(subC.id)
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-gray-200"
+                            }`}
+                            onClick={() => {
                               toggleCategoryId(subC.id);
                               handleSelectedCategory(subC);
                             }}
-                            className="sr-only peer"
-                          />
+                          >
+                            <Image
+                              src={subC.description.image}
+                              alt={subC.description.name}
+                              width={64}
+                              height={64}
+                              className="w-16 h-16 rounded-full object-cover"
+                            />
+                          </motion.button>
+                          <span className="mt-2 text-sm text-center">
+                            {subC.description.name}
+                          </span>
                         </div>
-                        <span
-                          className={`ml-2 text-sm ${
-                            selectedCategoriesIds.includes(subC.id)
-                              ? "text-blue-600"
-                              : "text-gray-600"
-                          } group-hover:text-gray-900 transition-colors`}
-                        >
-                          <div className="flex flex-col items-center text-center group">
-                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#219EBC] shadow-md group-hover:scale-105 transition-transform duration-300">
-                              <Image
-                                src={subC.description.image}
-                                alt={subC.description.name}
-                                width={96}
-                                height={96}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <span className="mt-2 text-sm md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
-                              {subC.description.name}
-                            </span>
-                          </div>
-                        </span>
-                      </motion.label>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
                 <motion.div
@@ -597,7 +679,7 @@ const ShopGridPage = () => {
                   transition={{ duration: 0.3 }}
                   className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {(products ?? []).map((product) => (
+                  {products.map((product) => (
                     <ProductItem
                       key={product.id}
                       product={product}
@@ -606,7 +688,21 @@ const ShopGridPage = () => {
                     />
                   ))}
                 </motion.div>
+
+                {/* Pagination Controls */}
+                <PaginationControls />
               </>
+            ) : pagination.page > 1 ? (
+              <div className="text-center py-8">
+                <p>No products found on page {pagination.page + 1}</p>
+                <button
+                  onClick={() => handlePageChange(1)}
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Go to first page
+                </button>
+                <PaginationControls />
+              </div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -681,29 +777,6 @@ const ShopGridPage = () => {
                     Price Range
                   </h4>
                   <div className="space-y-4">
-                    {/* <div className="relative h-2 bg-gray-200 rounded-full">
-                      <div
-                        className="absolute h-2 bg-blue-500 rounded-full"
-                        style={{
-                          left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
-                          right: `${100 - (priceRange[1] / MAX_PRICE) * 100}%`,
-                        }}
-                      />
-                      <div
-                        className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
-                        style={{
-                          left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
-                        }}
-                        onMouseDown={() => setActiveHandle("min")}
-                      />
-                      <div
-                        className="absolute h-4 w-4 bg-blue-600 rounded-full -top-1 transform -translate-x-1/2 cursor-pointer shadow-md"
-                        style={{
-                          left: `${(priceRange[1] / MAX_PRICE) * 100}%`,
-                        }}
-                        onMouseDown={() => setActiveHandle("max")}
-                      />
-                    </div> */}
                     <div className="flex justify-between gap-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Min:</span>
