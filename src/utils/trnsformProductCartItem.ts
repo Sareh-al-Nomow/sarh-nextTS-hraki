@@ -8,8 +8,8 @@ export function transformProductCartItem(
     id: product.product_id,
     name: product.description?.name || "Unnamed Product",
     image:
-      product.images?.find((img) => img.is_main)?.single_image ||
-      product.images?.[0]?.single_image ||
+      product.images?.find((img) => img.is_main)?.origin_image ||
+      product.images?.[0]?.origin_image ||
       "/placeholder-product.jpg",
     url_key: product.description?.url_key || "",
     price: product.price ?? 0,
