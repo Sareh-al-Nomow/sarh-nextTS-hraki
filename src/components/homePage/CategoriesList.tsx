@@ -48,21 +48,21 @@ export default function CategoriesList() {
         <h2 className="text-2xl md:text-3xl font-bold pr-text mb-10 ">
           {t("title")}
         </h2>
-        {!displayCategories.parentsWithoutChildren && (
+        {!displayCategories.allParent && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-6">
             <h1>There is No Avilable Categories</h1>
           </div>
         )}
         <div className="gap-6">
-          <div className="flex justify-center gap-10">
-            {displayCategories.parentsWithoutChildren &&
-              displayCategories.parentsWithoutChildren.map((cat, index) => (
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10">
+            {displayCategories.allParent &&
+              displayCategories.allParent.map((cat, index) => (
                 <Link
                   href={`/shopGrid?categoryid=${cat.id}`}
                   key={index}
-                  className="flex flex-col items-center text-center group"
+                  className="flex flex-col items-center text-center group w-24 sm:w-28 md:w-auto"
                 >
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={cat.description.image ?? "/image/products/img.png"}
                       alt={cat.description.name}
@@ -71,7 +71,7 @@ export default function CategoriesList() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="mt-2 text-lg font-bold text-gray-100 md:text-base pr-text group-hover:text-[#219EBC] transition-colors duration-300">
+                  <span className="mt-2 text-sm sm:text-base font-bold pr-text group-hover:text-[#219EBC] transition-colors duration-300">
                     {cat.description.name}
                   </span>
                 </Link>
