@@ -62,7 +62,7 @@ export default async function RootLayout({
                     <Toaster />
                     <div id="root-modal"></div>
                     <ClientLayoutPart />
-                    <div className="hidden md:block">
+                    <div className="">
                       <TopHeader />
                     </div>
                     <Navbar />
