@@ -4,17 +4,34 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 import { getLanguages } from "@/lib/axios/languagesAxios";
 
 export default function Language() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["languages"],
     queryFn: getLanguages,
   });
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Detect current locale from URL (assuming first path segment is locale)
+  const currentLocale = pathname?.split("/")[1] || "en";
+
+  // Detect mobile width for dropdown alignment
+  useEffect(() => {
+    function checkMobile() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -30,10 +47,20 @@ export default function Language() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelectLanguage = (lang: string) => {
-    setSelectedLanguage(lang);
+  const handleSelectLanguage = (langCode: string) => {
     setIsOpen(false);
-    // هنا يمكنك إضافة منطق تغيير اللغة الفعلي
+
+    // Replace locale segment with new langCode
+    const segments = pathname?.split("/") || [];
+    if (segments.length > 1) {
+      segments[1] = langCode; // replace locale segment
+    } else {
+      segments.push(langCode); // fallback
+    }
+    const newPathname = segments.join("/") || `/${langCode}`;
+    localStorage.setItem("lang", langCode);
+    // Navigate to new locale path
+    router.push(newPathname);
   };
 
   if (isLoading) {
@@ -41,7 +68,7 @@ export default function Language() {
   }
 
   if (error) {
-    return <p className="py-10">{error.message}</p>;
+    return <p className="py-10">{(error as Error).message}</p>;
   }
 
   return (
@@ -54,7 +81,7 @@ export default function Language() {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <span>{selectedLanguage}</span>
+        <span>{currentLocale.toUpperCase()}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -66,21 +93,23 @@ export default function Language() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            role="menu"
+            aria-label="Language selector"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className={`absolute ${
-              window.innerWidth < 768 ? "left-0" : "right-0"
+              isMobile ? "left-0" : "right-0"
             } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
           >
             {data?.data.map((lang) => (
               <motion.button
                 key={lang.languageCode}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleSelectLanguage(lang.languageName)}
+                onClick={() => handleSelectLanguage(lang.languageCode)}
                 className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                  selectedLanguage === lang.languageName
+                  currentLocale === lang.languageCode
                     ? "bg-gray-100 font-semibold"
                     : ""
                 }`}

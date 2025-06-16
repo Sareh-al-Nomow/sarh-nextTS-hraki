@@ -78,7 +78,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
           className="relative aspect-square"
         >
           <Image
-            src={product.image}
+            src={product.image ?? "/image/products/img.png"}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -220,7 +220,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
               {/* Image Container with Close Button */}
               <div className="relative h-48 w-full">
                 <Image
-                  src={product.image}
+                  src={product.image ?? "/image/products/img.png"}
                   alt={quickViewProduct.name}
                   fill
                   className="object-cover"

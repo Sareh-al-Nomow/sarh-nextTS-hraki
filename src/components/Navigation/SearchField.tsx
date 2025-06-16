@@ -1,11 +1,14 @@
 "use client";
 
 import { SearchContext } from "@/store/SearchContext";
-import {  useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 
 export default function SearchField() {
+  const t = useTranslations("navbar");
+
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
   const router = useRouter();
@@ -26,8 +29,8 @@ export default function SearchField() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         type="text"
-        placeholder="ابحث عن المنتجات..."
-        className="w-full p-3 text-xl shadow rounded-full focus:shadow-black/60 transition-all duration-200"
+        placeholder={t("searchPlaceholder")}
+        className="w-full p-3 px-5 text-xl shadow rounded-full focus:shadow-black/60 transition-all duration-200"
       />
       <FiSearch className="absolute top-4 right-5 text-gray-400" />
     </div>

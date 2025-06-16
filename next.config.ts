@@ -1,20 +1,13 @@
-// i want to allow image form all the wold how
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      }, // Unsplash
-      {
-        protocol: "https",
-        hostname: "**", // يسمح بكل النطاقات (غير آمن)
-      },
-    ],
+    unoptimized: true, // disable image optimization to allow images from any domain
   },
-  // Other Next.js config options can go here
+  // Add other Next.js config options here if needed
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

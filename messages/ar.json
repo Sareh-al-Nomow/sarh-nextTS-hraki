@@ -1,0 +1,85 @@
+{
+  "navbar": {
+    "home": "الرئيسية",
+    "categories": "الأقسام",
+    "brands": "العلامات التجارية",
+    "pubulareQuestion": "الأسئلة الشائعة",
+    "aboutUs": "من نحن",
+    "myAccount": "حسابي",
+    "viewProfile": "عرض الملف الشخصي",
+    "searchPlaceholder": "ابحث عن منتجات..."
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "forgotPassword": "نسيان كلمة المرور",
+      "noAccount": "ليس لديك حساب؟",
+      "createAccount": "إنشاء حساب",
+      "googleLogin": "تسجيل الدخول عبر Google",
+      "errors": {
+        "email": "يرجى تعبئة البريد الإلكتروني",
+        "password": "يرجى تعبئة كلمة المرور"
+      }
+    },
+    "signup": {
+      "title": "إنشاء حساب جديد",
+      "fullName": "الاسم الكامل",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "agreePolicy": "أوافق على سياسة الخصوصية",
+      "submit": "إنشاء حساب",
+      "haveAccount": "لديك حساب؟",
+      "login": "تسجيل الدخول",
+      "googleSignup": "التسجيل عبر Google",
+      "errors": {
+        "name": "الاسم مطلوب",
+        "phone": "رقم الهاتف غير صالح",
+        "email": "البريد الإلكتروني مطلوب",
+        "password": "كلمة المرور مطلوبة",
+        "agreePolicy": "يجب الموافقة على سياسة الخصوصية"
+      }
+    },
+    "otp": {
+      "title": "OTP",
+      "sentTo": "We Sent OTP To :",
+      "placeholder": "ادخل 6 رموز هنا لتأكيد حسابك",
+      "submit": "تأكيد",
+      "pending": "... تأكيد",
+      "errors": {
+        "emptyOTP": "OTP يرجى تعبئة"
+      }
+    },
+    "forgotPassword": {
+      "title": "نسيان كلمة المرور",
+      "enterEmail": "رجاء ادخال البريد الاكتروني الخاص بك",
+      "emailPlaceholder": "ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر",
+      "submit": "ارسال",
+      "pending": "... ارسال",
+      "success": "We Send Reset Password Link to Your email",
+      "done": "Done",
+      "noAccount": "ليس لديك حساب؟",
+      "createAccount": "إنشاء حساب"
+    },
+    "close": "إغلاق"
+  },
+
+  "topHeader": {
+    "available": "نحن متاحون على مدار الساعة طوال أيام الأسبوع، هل تحتاج إلى مساعدة؟",
+    "phone": "+962791986721"
+  },
+
+  "accountCard": {
+    "Profile": "الملف الشخصي",
+    "Orders": "الطلبات",
+    "wishlist": "قائمة الرغبات",
+    "SignOut": "تسجيل الخروج"
+  },
+
+  "category": {
+    "title": "تصفح الفئات"
+  }
+}

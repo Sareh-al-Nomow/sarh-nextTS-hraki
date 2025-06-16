@@ -1,0 +1,82 @@
+{
+  "navbar": {
+    "home": "Home",
+    "categories": "Categories",
+    "brands": "Brands",
+    "pubulareQuestion": "FAQ",
+    "aboutUs": "About Us",
+    "myAccount": "My Account",
+    "viewProfile": "View Profile",
+    "searchPlaceholder": "Search for products..."
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "googleLogin": "Login with Google",
+      "errors": {
+        "email": "Please enter your email",
+        "password": "Please enter your password"
+      }
+    },
+    "signup": {
+      "title": "Create Account",
+      "fullName": "Full Name",
+      "phone": "Phone Number",
+      "email": "Email",
+      "password": "Password",
+      "agreePolicy": "I agree to the privacy policy",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "login": "Login",
+      "googleSignup": "Sign up with Google",
+      "errors": {
+        "name": "Name is required",
+        "phone": "Valid phone number is required",
+        "email": "Email is required",
+        "password": "Password is required",
+        "agreePolicy": "You must agree to the privacy policy"
+      }
+    },
+    "otp": {
+      "title": "OTP Verification",
+      "sentTo": "We sent OTP to:",
+      "placeholder": "Enter 6-digit code to verify your account",
+      "submit": "Verify",
+      "pending": "Verifying..."
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "enterEmail": "Please enter your email",
+      "emailPlaceholder": "Enter your email to receive reset link",
+      "submit": "Send",
+      "pending": "Sending...",
+      "success": "We sent reset password link to your email",
+      "done": "Done",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account"
+    },
+    "close": "Close"
+  },
+
+  "topHeader": {
+    "available": "We are available 24/7, Need help?",
+    "phone": "+962791986721"
+  },
+
+  "accountCard": {
+    "Profile": "Profile",
+    "Orders": "Orders",
+    "wishlist": "wishlist",
+    "SignOut": "Sign Out"
+  },
+
+  "category": {
+    "title": "Browse Categories"
+  }
+}

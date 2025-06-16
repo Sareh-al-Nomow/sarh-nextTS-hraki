@@ -9,11 +9,10 @@ import { FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getBrands } from "@/lib/axios/brandsAxios";
 import { getCategories } from "@/lib/axios/categoryAxios";
-import { getCollections } from "@/lib/axios/collectionsAxios";
 import Spinner from "../UI/SpinnerLoading";
 import { Category } from "@/lib/models/categoryModal";
 import { BrandWithProducts } from "@/lib/models/brandsModal";
-import { Collection } from "@/lib/models/collectionModal";
+import { useTranslations } from "next-intl";
 
 interface Group {
   name: string;
@@ -22,8 +21,9 @@ interface Group {
 }
 
 export default function PremiumNavWidget() {
-  const [groups, setGroups] = useState<Group[]>([]);
+  const t = useTranslations("navbar");
 
+  const [groups, setGroups] = useState<Group[]>([]);
   console.log(groups);
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -45,52 +45,53 @@ export default function PremiumNavWidget() {
     data: categoriesData,
     isLoading: isLoadingCategories,
     error: errorCategories,
+    refetch,
   } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
 
-  const {
-    data: collectionsData,
-    isLoading: isLoadingCollections,
-    error: errorCollections,
-    refetch,
-  } = useQuery({
-    queryKey: ["collections"],
-    queryFn: getCollections,
-  });
+  // const {
+  //   data: collectionsData,
+  //   isLoading: isLoadingCollections,
+  //   error: errorCollections,
+  //   refetch,
+  // } = useQuery({
+  //   queryKey: ["collections"],
+  //   queryFn: getCollections,
+  // });
 
   useEffect(() => {
-    if (categoriesData && brandsData && collectionsData) {
+    if (categoriesData && brandsData) {
       const newGroups = [
         {
-          name: "Categories",
+          name: t("categories"),
           subcategories: categoriesData.data.map(
             (cat: Category) => cat.description.name
           ),
           ids: categoriesData.data.map((cat: Category) => cat.id),
         },
         {
-          name: "Brands",
+          name: t("brands"),
           subcategories: brandsData.data.map(
             (brand: BrandWithProducts) => brand.name
           ),
           ids: brandsData.data.map((brand: BrandWithProducts) => brand.id),
         },
-        {
-          name: "Collections",
-          subcategories: collectionsData.collections.map(
-            (col: Collection) => col.name
-          ),
-          ids: collectionsData.collections.map(
-            (col: Collection) => col.collection_id
-          ),
-        },
+        // {
+        //   name: "Collections",
+        //   subcategories: collectionsData.collections.map(
+        //     (col: Collection) => col.name
+        //   ),
+        //   ids: collectionsData.collections.map(
+        //     (col: Collection) => col.collection_id
+        //   ),
+        // },
       ];
 
       setGroups(newGroups);
     }
-  }, [categoriesData, brandsData, collectionsData]);
+  }, [categoriesData, brandsData]);
 
   function handleSearchTerm() {
     if (term) {
@@ -100,7 +101,7 @@ export default function PremiumNavWidget() {
     }
   }
 
-  if (isLoadingBrands || isLoadingCollections || isLoadingCategories) {
+  if (isLoadingBrands || isLoadingCategories) {
     return (
       <div className="my-40 mt-56">
         <Spinner />
@@ -108,17 +109,15 @@ export default function PremiumNavWidget() {
     );
   }
 
-  if (errorBrands || errorCategories || errorCollections) {
+  if (errorBrands || errorCategories) {
     return (
       <div className="text-center py-10">
         <h3 className="text-red-500">
           {" "}
-          {errorBrands?.name || errorCategories?.name || errorCollections?.name}
+          {errorBrands?.name || errorCategories?.name}
         </h3>
         <p className="py-10">
-          {errorBrands?.message ||
-            errorCategories?.message ||
-            errorCollections?.message}
+          {errorBrands?.message || errorCategories?.message}
         </p>
         <button
           onClick={() => refetch()}
@@ -320,14 +319,14 @@ export default function PremiumNavWidget() {
               </div>
 
               <ul>
-                <li className="px-8 py-5">
+                <li className="px-8 py-5 text-[18px]">
                   <Link href={"/contact"} onClick={() => setIsOpen(false)}>
-                    Pubulare Question
+                    {t("pubulareQuestion")}
                   </Link>
                 </li>
-                <li className="px-8 py-5">
+                <li className="px-8 py-5 text-[18px]">
                   <Link href={"/about"} onClick={() => setIsOpen(false)}>
-                    About Us
+                    {t("aboutUs")}
                   </Link>
                 </li>
               </ul>
@@ -342,8 +341,12 @@ export default function PremiumNavWidget() {
                     <FiUser className="text-gray-500" />
                   </div>
                   <div>
-                    <div className="font-medium">My Account</div>
-                    <div className="text-sm text-gray-500">View profile</div>
+                    <div className="font-medium text-[22px]">
+                      {t("myAccount")}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {t("viewProfile")}
+                    </div>
                   </div>
                 </Link>
               </div>

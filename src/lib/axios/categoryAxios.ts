@@ -4,8 +4,9 @@ import { CategoryResponse } from "../models/categoryModal";
 export const getCategories = async (): Promise<CategoryResponse> => {
   try {
     const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang") ?? "en";
     const response = await axios.get<CategoryResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories?lang=${lang}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

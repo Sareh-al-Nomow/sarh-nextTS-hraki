@@ -8,8 +8,10 @@ export interface CollectionResponse {
 export const getCollections = async (): Promise<CollectionResponse> => {
   try {
     const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang") ?? "en";
+
     const response = await axios.get<CollectionResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/collections`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/collections?lang=${lang}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

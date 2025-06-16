@@ -5,8 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import Spinner from "../UI/SpinnerLoading";
+import { useTranslations } from "next-intl";
 
 export default function CategoriesList() {
+  const t = useTranslations("category");
   const {
     data: categories,
     isLoading,
@@ -37,7 +39,7 @@ export default function CategoriesList() {
     <section className="px-4 py-6 md:py-10 text-center">
       <div className="container mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold pr-text mb-10 ">
-          Browse Categories
+          {t("title")}
         </h2>
         {!categories && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-6">
@@ -54,7 +56,7 @@ export default function CategoriesList() {
               >
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Image
-                    src={cat.description.image}
+                    src={cat.description.image ?? "/image/products/img.png"}
                     alt={cat.description.name}
                     width={96}
                     height={96}

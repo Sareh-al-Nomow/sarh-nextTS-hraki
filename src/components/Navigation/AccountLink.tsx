@@ -13,8 +13,11 @@ import { AuthContext } from "@/store/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function PremiumUserMenu() {
+  const t = useTranslations("accountCard");
+
   const { user, logout } = useContext(AuthContext);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +36,9 @@ export default function PremiumUserMenu() {
   }, []);
 
   const menuItems = [
-    { icon: <FiUser size={18} />, label: "Profile", path: "/profile" },
-    { icon: <FiShoppingBag size={18} />, label: "Orders", path: "/orders" },
-    { icon: <FiHeart size={18} />, label: "wishlist", path: "/wishlist" },
+    { icon: <FiUser size={18} />, label: t("Profile"), path: "/profile" },
+    { icon: <FiShoppingBag size={18} />, label: t("Orders"), path: "/orders" },
+    { icon: <FiHeart size={18} />, label: t("wishlist"), path: "/wishlist" },
   ];
 
   const handleLogout = () => {
@@ -131,7 +134,7 @@ export default function PremiumUserMenu() {
                 className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
               >
                 <FiLogOut className="text-red-400" size={18} />
-                <span>Sign Out</span>
+                <span>{t("wishlist")}</span>
               </motion.button>
             </div>
           </motion.div>

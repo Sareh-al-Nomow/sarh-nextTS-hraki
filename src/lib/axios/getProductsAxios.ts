@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import {  ProductsResponse } from "../models/productsModal";
+import { ProductsResponse } from "../models/productsModal";
 
 export interface GetProductsParams {
   page?: number;
@@ -18,8 +18,10 @@ export const getProducts = async (
   signal?: AbortSignal
 ): Promise<ProductsResponse> => {
   try {
+    const lang = localStorage.getItem("lang") ?? "en";
+
     const response = await axios.get<ProductsResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products?lang=${lang}`,
       { params, signal }
     );
     return response.data;
@@ -36,8 +38,9 @@ export const getProductByUrlKey = async (
   signal?: AbortSignal
 ): Promise<ProductsResponse> => {
   try {
+    const lang = localStorage.getItem("lang") ?? "en";
     const response = await axios.get<ProductsResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/by-url/${url_key}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/by-url/${url_key}?lang=${lang}`,
       { signal }
     );
     return response.data;

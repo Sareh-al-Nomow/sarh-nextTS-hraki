@@ -9,12 +9,14 @@ import { BsList } from "react-icons/bs";
 import { useContext } from "react";
 import { AuthContext } from "@/store/AuthContext";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function Navbar() {
   const { isAuthenticated } = useContext(AuthContext);
+  const t = useTranslations("navbar");
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow bg-white">
+    <header className="z-50 w-full shadow bg-white">
       <div className="w-full lg:px-20">
         <nav
           dir="ltr"
@@ -34,9 +36,9 @@ export default function Navbar() {
 
           {/* Right - Actions */}
           <div className="flex items-center gap-2">
-            <span className="text-sm border px-3 py-1 rounded-lg pr-text cursor-pointer">
+            {/* <span className="text-sm border px-3 py-1 rounded-lg pr-text cursor-pointer">
               JOD
-            </span>
+            </span> */}
             {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
             <CartLink />
             <BsList
@@ -47,8 +49,8 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <div className="flex items-center gap-5 mx-3">
-            <span className="hidden md:flex cursor-pointer pr-text hover:text-[#219EBC] text-[20px] mt-1">
-              Home
+            <span className="hidden md:flex cursor-pointer pr-text font-bold hover:text-[#219EBC] text-[23px] mt-1">
+              {t("home")}
             </span>
             <PremiumNavWidget />
           </div>

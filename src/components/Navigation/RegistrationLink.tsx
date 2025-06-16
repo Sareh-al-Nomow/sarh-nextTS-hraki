@@ -13,8 +13,11 @@ import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
 import Link from "next/link";
 import { restPasswordRequest } from "@/lib/axios/resetPasswordAxios";
+import { useTranslations } from "next-intl";
 
 export default function RegistrationLink() {
+  const t = useTranslations("auth");
+
   const { login: loginCxt } = useContext(AuthContext);
   const { openAuthModal, closeAuthModal, isAuthModalOpen } =
     useContext(AuthModalContext);
@@ -112,8 +115,8 @@ export default function RegistrationLink() {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    if (!formInput.email) newErrors.email = "يرجى تعبئة البريد الإلكتروني";
-    if (!formInput.pass) newErrors.pass = "يرجى تعبئة كلمة المرور";
+    if (!formInput.email) newErrors.email = t("login.errors.email");
+    if (!formInput.pass) newErrors.pass = t("login.errors.password");
 
     setErrors(newErrors);
 
@@ -131,18 +134,18 @@ export default function RegistrationLink() {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    if (!formInput.name) newErrors.name = "الاسم مطلوب";
-    if (!formInput.email) newErrors.email = "البريد الإلكتروني مطلوب";
-    if (!formInput.phone) newErrors.phone = "رقم الهاتف مطلوب";
-    if (!formInput.pass) newErrors.pass = "كلمة المرور مطلوبة";
+    if (!formInput.name) newErrors.name = t("signup.errors.name");
+    if (!formInput.email) newErrors.email = t("signup.errors.email");
+    if (!formInput.phone) newErrors.phone = t("signup.errors.phone");
+    if (!formInput.pass) newErrors.pass = t("signup.errors.password");
 
     const generalPhoneRegex = /^[0-9]{8,15}$/;
     if (formInput.phone && !generalPhoneRegex.test(formInput.phone)) {
-      newErrors.phone = "رقم الهاتف غير صالح";
+      newErrors.phone = t("signup.errors.phone");
     }
 
     if (!formInput.agreePolicy)
-      newErrors.agreePolicy = "يجب الموافقة على سياسة الخصوصية";
+      newErrors.agreePolicy = t("signup.errors.agreePolicy");
 
     setErrors(newErrors);
 
@@ -163,7 +166,7 @@ export default function RegistrationLink() {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    if (formInput.otp.length !== 6) newErrors.otp = "OTP يرجى تعبئة";
+    if (formInput.otp.length !== 6) newErrors.otp = t("otp.errors.enterEmail");
 
     setErrors(newErrors);
 
@@ -219,7 +222,7 @@ export default function RegistrationLink() {
           <button
             onClick={handleCloseModal}
             className="absolute top-3 right-3 text-5xl text-gray-300 hover:text-white"
-            aria-label="إغلاق"
+            aria-label={t("close")}
           >
             &times;
           </button>
@@ -227,14 +230,14 @@ export default function RegistrationLink() {
           {contentView === "login" && (
             <>
               <h2 className="text-xl font-bold mb-4 text-center">
-                تسجيل الدخول
+                {t("login.title")}
               </h2>
 
               <form className="space-y-4" onSubmit={handleLogin}>
                 <div>
                   <div className="flex justify-between">
                     <label className="block mb-1 text-sm">
-                      البريد الإلكتروني
+                      {t("login.email")}
                     </label>
                     {errors.email && (
                       <span className="text-red-400 text-sm mt-1">
@@ -259,7 +262,10 @@ export default function RegistrationLink() {
 
                 <div>
                   <div className="flex justify-between">
-                    <label className="block mb-1 text-sm">كلمة المرور</label>
+                    <label className="block mb-1 text-sm">
+                      {" "}
+                      {t("login.password")}
+                    </label>
                     {errors.pass && (
                       <p className="text-red-400 text-sm mt-1">{errors.pass}</p>
                     )}
@@ -284,7 +290,9 @@ export default function RegistrationLink() {
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white"
                 >
-                  {isPendingLogin ? "... تسجيل الدخول" : "تسجيل الدخول"}
+                  {isPendingLogin
+                    ? `...${t("login.submit")}`
+                    : t("login.submit")}
                 </button>
               </form>
               <div className="flex justify-between">
@@ -296,11 +304,11 @@ export default function RegistrationLink() {
                     }}
                     className="text-blue-400 hover:underline"
                   >
-                    نسيان كلمة المرور
+                    {t("login.forgotPassword")}
                   </button>
                 </div>
                 <div className="text-center my-4 text-sm">
-                  ليس لديك حساب؟{" "}
+                  {t("login.noAccount")}{" "}
                   <button
                     onClick={() => {
                       setContentView("signup");
@@ -308,7 +316,7 @@ export default function RegistrationLink() {
                     }}
                     className="text-blue-400 hover:underline"
                   >
-                    إنشاء حساب
+                    {t("login.createAccount")}
                   </button>
                 </div>
               </div>
@@ -321,7 +329,7 @@ export default function RegistrationLink() {
                   className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
                 >
                   <FcGoogle className="text-xl" />
-                  <span>تسجيل الدخول عبر Google</span>
+                  <span> {t("login.googleLogin")}</span>
                 </Link>
               </div>
             </>
@@ -330,13 +338,16 @@ export default function RegistrationLink() {
           {contentView === "signup" && (
             <>
               <h2 className="text-xl font-bold mb-2 text-center">
-                إنشاء حساب جديد
+                {t("signup.title")}
               </h2>
 
               <form className="space-y-4" onSubmit={handleRegister}>
                 <div>
                   <div className="flex justify-between">
-                    <label className="block mb-1 text-sm">الاسم الكامل</label>
+                    <label className="block mb-1 text-sm">
+                      {" "}
+                      {t("signup.fullName")}
+                    </label>
                     {errors.name && (
                       <p className="text-red-400 text-sm mt-1">{errors.name}</p>
                     )}
@@ -352,13 +363,16 @@ export default function RegistrationLink() {
                         ? "border-red-500 focus:ring-red-500"
                         : "border-slate-600 focus:ring-green-500"
                     } focus:outline-none focus:ring-2`}
-                    placeholder="الاسم الكامل"
+                    placeholder={t("signup.fullName")}
                   />
                 </div>
 
                 <div>
                   <div className="flex justify-between">
-                    <label className="block mb-1 text-sm">رقم الهاتف</label>
+                    <label className="block mb-1 text-sm">
+                      {" "}
+                      {t("signup.phone")}
+                    </label>
                     {errors.phone && (
                       <p className="text-red-400 text-sm mt-1">
                         {errors.phone}
@@ -383,7 +397,7 @@ export default function RegistrationLink() {
                 <div>
                   <div className="flex justify-between">
                     <label className="block mb-1 text-sm">
-                      البريد الإلكتروني
+                      {t("signup.email")}
                     </label>
                     {errors.email && (
                       <p className="text-red-400 text-sm mt-1">
@@ -408,7 +422,10 @@ export default function RegistrationLink() {
 
                 <div>
                   <div className="flex justify-between">
-                    <label className="block mb-1 text-sm">كلمة المرور</label>
+                    <label className="block mb-1 text-sm">
+                      {" "}
+                      {t("signup.password")}
+                    </label>
                     {errors.pass && (
                       <p className="text-red-400 text-sm mt-1">{errors.pass}</p>
                     )}
@@ -440,7 +457,7 @@ export default function RegistrationLink() {
                         errors.agreePolicy ? "border-red-500" : ""
                       }`}
                     />
-                    <label htmlFor="agree">أوافق على سياسة الخصوصية</label>
+                    <label htmlFor="agree"> {t("signup.agreePolicy")}</label>
                   </div>
 
                   {errors.agreePolicy && (
@@ -455,7 +472,9 @@ export default function RegistrationLink() {
                   type="submit"
                   className="w-full bg-green-600 hover:bg-green-700 transition-colors py-2 rounded text-white cursor-pointer"
                 >
-                  {isPendingSignup ? "... تسجيل" : " إنشاء حساب"}
+                  {isPendingSignup
+                    ? `...${t("signup.submit")}`
+                    : t("signup.submit")}
                 </button>
               </form>
 
@@ -467,7 +486,7 @@ export default function RegistrationLink() {
                   className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
                 >
                   <FcGoogle className="text-xl" />
-                  <span>تسجيل الدخول عبر Google</span>
+                  <span> {t("signup.googleSignup")} </span>
                 </Link>
               </div>
               <div className="flex justify-between">
@@ -479,11 +498,11 @@ export default function RegistrationLink() {
                     }}
                     className="text-blue-400 hover:underline"
                   >
-                    نسيان كلمة المرور
+                    {t("login.forgotPassword")}
                   </button>
                 </div>
                 <div className="text-center mt-4 text-sm">
-                  لديك حساب؟{" "}
+                  {t("signup.haveAccount")}{" "}
                   <button
                     onClick={() => {
                       setContentView("login");
@@ -491,7 +510,7 @@ export default function RegistrationLink() {
                     }}
                     className="text-green-400 hover:underline"
                   >
-                    تسجيل الدخول
+                    {t("login.submit")}
                   </button>
                 </div>
               </div>
@@ -500,7 +519,10 @@ export default function RegistrationLink() {
 
           {contentView === "otp" && (
             <>
-              <h2 className="text-xl font-bold mb-4 text-center">OTP</h2>
+              <h2 className="text-xl font-bold mb-4 text-center">
+                {" "}
+                {t("otp.title")}
+              </h2>
               <form
                 className="space-y-4 text-center"
                 onSubmit={handleVerifyOtp}
@@ -508,7 +530,7 @@ export default function RegistrationLink() {
                 <div>
                   <div className="flex justify-between">
                     <label className="block mb-1 ">
-                      We Sent OTP To :{" "}
+                      {t("otp.password.sentTo")}
                       <span className="text-sm text-gray-400">
                         {" "}
                         {formInput.email}
@@ -531,7 +553,7 @@ export default function RegistrationLink() {
                         ? "border-red-500 focus:ring-red-500"
                         : "border-slate-600 focus:ring-blue-500"
                     } focus:outline-none focus:ring-2`}
-                    placeholder="ادخل 6 رموز هنا لتأكيد حسابك"
+                    placeholder={t("otp.placeholder")}
                   />
                 </div>
 
@@ -540,7 +562,7 @@ export default function RegistrationLink() {
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
                 >
-                  {isPendingOtp ? "... تأكيد" : "تأكيد"}
+                  {isPendingOtp ? `...${t("otp.submit")}` : t("otp.submit")}
                 </button>
               </form>
             </>
@@ -551,13 +573,13 @@ export default function RegistrationLink() {
               {successResetPasswordRequest ? (
                 <div>
                   <h2 className="text-xl font-bold mb-4 text-center ">
-                    Forget Password
+                    {t("forgotPassword.title")}
                   </h2>
                   <div className="space-y-4 text-center">
                     <div>
                       <div className="flex justify-center">
                         <label className="block mb-2 text-gray-300">
-                          We Send Reset Password Link to Your email
+                          {t("forgotPassword.success")}
                         </label>
                         {errors.otp && (
                           <span className="text-red-400 text-sm mt-1">
@@ -571,7 +593,7 @@ export default function RegistrationLink() {
                       onClick={handleCloseModal}
                       className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
                     >
-                      Done
+                      {t("forgotPassword.done")}
                     </button>
                     <div className="text-center my-4 text-sm"></div>
                   </div>
@@ -579,13 +601,13 @@ export default function RegistrationLink() {
               ) : (
                 <div>
                   <h2 className="text-xl font-bold mb-4 text-center ">
-                    Forget Password
+                    {t("forgotPassword.title")}
                   </h2>
                   <div className="space-y-4 text-center">
                     <div>
                       <div className="flex justify-center">
                         <label className="block mb-2 text-gray-300">
-                          Please Enter Your Email
+                          {t("forgotPassword.enterEmail")}
                         </label>
                         {errors.otp && (
                           <span className="text-red-400 text-sm mt-1">
@@ -604,7 +626,7 @@ export default function RegistrationLink() {
                             ? "border-red-500 focus:ring-red-500"
                             : "border-slate-600 focus:ring-blue-500"
                         } focus:outline-none focus:ring-2`}
-                        placeholder="ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر"
+                        placeholder={t("forgotPassword.emailPlaceholder")}
                       />
                     </div>
 
@@ -614,10 +636,13 @@ export default function RegistrationLink() {
                       onClick={handleForgetPassword}
                       className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
                     >
-                      {isPendingResetPassword ? "... ارسال" : "ارسال"}
+                      {isPendingResetPassword
+                        ? `...${t("forgotPassword.submit")}`
+                        : t("forgotPassword.submit")}
                     </button>
                     <div className="text-center my-4 text-sm">
-                      ليس لديك حساب؟{" "}
+                      {t("forgotPassword.noAccount")}
+
                       <button
                         onClick={() => {
                           setContentView("signup");
@@ -625,7 +650,7 @@ export default function RegistrationLink() {
                         }}
                         className="text-blue-400 hover:underline"
                       >
-                        إنشاء حساب
+                        {t("forgotPassword.createAccount")}
                       </button>
                     </div>
                   </div>
