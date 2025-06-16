@@ -11,8 +11,8 @@ export function transformProduct(product: Product): FrontendProduct {
       ? `$${product.old_price.toFixed(2)}`
       : undefined,
     image:
-      product.images?.find((img) => img.is_main)?.single_image ||
-      product.images?.[0]?.single_image ||
+      product.images?.find((img) => img.is_main)?.origin_image ||
+      product.images?.[0]?.origin_image ||
       "/placeholder-product.jpg",
     rating: product.meanRating || 0,
     description: product.description?.description || "",

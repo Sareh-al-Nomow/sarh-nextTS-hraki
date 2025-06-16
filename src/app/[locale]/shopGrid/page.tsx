@@ -811,7 +811,10 @@ const ShopGridPage = () => {
                             }}
                           >
                             <Image
-                              src={subC.description.image}
+                              src={
+                                subC.description.image ??
+                                "/image/products/img.png"
+                              }
                               alt={subC.description.name}
                               width={64}
                               height={64}
