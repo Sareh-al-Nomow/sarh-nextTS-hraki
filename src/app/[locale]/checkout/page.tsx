@@ -14,8 +14,13 @@ import { Country } from "@/models/forntEndCountry";
 import Spinner from "@/components/UI/SpinnerLoading";
 import Shipping from "@/components/chechout/Shipping";
 import PaymentTap from "@/components/chechout/PaymentTap";
+import { useLocale, useTranslations } from "next-intl";
 
 const CheckoutPage = () => {
+  const t = useTranslations("checkout");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   const [activeTab, setActiveTab] = useState<
     "information" | "shipping" | "payment"
   >("information");
@@ -148,7 +153,7 @@ const CheckoutPage = () => {
   return (
     <>
       <Head>
-        <title>Checkout | Modern Shop</title>
+        <title>{t("pageTitle")}</title>
       </Head>
 
       <motion.div
@@ -164,11 +169,9 @@ const CheckoutPage = () => {
               animate={{ y: 0 }}
               className="text-3xl font-bold text-gray-900 mb-2"
             >
-              Complete Your Purchase
+              {t("headings.main")}
             </motion.h1>
-            <p className="text-gray-600">
-              Secure checkout with our encrypted payment system
-            </p>
+            <p className="text-gray-600">{t("headings.sub")}</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -190,7 +193,7 @@ const CheckoutPage = () => {
                         : `text-black `
                     }`}
                   >
-                    Information
+                    {t("tabs.information")}
                   </button>
                   <button
                     disabled={!orderData.addressId}
@@ -205,7 +208,7 @@ const CheckoutPage = () => {
                           } `
                     }`}
                   >
-                    Shipping
+                    {t("tabs.shipping")}
                   </button>
                   <button
                     disabled={!orderData.delevaryMethodId}
@@ -220,7 +223,7 @@ const CheckoutPage = () => {
                           } `
                     }`}
                   >
-                    Payment
+                    {t("tabs.payment")}
                   </button>
                 </div>
               </motion.div>
@@ -252,7 +255,7 @@ const CheckoutPage = () => {
                   />
                 ) : (
                   <div className="text-center my-20">
-                    <h1>Please Select your Address...</h1>
+                    <h1> {t("messages.selectAddress")}</h1>
                   </div>
                 ))}
 
@@ -263,13 +266,14 @@ const CheckoutPage = () => {
             {/* Order Summary */}
             <div>
               <motion.div
+                // dir={isRTL ? "rtl" : "ltr"}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
                 className="bg-white shadow-sm rounded-lg p-6 h-fit sticky top-8"
               >
                 <h2 className="text-lg font-medium text-gray-900 mb-6">
-                  Order Summary
+                  {t("headings.orderSummary")}
                 </h2>
 
                 <div className="space-y-4">
@@ -299,7 +303,7 @@ const CheckoutPage = () => {
                               {item.product_name}
                             </p>
                             <p className="text-sm text-gray-500">
-                              Qty: {item.qty}
+                              {t("orderSummary.quantity")}: {item.qty}
                             </p>
                           </div>
                         </div>
@@ -310,35 +314,52 @@ const CheckoutPage = () => {
                     ))}
                   </div>
 
-                  <div className="border-t border-gray-200 pt-4 space-y-2">
+                  <div
+                    dir={isRTL ? "rtl" : "ltr"}
+                    className="border-t border-gray-200 pt-4 space-y-2"
+                  >
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal</span>
+                      <span className="text-gray-600">
+                        {t("orderSummary.subtotal")}
+                      </span>
                       <span className="text-gray-900">
                         ${summaryCart.subTotal}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Shipping</span>
+                      <span className="text-gray-600">
+                        {" "}
+                        {t("orderSummary.shipping")}
+                      </span>
                       <span className="text-gray-900">
                         ${summaryCart.shippingFee ?? 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Tax</span>
+                      <span className="text-gray-600">
+                        {" "}
+                        {t("orderSummary.tax")}
+                      </span>
                       <span className="text-gray-900">
                         ${summaryCart.tax ?? 0}
                       </span>
                     </div>
                     {summaryCart.discount && (
                       <div className="flex justify-between">
-                        <span className="text-red-300">Discount</span>
+                        <span className="text-red-300">
+                          {" "}
+                          {t("orderSummary.discount")}
+                        </span>
                         <span className="text-red-300 line-through">
                           ${summaryCart.discount ?? 0}
                         </span>
                       </div>
                     )}
                     <div className="flex justify-between pt-2 border-t border-gray-200">
-                      <span className="font-medium text-gray-900">Total</span>
+                      <span className="font-medium text-gray-900">
+                        {" "}
+                        {t("orderSummary.total")}
+                      </span>
                       <span className="font-medium text-gray-900">
                         ${summaryCart.grandTotal ?? 0}
                       </span>

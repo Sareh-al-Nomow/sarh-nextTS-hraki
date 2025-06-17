@@ -134,7 +134,7 @@ export default function PremiumUserMenu() {
                 className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
               >
                 <FiLogOut className="text-red-400" size={18} />
-                <span>{t("wishlist")}</span>
+                <span>{t("SignOut")}</span>
               </motion.button>
             </div>
           </motion.div>

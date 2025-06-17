@@ -17,8 +17,6 @@ export default function CategoriesList() {
   } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
   });
 
   const displayCategories = organizeCategories(categories?.data ?? []);
@@ -50,7 +48,7 @@ export default function CategoriesList() {
         </h2>
         {!displayCategories.allParent && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-6">
-            <h1>There is No Avilable Categories</h1>
+            <h1> {t("noCategory")}</h1>
           </div>
         )}
         <div className="gap-6">

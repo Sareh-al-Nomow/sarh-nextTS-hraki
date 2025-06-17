@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import Spinner from "../UI/SpinnerLoading";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const Shipping: React.FC<{
   countryId: number;
@@ -21,6 +22,7 @@ const Shipping: React.FC<{
   selectedShippingMethod,
   startPayment,
 }) => {
+  const t = useTranslations("shipping");
   const { data, isLoading, error } = useQuery({
     queryKey: ["shipping"],
     queryFn: () => getCountry(countryId),
@@ -35,11 +37,12 @@ const Shipping: React.FC<{
     console.log("Selected delivery method:", selectedValue ?? null);
     updateOrderData("delevaryMethodId", Number(selectedValue) ?? null);
   }
+
   function handleFinishSelectDelevary() {
     if (orderData.delevaryMethodId !== null) {
       startPayment();
     } else {
-      toast.error("Please select Delevary method!");
+      toast.error(t("errors.selectMethod"));
     }
   }
 
@@ -62,7 +65,7 @@ const Shipping: React.FC<{
   if (!data || !data.ShippingZone || data.ShippingZone.length === 0) {
     return (
       <div className="text-center my-40">
-        <h1>No Available Delevary at your Region!</h1>{" "}
+        <h1>{t("noDelivery")}</h1>
       </div>
     );
   }
@@ -73,7 +76,7 @@ const Shipping: React.FC<{
       animate={{ opacity: 1, y: 0 }}
       className="bg-white shadow-sm rounded-lg p-6 space-y-6"
     >
-      <h2 className="text-xl font-medium text-gray-900">Shipping Method</h2>
+      <h2 className="text-xl font-medium text-gray-900">{t("title")}</h2>
 
       <div className="space-y-4">
         {data.ShippingZone.map((shZo, index) => (
@@ -81,7 +84,7 @@ const Shipping: React.FC<{
             {shZo.zone_methods.map((method, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between border p-4  border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer"
+                className="flex items-center justify-between border p-4 border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer"
               >
                 <div className="flex items-center">
                   <input
@@ -90,7 +93,7 @@ const Shipping: React.FC<{
                     name="shipping"
                     value={method.shipping_zone_method_id}
                     onChange={handleSelectDelevaryMethod}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 "
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                     defaultChecked={
                       selectedShippingMethod !== null &&
                       selectedShippingMethod === method.shipping_zone_method_id
@@ -111,11 +114,8 @@ const Shipping: React.FC<{
       </div>
 
       <div className="flex justify-between pt-4">
-        <button
-          //   onClick={() => setActiveTab("information")}
-          className="text-indigo-600 hover:text-indigo-500 font-medium"
-        >
-          ← Back to Information
+        <button className="text-indigo-600 hover:text-indigo-500 font-medium">
+          {t("back")}
         </button>
         <motion.button
           whileHover={{ scale: 1.01 }}
@@ -123,7 +123,7 @@ const Shipping: React.FC<{
           onClick={handleFinishSelectDelevary}
           className="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition font-medium"
         >
-          Continue to Payment
+          {t("continue")}
         </motion.button>
       </div>
     </motion.div>

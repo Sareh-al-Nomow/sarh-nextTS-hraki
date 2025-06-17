@@ -14,6 +14,7 @@ import { validateAddressForm } from "@/utils/valiadtion/validateAddressForm";
 import Modal from "../UI/Modal";
 import { Address } from "@/models/frontEndAddress";
 import { Country } from "@/models/forntEndCountry";
+import { useTranslations } from "next-intl";
 
 const AddressTap: React.FC<{
   setActiveTab: (tab: "information" | "shipping" | "payment") => void;
@@ -49,6 +50,8 @@ const AddressTap: React.FC<{
       postcode: "",
     }
   );
+
+  const t = useTranslations("address");
 
   const [addressError, setAddressError] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -232,7 +235,7 @@ const AddressTap: React.FC<{
       <Modal open={isModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
           <h2 className="text-xl font-bold mb-4 text-center">
-            Address input errors
+            {t("modal.title")}
           </h2>
           <ul className="space-y-2 px-4 list-disc">
             {addressError.map((err, idx) => (
@@ -249,7 +252,7 @@ const AddressTap: React.FC<{
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 rounded-2xl bg-amber-600"
             >
-              Close
+              {t("modal.close")}
             </button>
           </div>
         </div>
@@ -262,7 +265,7 @@ const AddressTap: React.FC<{
         className="bg-white shadow-sm rounded-lg p-6 space-y-6 relative"
       >
         <h2 className="text-xl font-medium text-gray-900">
-          Contact Information
+          {t("form.contactInfo")}
         </h2>
 
         {/* Dropdown to choose saved address */}
@@ -274,7 +277,7 @@ const AddressTap: React.FC<{
           >
             {selectedAddress
               ? `${selectedAddress.address_1}, ${selectedAddress.city_id}`
-              : "Choose a saved address"}
+              : t("form.chooseAddress")}
             <FaChevronDown className="text-gray-500 ml-2" />
           </button>
 
@@ -314,7 +317,7 @@ const AddressTap: React.FC<{
               htmlFor="full_name"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Full Name
+              {t("form.fullName")}
             </label>
             <input
               type="text"
@@ -326,7 +329,7 @@ const AddressTap: React.FC<{
               className={`${
                 !isEditing && "opacity-60"
               } w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"`}
-              placeholder="Your name"
+              placeholder={t("form.placeholderName")}
             />
           </div>
           <div>
@@ -334,7 +337,7 @@ const AddressTap: React.FC<{
               htmlFor="phone_number"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Phone
+              {t("form.phone")}
             </label>
             <input
               type="tel"
@@ -352,15 +355,17 @@ const AddressTap: React.FC<{
         </div>
 
         <h2 className="text-xl font-medium text-gray-900 pt-4 border-t border-gray-200">
-          Shipping Address
+          {t("form.shippingAddress")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <label
               htmlFor="address_1"
-              className={` opacity-60 block text-sm font-medium text-gray-700 mb-1`}
+              className={` ${
+                !isEditing && "opacity-60"
+              } block text-sm font-medium text-gray-700 mb-1`}
             >
-              Address
+              {t("form.address")}
             </label>
             <input
               type="text"
@@ -378,9 +383,9 @@ const AddressTap: React.FC<{
           <div className="md:col-span-2">
             <label
               htmlFor="address_2"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className=" block text-sm font-medium text-gray-700 mb-1"
             >
-              Address Details (Optional)
+              {t("form.addressDetails")}
             </label>
             <input
               type="text"
@@ -401,7 +406,7 @@ const AddressTap: React.FC<{
               htmlFor="country_id"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Country
+              {t("form.country")}
             </label>
             <select
               id="country_id"
@@ -413,7 +418,7 @@ const AddressTap: React.FC<{
                 !isEditing && "opacity-60"
               } w-full px-4 py-2 border border-gray-300 rounded-md`}
             >
-              <option value={0}>- Select Country</option>
+              <option value={0}> {t("form.selectCountry")}</option>
               {countries &&
                 countries.map((country) => (
                   <option key={country.id} value={country.id}>
@@ -429,7 +434,7 @@ const AddressTap: React.FC<{
                 htmlFor="city_id"
                 className={` block text-sm font-medium text-gray-700 mb-1`}
               >
-                City
+                {t("form.city")}
               </label>
               <select
                 id="city_id"
@@ -441,7 +446,7 @@ const AddressTap: React.FC<{
                   !isEditing && "opacity-60"
                 } w-full px-4 py-2 border border-gray-300 rounded-md`}
               >
-                <option value={0}>- Select City</option>
+                <option value={0}> {t("form.selectCity")}</option>
                 {selectedCountry.Cities.map((city) => (
                   <option key={city.id} value={city.id}>
                     {city.name}
@@ -457,7 +462,7 @@ const AddressTap: React.FC<{
             htmlFor="postcode"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            ZIP/Postal Code
+            {t("form.postcode")}
           </label>
           <input
             type="text"
@@ -482,7 +487,7 @@ const AddressTap: React.FC<{
               onClick={handleStartEdit}
               className="w-full  bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium"
             >
-              Edit
+              {t("form.edit")}
             </motion.button>
           )}
 
@@ -494,7 +499,7 @@ const AddressTap: React.FC<{
               onClick={handleCancelButton}
               className={`w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium`}
             >
-              Cancel
+              {t("form.cancel")}
             </motion.button>
           )}
           <motion.button
@@ -506,7 +511,9 @@ const AddressTap: React.FC<{
             }
             className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium"
           >
-            {dataReady.addressReady ? "Continue to Shipping" : "Save Address"}
+            {dataReady.addressReady
+              ? t("form.continueShipping")
+              : t("form.saveAddress")}
           </motion.button>
         </div>
       </motion.form>

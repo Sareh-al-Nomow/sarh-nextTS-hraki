@@ -152,8 +152,9 @@ export default function Products() {
             className="px-8 py-3 mb-8 bg-gradient-to-r from-[#219EBC] to-[#2EC4B6] text-white rounded-full font-medium shadow-md hover:shadow-lg transition"
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
-            View More ({data?.total ? data.total - allProducts.length : 0}{" "}
-            remaining)
+            View More
+            {/* ({data?.total ? data.total - allProducts.length : 0}{" "}
+            remaining) */}
           </motion.button>
         </motion.div>
       )}

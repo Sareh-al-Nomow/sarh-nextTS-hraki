@@ -8,13 +8,14 @@ import { newPasswordRequest } from "@/lib/axios/resetPasswordAxios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { MdFileDownloadDone } from "react-icons/md";
-
+import { useTranslations } from "next-intl";
 import { AuthModalContext } from "@/store/AuthModalContext";
 
 type ResetPasswordProps = {
   params: Promise<{ token: string }>;
 };
 const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
+  const t = useTranslations("resetPassword");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [incomingToken, setIncomingToken] = useState("");
@@ -34,11 +35,11 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
     useMutation({
       mutationFn: newPasswordRequest,
       onSuccess: (data) => {
-        console.log("تم ارسال otp", data);
+        console.log(t("console.success"), data);
         setSuccess(true);
       },
       onError: (error: Error) => {
-        console.log("خطأ أثناء otp:", error.message);
+        console.log(t("console.error"), error.message);
         toast.error(error.message);
       },
     });
@@ -47,11 +48,10 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
     e.preventDefault();
 
     if (password.length < 8) {
-      setError("password should be 8 charachter at least!");
+      setError(t("errors.passwordLength"));
       return;
     }
     mutateRestPassword({ newPassword: password, token: incomingToken });
-    // Simulate API call
   };
 
   function handleSuccessButton() {
@@ -74,12 +74,10 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
               <FiLock className="text-white text-3xl" />
             </div>
             <h1 className="text-2xl font-bold text-white">
-              {success ? "Password Updated!" : "Reset Your Password"}
+              {success ? t("success.title") : t("title")}
             </h1>
             <p className="text-blue-100 mt-2">
-              {success
-                ? "Your password has been successfully updated."
-                : "Enter your new password below"}
+              {success ? t("success.message") : t("description")}
             </p>
           </div>
 
@@ -99,7 +97,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                   onClick={handleSuccessButton}
                   className="inline-flex items-center justify-center px-6 py-3 pr-bg text-white font-medium rounded-lg transition-colors"
                 >
-                  Back to Login
+                  {t("success.button")}
                   <FiArrowRight className="ml-2" />
                 </button>
               </motion.div>
@@ -114,7 +112,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                       htmlFor="password"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      New Password
+                      {t("form.newPassword")}
                     </label>
                     <div className="relative">
                       <input
@@ -123,7 +121,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        placeholder="Enter new password"
+                        placeholder={t("form.newPasswordPlaceholder")}
                         required
                         minLength={8}
                       />
@@ -136,7 +134,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                       htmlFor="confirmPassword"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Confirm Password
+                      {t("form.confirmPassword")}
                     </label>
                     <div className="relative">
                       <input
@@ -145,7 +143,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        placeholder="Confirm new password"
+                        placeholder={t("form.confirmPasswordPlaceholder")}
                         required
                         minLength={8}
                       />
@@ -188,11 +186,11 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Updating...
+                      {t("form.updating")}
                     </>
                   ) : (
                     <>
-                      Update Password
+                      {t("form.updateButton")}
                       <FiArrowRight className="ml-2" />
                     </>
                   )}
@@ -211,7 +209,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
             className="mt-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
           >
             <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Password Requirements:
+              {t("requirements.title")}:
             </h3>
             <ul className="text-xs text-gray-600 space-y-1">
               <li className="flex items-center">
@@ -220,7 +218,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                     password.length >= 8 ? "bg-green-500" : "bg-gray-300"
                   }`}
                 ></span>
-                Minimum 8 characters
+                {t("requirements.minLength")}
               </li>
               <li className="flex items-center">
                 <span
@@ -228,7 +226,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                     /[A-Z]/.test(password) ? "bg-green-500" : "bg-gray-300"
                   }`}
                 ></span>
-                At least one uppercase letter
+                {t("requirements.uppercase")}
               </li>
               <li className="flex items-center">
                 <span
@@ -236,7 +234,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                     /[0-9]/.test(password) ? "bg-green-500" : "bg-gray-300"
                   }`}
                 ></span>
-                At least one number
+                {t("requirements.number")}
               </li>
               <li className="flex items-center">
                 <span
@@ -246,7 +244,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                       : "bg-gray-300"
                   }`}
                 ></span>
-                At least one special character
+                {t("requirements.specialChar")}
               </li>
               <li className="flex items-center">
                 <span
@@ -256,7 +254,7 @@ const ResetPasswordPage = ({ params }: ResetPasswordProps) => {
                       : "bg-gray-300"
                   }`}
                 ></span>
-                Passwords match
+                {t("requirements.match")}
               </li>
             </ul>
           </motion.div>

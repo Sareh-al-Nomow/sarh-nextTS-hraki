@@ -3,9 +3,11 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FiCheckCircle, FiArrowRight } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 const OrderSuccessPage = () => {
   const router = useRouter();
+  const t = useTranslations("orderSuccess");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -21,13 +23,8 @@ const OrderSuccessPage = () => {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-3">
-          Order Confirmed!
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Thank you for your purchase! Your order has been successfully placed.
-          You can view your order details and track shipping in your profile.
-        </p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-3">{t("title")}</h2>
+        <p className="text-gray-600 mb-6">{t("description")}</p>
 
         <div className="space-y-4">
           <motion.button
@@ -36,7 +33,7 @@ const OrderSuccessPage = () => {
             onClick={() => router.push("/orders")}
             className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
           >
-            View My Orders
+            {t("viewOrders")}
             <FiArrowRight className="text-lg" />
           </motion.button>
 
@@ -44,18 +41,18 @@ const OrderSuccessPage = () => {
             onClick={() => router.push("/")}
             className="w-full text-blue-500 py-2.5 px-6 rounded-lg font-medium hover:bg-blue-50 transition-colors"
           >
-            Continue Shopping
+            {t("continueShopping")}
           </button>
         </div>
 
         <div className="mt-6 pt-6 border-t border-gray-100">
           <p className="text-sm text-gray-500">
-            Need help with your order?{" "}
+            {t("needHelp")}{" "}
             <a
               href="#"
               className="text-blue-500 hover:text-blue-600 hover:underline"
             >
-              Contact support
+              {t("contactSupport")}
             </a>
           </p>
         </div>

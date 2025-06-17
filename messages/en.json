@@ -77,6 +77,322 @@
   },
 
   "category": {
-    "title": "Browse Categories"
+    "title": "Browse Categories",
+    "noCategory": "There is No Avilable Categories"
+  },
+
+  "cart": {
+    "pageTitle": "Your Cart | Modern Shop",
+    "title": "Your Shopping Cart",
+    "itemsCount": "{count} {count, plural, one {Item} other {Items}} in Cart",
+    "Item": "Item",
+    "Items": "Items",
+    "inCart": "in Cart",
+    "emptyCart": {
+      "message": "Your cart is empty",
+      "continueShopping": "Continue Shopping"
+    },
+    "product": {
+      "remove": "Remove item"
+    },
+    "orderSummary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "discount": "Discount",
+      "total": "Total"
+    },
+    "checkout": "Checkout",
+    "orContinue": "or",
+    "coupon": {
+      "title": "COUPON",
+      "applied": "applied",
+      "placeholder": "Enter coupon code",
+      "apply": "Apply Coupon",
+      "remove": "Remove coupon"
+    },
+    "paymentMethods": {
+      "title": "We Accept",
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "paypal": "PayPal",
+      "applePay": "Apple Pay",
+      "cashOnDelivery": "Pay on Delivery"
+    }
+  },
+
+  "checkout": {
+    "pageTitle": "Checkout | Modern Shop",
+    "headings": {
+      "main": "Complete Your Purchase",
+      "sub": "Secure checkout with our encrypted payment system",
+      "orderSummary": "Order Summary"
+    },
+    "tabs": {
+      "information": "Information",
+      "shipping": "Shipping",
+      "payment": "Payment"
+    },
+    "messages": {
+      "selectAddress": "Please Select your Address...",
+      "saveOrderFail": "Save Order Data Failed",
+      "tryAgain": "Try Again",
+      "tryAgainMessage": "try to add your address and delivery method again"
+    },
+    "orderSummary": {
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "discount": "Discount",
+      "total": "Total",
+      "quantity": "Qty"
+    }
+  },
+
+  "address": {
+    "modal": {
+      "title": "Address input errors",
+      "close": "Close"
+    },
+    "form": {
+      "contactInfo": "Contact Information",
+      "shippingAddress": "Shipping Address",
+      "chooseAddress": "Choose a saved address",
+      "fullName": "Full Name",
+      "phone": "Phone",
+      "address": "Address",
+      "addressDetails": "Address Details (Optional)",
+      "country": "Country",
+      "selectCountry": "- Select Country",
+      "city": "City",
+      "selectCity": "- Select City",
+      "postcode": "ZIP/Postal Code",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "saveAddress": "Save Address",
+      "continueShipping": "Continue to Shipping",
+      "placeholderName": "Your Name"
+    }
+  },
+
+  "shipping": {
+    "title": "Shipping Method",
+    "noDelivery": "No Available Delivery in your Region!",
+    "back": "← Back to Information",
+    "continue": "Continue to Payment",
+    "errors": {
+      "selectMethod": "Please select Delivery method!"
+    }
+  },
+
+  "payment": {
+    "title": "Payment Method",
+    "methods": {
+      "creditCard": "Credit Card",
+      "cashOnDelivery": "Cash On Delivery"
+    },
+    "terms": "I agree to the ",
+    "and": "and",
+    "termsLinks": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "navigation": {
+      "back": "← Back to Shipping",
+      "complete": "Complete Order"
+    },
+    "errors": {
+      "stripeFailed": "Stripe payment failed."
+    }
+  },
+  "orderSuccess": {
+    "title": "Order Confirmed!",
+    "description": "Thank you for your purchase! Your order has been successfully placed. You can view your order details and track shipping in your profile.",
+    "viewOrders": "View My Orders",
+    "continueShopping": "Continue Shopping",
+    "needHelp": "Need help with your order?",
+    "contactSupport": "Contact support"
+  },
+
+  "resetPassword": {
+    "title": "Reset Your Password",
+    "description": "Enter your new password below",
+    "form": {
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "updateButton": "Update Password",
+      "updating": "Updating..."
+    },
+    "success": {
+      "title": "Password Updated!",
+      "message": "Your password has been successfully updated.",
+      "button": "Back to Login"
+    },
+    "requirements": {
+      "title": "Password Requirements",
+      "minLength": "Minimum 8 characters",
+      "uppercase": "At least one uppercase letter",
+      "number": "At least one number",
+      "specialChar": "At least one special character",
+      "match": "Passwords match"
+    },
+    "errors": {
+      "passwordLength": "Password should be 8 characters at least!"
+    },
+    "console": {
+      "success": "OTP sent successfully",
+      "error": "Error while sending OTP:"
+    }
+  },
+
+  "faq": {
+    "title": "Help Center",
+    "subtitle": "Find answers to common questions about orders, shipping, returns, and more.",
+    "categories": {
+      "all": "All Questions",
+      "shipping": "Shipping",
+      "payments": "Payments",
+      "returns": "Returns",
+      "account": "Account"
+    },
+    "questions": {
+      "shippingTime": {
+        "question": "How long does shipping take?",
+        "answer": "Most orders ship within 1-2 business days and arrive in 3-5 business days. Express shipping options are available at checkout."
+      },
+      "paymentMethods": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay. All payments are securely processed."
+      },
+      "returns": {
+        "question": "Can I return or exchange an item?",
+        "answer": "Yes! We offer free returns within 30 days of purchase. Items must be unused and in original packaging. Visit our Returns Center to initiate a return."
+      },
+      "tracking": {
+        "question": "How do I track my order?",
+        "answer": "Once your order ships, you'll receive a tracking number via email. You can also check order status by logging into your account."
+      },
+      "internationalShipping": {
+        "question": "Do you offer international shipping?",
+        "answer": "Yes, we ship to over 100 countries worldwide. International shipping rates and delivery times vary by destination."
+      },
+      "createAccount": {
+        "question": "How do I create an account?",
+        "answer": "Click 'Sign Up' in the top navigation. You can also create an account during checkout by selecting 'Save my information for next time'."
+      }
+    },
+    "cta": {
+      "title": "Still need help?",
+      "description": "Our customer support team is available 24/7 to assist you with any questions.",
+      "contactSupport": "Contact Support",
+      "liveChat": "Live Chat"
+    }
+  },
+
+  "aboutUs": {
+    "hero": {
+      "title": "We are redefining the future of shopping",
+      "subtitle": "A passionate team dedicated to bringing you the best products with an exceptional experience",
+      "button": "Shop Our Collection"
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "Founded in 2010, we started as a small boutique with a big dream - to make premium products accessible to everyone.",
+      "p2": "We believe shopping should be joyful, sustainable, and personal. Every product in our collection is carefully curated to meet our high standards.",
+      "p3": "Today, we are proud to serve millions of customers worldwide while staying true to our original values."
+    },
+    "stats": {
+      "customers": "Happy Customers",
+      "countries": "Countries Worldwide",
+      "established": "Established Since",
+      "support": "Customer Support"
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "These principles guide everything we do",
+      "items": {
+        "customer": {
+          "title": "Customer Obsession",
+          "desc": "We start with the customer and work backwards."
+        },
+        "sustainability": {
+          "title": "Sustainable Future",
+          "desc": "Committed to eco-friendly practices."
+        },
+        "innovation": {
+          "title": "Innovation",
+          "desc": "Constantly pushing boundaries."
+        },
+        "quality": {
+          "title": "Quality Craftsmanship",
+          "desc": "Every product meets our standards."
+        },
+        "community": {
+          "title": "Community",
+          "desc": "Building meaningful connections."
+        },
+        "transparency": {
+          "title": "Transparency",
+          "desc": "Open about our processes."
+        }
+      }
+    },
+    "team": {
+      "title": "Meet the Team",
+      "subtitle": "The brilliant minds behind our success",
+      "ceo": {
+        "name": "Ahmad Alhraki",
+        "role": "SoftWare Enginner",
+        "bio": "Visionary leader..."
+      }
+    },
+    "cta": {
+      "title": "Join Our Community",
+      "subtitle": "Sign up for exclusive offers and updates.",
+      "placeholder": "Your email address",
+      "button": "Subscribe"
+    }
+  },
+
+  "footer": {
+    "description": "Your premier destination for quality products and exceptional service since 2010.",
+    "sections": {
+      "shop": {
+        "title": "Shop",
+        "items": [
+          "All Products",
+          "New Arrivals",
+          "Best Sellers",
+          "Special Offers"
+        ]
+      },
+      "service": {
+        "title": "Customer Service",
+        "items": [
+          "Contact Us",
+          "FAQs",
+          "Shipping Policy",
+          "Returns & Exchanges"
+        ]
+      },
+      "about": {
+        "title": "About Us",
+        "items": ["Our Story", "Sustainability", "Careers", "Press"]
+      }
+    },
+    "badges": {
+      "shipping": "Free Shipping Over $50",
+      "warranty": "2-Year Warranty",
+      "secure": "Secure Payments"
+    },
+    "paymentMethods": ["Visa", "Mastercard"],
+    "bottom": {
+      "copyright": "© 2023 ShopEase. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookies"
+    }
   }
 }

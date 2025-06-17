@@ -9,8 +9,7 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { useState } from "react";
-
-import React from "react";
+import { useTranslations } from "next-intl";
 
 type FAQItem = {
   question: string;
@@ -20,60 +19,55 @@ type FAQItem = {
 };
 
 export default function FAQPage() {
+  const t = useTranslations("faq");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const faqs: FAQItem[] = [
     {
-      question: "How long does shipping take?",
-      answer:
-        "Most orders ship within 1-2 business days and arrive in 3-5 business days. Express shipping options are available at checkout.",
+      question: t("questions.shippingTime.question"),
+      answer: t("questions.shippingTime.answer"),
       category: "shipping",
       icon: <FiTruck className="text-blue-500" />,
     },
     {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay. All payments are securely processed.",
+      question: t("questions.paymentMethods.question"),
+      answer: t("questions.paymentMethods.answer"),
       category: "payments",
       icon: <FiCreditCard className="text-green-500" />,
     },
     {
-      question: "Can I return or exchange an item?",
-      answer:
-        "Yes! We offer free returns within 30 days of purchase. Items must be unused and in original packaging. Visit our Returns Center to initiate a return.",
+      question: t("questions.returns.question"),
+      answer: t("questions.returns.answer"),
       category: "returns",
       icon: <FiRefreshCw className="text-purple-500" />,
     },
     {
-      question: "How do I track my order?",
-      answer:
-        "Once your order ships, you'll receive a tracking number via email. You can also check order status by logging into your account.",
+      question: t("questions.tracking.question"),
+      answer: t("questions.tracking.answer"),
       category: "shipping",
       icon: <FiTruck className="text-blue-500" />,
     },
     {
-      question: "Do you offer international shipping?",
-      answer:
-        "Yes, we ship to over 100 countries worldwide. International shipping rates and delivery times vary by destination.",
+      question: t("questions.internationalShipping.question"),
+      answer: t("questions.internationalShipping.answer"),
       category: "shipping",
       icon: <FiTruck className="text-blue-500" />,
     },
     {
-      question: "How do I create an account?",
-      answer:
-        "Click 'Sign Up' in the top navigation. You can also create an account during checkout by selecting 'Save my information for next time'.",
+      question: t("questions.createAccount.question"),
+      answer: t("questions.createAccount.answer"),
       category: "account",
       icon: <FiUser className="text-orange-500" />,
     },
   ];
 
   const categories = [
-    { id: "all", name: "All Questions" },
-    { id: "shipping", name: "Shipping" },
-    { id: "payments", name: "Payments" },
-    { id: "returns", name: "Returns" },
-    { id: "account", name: "Account" },
+    { id: "all", name: t("categories.all") },
+    { id: "shipping", name: t("categories.shipping") },
+    { id: "payments", name: t("categories.payments") },
+    { id: "returns", name: t("categories.returns") },
+    { id: "account", name: t("categories.account") },
   ];
 
   const filteredFaqs =
@@ -95,11 +89,10 @@ export default function FAQPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Help Center</h1>
-          <p className="text-xl text-gray-600">
-            Find answers to common questions about orders, shipping, returns,
-            and more.
-          </p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {t("title")}
+          </h1>
+          <p className="text-xl text-gray-600">{t("subtitle")}</p>
         </motion.div>
 
         {/* Category Filters */}
@@ -186,11 +179,10 @@ export default function FAQPage() {
           className="mt-20 bg-blue-50 rounded-xl p-8 text-center"
         >
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Still need help?
+            {t("cta.title")}
           </h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Our customer support team is available 24/7 to assist you with any
-            questions.
+            {t("cta.description")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <motion.button
@@ -198,14 +190,14 @@ export default function FAQPage() {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium"
             >
-              Contact Support
+              {t("cta.contactSupport")}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-white text-gray-700 rounded-lg font-medium border border-gray-300"
             >
-              Live Chat
+              {t("cta.liveChat")}
             </motion.button>
           </div>
         </motion.div>

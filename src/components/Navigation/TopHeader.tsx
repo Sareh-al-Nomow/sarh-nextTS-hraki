@@ -12,7 +12,7 @@ const TopHeader: React.FC = () => {
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 py-1">
         <div className="flex items-center justify-between gap-2 py-2 text-xs font-medium text-gray-700 font-sans">
           {/* Left side */}
-          <div className="flex-wrap items-center gap-1 sm:gap-2 text-center sm:text-left justify-center sm:justify-start w-full sm:w-auto">
+          <div className="flex items-center gap-1 sm:gap-2 text-center sm:text-left justify-strat sm:justify-start w-full sm:w-auto">
             <div className="hidden md:block">
               <div className=" text-[13px] md:text-sm text-gray-300 whitespace-nowrap">
                 {t("available")}

@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const PaymentTap: React.FC = () => {
+  const t = useTranslations("payment");
   const { updateCart } = useContext(CartContext);
   const router = useRouter();
 
@@ -32,7 +34,7 @@ const PaymentTap: React.FC = () => {
       }
     },
     onError: (error) => {
-      toast.error(error?.message || "Stripe payment failed.");
+      toast.error(error?.message || t("errors.stripeFailed"));
     },
   });
 
@@ -46,7 +48,7 @@ const PaymentTap: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white shadow-sm rounded-lg p-6 space-y-6"
     >
-      <h2 className="text-xl font-medium text-gray-900">Payment Method</h2>
+      <h2 className="text-xl font-medium text-gray-900">{t("title")}</h2>
 
       <div className="space-y-4">
         <div
@@ -70,7 +72,7 @@ const PaymentTap: React.FC = () => {
               htmlFor="credit-card"
               className="ml-3 block text-sm font-medium text-gray-700"
             >
-              Credit Card
+              {t("methods.creditCard")}
             </label>
           </div>
         </div>
@@ -96,7 +98,7 @@ const PaymentTap: React.FC = () => {
               htmlFor="paypal"
               className="ml-3 block text-sm font-medium text-gray-700"
             >
-              Cash On Delivery
+              {t("methods.cashOnDelivery")}
             </label>
           </div>
         </div>
@@ -110,13 +112,13 @@ const PaymentTap: React.FC = () => {
             className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
           />
           <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-            I agree to the{" "}
+            {t("terms")}
             <a href="#" className="text-indigo-600 hover:text-indigo-500">
-              Terms of Service
+              {t("termsLinks.terms")}
             </a>{" "}
-            and{" "}
+            {t("and")}{" "}
             <a href="#" className="text-indigo-600 hover:text-indigo-500">
-              Privacy Policy
+              {t("termsLinks.privacy")}
             </a>
           </label>
         </div>
@@ -127,7 +129,7 @@ const PaymentTap: React.FC = () => {
           onClick={() => {}}
           className="text-indigo-600 hover:text-indigo-500 font-medium"
         >
-          ← Back to Shipping
+          {t("navigation.back")}
         </button>
         <motion.button
           onClick={handlePlaceOrder}
@@ -135,7 +137,7 @@ const PaymentTap: React.FC = () => {
           whileTap={{ scale: 0.98 }}
           className="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition font-medium"
         >
-          Complete Order
+          {t("navigation.complete")}
         </motion.button>
       </div>
     </motion.div>

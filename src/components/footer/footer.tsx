@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   FiFacebook,
   FiTwitter,
@@ -12,27 +13,24 @@ import {
 } from "react-icons/fi";
 
 export default function Footer() {
-  const footerLinks = [
+  const t = useTranslations("footer");
+
+  const footerSections = [
     {
-      title: "Shop",
-      links: ["All Products", "New Arrivals", "Best Sellers", "Special Offers"],
+      title: t("sections.shop.title"),
+      items: t.raw("sections.shop.items") as string[],
     },
     {
-      title: "Customer Service",
-      links: ["Contact Us", "FAQs", "Shipping Policy", "Returns & Exchanges"],
+      title: t("sections.service.title"),
+      items: t.raw("sections.service.items") as string[],
     },
     {
-      title: "About Us",
-      links: ["Our Story", "Sustainability", "Careers", "Press"],
+      title: t("sections.about.title"),
+      items: t.raw("sections.about.items") as string[],
     },
   ];
 
-  const paymentMethods = [
-    { icon: <FiCreditCard />, name: "Visa" },
-    { icon: <FiCreditCard />, name: "Mastercard" },
-    { icon: <FiCreditCard />, name: "PayPal" },
-    { icon: <FiCreditCard />, name: "Apple Pay" },
-  ];
+  const paymentMethods = t.raw("paymentMethods") as string[];
 
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
@@ -47,31 +45,25 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <h2 className="text-2xl font-bold mb-4">ShopEase</h2>
-            <p className="text-gray-400 mb-6">
-              Your premier destination for quality products and exceptional
-              service since 2010.
-            </p>
+            <p className="text-gray-400 mb-6">{t("description")}</p>
             <div className="flex space-x-4">
-              {[
-                { icon: <FiFacebook />, key: "facebook" },
-                { icon: <FiTwitter />, key: "twitter" },
-                { icon: <FiInstagram />, key: "instagram" },
-                { icon: <FiYoutube />, key: "youtube" },
-              ].map(({ icon, key }) => (
-                <motion.a
-                  key={key}
-                  href="#"
-                  whileHover={{ y: -3, color: "#3B82F6" }}
-                  className="text-gray-400 hover:text-blue-500 text-xl"
-                >
-                  {icon}
-                </motion.a>
-              ))}
+              {[FiFacebook, FiTwitter, FiInstagram, FiYoutube].map(
+                (Icon, idx) => (
+                  <motion.a
+                    key={idx}
+                    href="#"
+                    whileHover={{ y: -3, color: "#3B82F6" }}
+                    className="text-gray-400 hover:text-blue-500 text-xl"
+                  >
+                    <Icon />
+                  </motion.a>
+                )
+              )}
             </div>
           </motion.div>
 
-          {/* Footer Links */}
-          {footerLinks.map((column, index) => (
+          {/* Footer Sections Links */}
+          {footerSections.map((section, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -79,17 +71,17 @@ export default function Footer() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-lg font-semibold mb-4">{column.title}</h3>
+              <h3 className="text-lg font-semibold mb-4">{section.title}</h3>
               <ul className="space-y-2">
-                {column.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <motion.a
-                      href="#"
-                      whileHover={{ x: 5, color: "#3B82F6" }}
-                      className="text-gray-400 hover:text-blue-500 transition-colors"
-                    >
-                      {link}
-                    </motion.a>
+                {section.items.map((item: string, i: number) => (
+                  <li key={i}>
+                  <motion.a
+                    href="#"
+                    whileHover={{ x: 5, color: "#3B82F6" }}
+                    className="text-gray-400 hover:text-blue-500 transition-colors"
+                  >
+                    {item}
+                  </motion.a>
                   </li>
                 ))}
               </ul>
@@ -108,15 +100,15 @@ export default function Footer() {
           {[
             {
               icon: <FiTruck className="text-2xl" />,
-              text: "Free Shipping Over $50",
+              text: t("badges.shipping"),
             },
             {
               icon: <FiShield className="text-2xl" />,
-              text: "2-Year Warranty",
+              text: t("badges.warranty"),
             },
             {
               icon: <FiCreditCard className="text-2xl" />,
-              text: "Secure Payments",
+              text: t("badges.secure"),
             },
           ].map((badge, index) => (
             <motion.div
@@ -138,8 +130,8 @@ export default function Footer() {
               whileHover={{ scale: 1.1 }}
               className="bg-gray-800 p-3 rounded-md flex items-center gap-2"
             >
-              {method.icon}
-              <span className="text-sm">{method.name}</span>
+              <FiCreditCard />
+              <span className="text-sm">{method}</span>
             </motion.div>
           ))}
         </div>
@@ -153,16 +145,16 @@ export default function Footer() {
           className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm"
         >
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>© 2023 ShopEase. All rights reserved.</p>
+            <p>{t("bottom.copyright")}</p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <motion.a href="#" whileHover={{ color: "#3B82F6" }}>
-                Privacy Policy
+                {t("bottom.privacy")}
               </motion.a>
               <motion.a href="#" whileHover={{ color: "#3B82F6" }}>
-                Terms of Service
+                {t("bottom.terms")}
               </motion.a>
               <motion.a href="#" whileHover={{ color: "#3B82F6" }}>
-                Cookies
+                {t("bottom.cookies")}
               </motion.a>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { CartContext } from "@/store/CartContext";
 import Spinner from "@/components/UI/SpinnerLoading";
 import Image from "next/image";
 import { BiX } from "react-icons/bi";
+import { useLocale, useTranslations } from "next-intl";
 
 const CartPage = () => {
   const {
@@ -24,8 +25,9 @@ const CartPage = () => {
     deleteAppliedCoupon,
   } = useContext(CartContext);
 
-
-  console.log(margeItems)
+  const t = useTranslations("cart");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
 
   const defualtCoupon = summaryCart.coupon ? summaryCart.coupon : "";
   const [coupon, setCoupon] = useState<string>(defualtCoupon);
@@ -74,7 +76,7 @@ const CartPage = () => {
   return (
     <>
       <Head>
-        <title>Your Cart | Modern Shop</title>
+        <title>{t("pageTitle")}</title>
       </Head>
 
       <motion.div
@@ -85,7 +87,7 @@ const CartPage = () => {
       >
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Your Shopping Cart
+            {t("title")}{" "}
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -93,9 +95,14 @@ const CartPage = () => {
             <div className="lg:col-span-2">
               <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
-                  <h2 className="text-lg font-medium text-gray-900">
+                  <h2
+                    className="text-lg font-medium text-gray-900"
+                    dir={isRTL ? "rtl" : "ltr"}
+                  >
                     {margeItems.length}{" "}
-                    {margeItems.length === 1 ? "Item" : "Items"} in Cart
+                    {margeItems.length === 1 ? null : margeItems.length}
+                    {margeItems.length === 1 ? t("Item") : t("Items")}{" "}
+                    {t("inCart")}
                   </h2>
                 </div>
 
@@ -105,12 +112,14 @@ const CartPage = () => {
                     animate={{ scale: 1 }}
                     className="p-12 text-center"
                   >
-                    <p className="text-gray-500 mb-4">Your cart is empty</p>
+                    <p className="text-gray-500 mb-4">
+                      {t("emptyCart.message")}
+                    </p>
                     <Link
                       href={"/"}
                       className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
                     >
-                      Continue Shopping
+                      {t("emptyCart.continueShopping")}
                     </Link>
                   </motion.div>
                 ) : (
@@ -222,7 +231,7 @@ const CartPage = () => {
 
             {/* Order Summary */}
 
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5" dir={isRTL ? "rtl" : "ltr"}>
               {/* Order Cart */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -231,19 +240,23 @@ const CartPage = () => {
                 className="bg-white shadow-sm rounded-lg p-6 h-fit top-8"
               >
                 <h2 className="text-lg font-medium text-gray-900 mb-6">
-                  Order Summary
+                  {t("orderSummary.title")}
                 </h2>
 
                 <div className="space-y-4">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-gray-600">
+                      {t("orderSummary.subtotal")}
+                    </span>
                     <span className="text-gray-900">
                       ${summaryCart.subTotal ?? 0}
                     </span>
                   </div>
 
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tax</span>
+                    <span className="text-gray-600">
+                      {t("orderSummary.tax")}
+                    </span>
                     <span className="text-gray-900">
                       ${summaryCart.tax ?? 0}
                     </span>
@@ -251,7 +264,9 @@ const CartPage = () => {
 
                   {summaryCart.discount && (
                     <div className="flex justify-between">
-                      <span className="text-red-300">Discount</span>
+                      <span className="text-red-300">
+                        {t("orderSummary.discount")}
+                      </span>
                       <span className="text-red-300 line-through">
                         ${summaryCart.discount ?? 0}
                       </span>
@@ -259,7 +274,9 @@ const CartPage = () => {
                   )}
 
                   <div className="border-t border-gray-200 pt-4 flex justify-between">
-                    <span className="font-medium text-gray-900">Total</span>
+                    <span className="font-medium text-gray-900">
+                      {t("orderSummary.total")}
+                    </span>
                     <span className="font-medium text-gray-900">
                       ${summaryCart.grandTotal ?? 0}
                     </span>
@@ -275,24 +292,25 @@ const CartPage = () => {
                     margeItems.length > 0 ? "opacity-100" : "opacity-45"
                   } cursor-pointer mt-6 w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium`}
                 >
-                  Checkout
+                  {t("checkout")}
                 </motion.button>
 
                 <div className="mt-6 flex justify-center text-sm text-gray-500">
                   <p>
-                    or{" "}
+                    {t("orContinue")}
+
                     <Link
                       href={"/"}
                       className="text-indigo-600 hover:text-indigo-500 cursor-pointer "
                     >
-                      Continue Shopping
+                      {t("emptyCart.continueShopping")}
                     </Link>
                   </p>
                 </div>
               </motion.div>
 
               {/* Order Coupon */}
-              <div>
+              <div dir={isRTL ? "rtl" : "ltr"}>
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -300,40 +318,44 @@ const CartPage = () => {
                   className="bg-white shadow-sm rounded-lg p-6 h-fit sticky top-8"
                 >
                   <h2 className="text-lg font-medium text-gray-900 mb-6">
-                    COUPON
+                    {t("coupon.title")}
                   </h2>
 
-                  {summaryCart.coupon ? (
-                    <div className="flex justify-between">
-                      <span>
-                        coupone{" "}
-                        <span className="text-indigo-600">
-                          {" "}
-                          {summaryCart.coupon}
-                        </span>{" "}
-                        applied
-                      </span>
-                      <button
-                        onClick={() =>
-                          handleDeletAppliedCoupon(summaryCart.cart_id)
-                        }
-                        className="text-gray-900"
-                      >
-                        <BiX className="text-3xl text-red-400 cursor-pointer"></BiX>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
+                  <div>
+                    {summaryCart.coupon ? (
                       <div className="flex justify-between">
-                        <input
-                          type="text"
-                          value={coupon}
-                          onChange={(e) => setCoupon(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                        />
+                        <span>
+                          {t("coupon.title")}
+                          <span className="text-indigo-600">
+                            {" "}
+                            {summaryCart.coupon}
+                          </span>{" "}
+                          {t("coupon.applied")}
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleDeletAppliedCoupon(summaryCart.cart_id)
+                          }
+                          className="text-gray-900"
+                        >
+                          <BiX className="text-3xl text-red-400 cursor-pointer"></BiX>
+                        </button>
                       </div>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="flex justify-between">
+                          <input
+                            type="text"
+                            placeholder={t("coupon.placeholder")}
+                            value={coupon}
+                            onChange={(e) => setCoupon(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   {!summaryCart.coupon && (
                     <motion.button
                       onClick={handleApplyCoupon}
@@ -344,7 +366,7 @@ const CartPage = () => {
                         margeItems.length > 0 ? "opacity-100" : "opacity-45"
                       } cursor-pointer mt-6 w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition font-medium`}
                     >
-                      Apply Coupon
+                      {t("coupon.apply")}
                     </motion.button>
                   )}
                 </motion.div>
@@ -358,25 +380,25 @@ const CartPage = () => {
                 className="bg-white shadow-sm rounded-lg p-6"
               >
                 <h3 className="text-md font-medium text-gray-900 mb-4">
-                  We Accept
+                  {t("paymentMethods.title")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                    Visa
+                    {t("paymentMethods.visa")}
                   </span>
                   <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                    Pay on Delevary
+                    {t("paymentMethods.cashOnDelivery")}
                   </span>
                   <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                    Mastercard
+                    {t("paymentMethods.mastercard")}
                   </span>
 
-                  <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                  {/* <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
                     PayPal
                   </span>
                   <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
                     Apple Pay
-                  </span>
+                  </span> */}
                 </div>
               </motion.div>
             </div>
