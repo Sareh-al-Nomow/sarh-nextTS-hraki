@@ -24,9 +24,9 @@ export default function Navbar() {
           className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5"
         >
           {/* Left - Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-3 md:gap-4">
             {/* Navigation Links */}
-            <div className="flex items-center gap-5 mx-3 md:hidden">
+            <div className="flex items-center md:hidden">
               <PremiumNavWidget />
             </div>
             <Link href={"/"} className="flex items-centerz-10">
@@ -42,7 +42,7 @@ export default function Navbar() {
           </div>
 
           {/* Right - Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <div className=" hidden md:block">
               <Language textColor="text-[#d0e3ec] hover:text-white" />
             </div>

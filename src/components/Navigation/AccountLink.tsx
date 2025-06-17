@@ -53,7 +53,7 @@ export default function PremiumUserMenu() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1 rounded-full transition-all"
+        className="flex items-center gap-1 rounded-full transition-all"
         aria-label="User menu"
       >
         <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">

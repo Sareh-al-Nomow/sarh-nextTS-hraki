@@ -45,7 +45,7 @@ export default function FloatingCallButton() {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[50] font-sans">
+    <div className="fixed bottom-8 right-8 z-40 font-sans">
       {/* Call Panel */}
       <AnimatePresence>
         {showCallPanel && (
