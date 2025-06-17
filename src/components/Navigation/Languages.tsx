@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { getLanguages } from "@/lib/axios/languagesAxios";
 
-export default function Language() {
+export default function Language({ textColor }: { textColor: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -22,6 +22,11 @@ export default function Language() {
 
   // Detect current locale from URL (assuming first path segment is locale)
   const currentLocale = pathname?.split("/")[1] || "en";
+
+  // Find the current language name for display
+  const currentLanguage = data?.data.find(
+    (lang) => lang.languageCode === currentLocale
+  );
 
   // Detect mobile width for dropdown alignment
   useEffect(() => {
@@ -76,12 +81,16 @@ export default function Language() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1 border rounded-md text-white hover:bg-gray-700 focus:outline-none"
+        className={`flex items-center gap-2 px-3 py-1  rounded-md focus:outline-none ${textColor}`}
         aria-label="Select language"
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <span>{currentLocale.toUpperCase()}</span>
+        <span>
+          {currentLanguage
+            ? currentLanguage.languageName
+            : currentLocale.toUpperCase()}
+        </span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}

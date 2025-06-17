@@ -3,7 +3,6 @@
 import { useContext, useState } from "react";
 import Modal from "../UI/Modal";
 import { FcGoogle } from "react-icons/fc";
-import { GoSignIn } from "react-icons/go";
 import { useMutation } from "@tanstack/react-query";
 import { signUp, SignUpRequest } from "@/lib/axios/signUpAxios";
 import toast from "react-hot-toast";
@@ -14,6 +13,7 @@ import { AuthModalContext } from "@/store/AuthModalContext";
 import Link from "next/link";
 import { restPasswordRequest } from "@/lib/axios/resetPasswordAxios";
 import { useTranslations } from "next-intl";
+import { PiUserCircleFill } from "react-icons/pi";
 
 export default function RegistrationLink() {
   const t = useTranslations("auth");
@@ -208,13 +208,18 @@ export default function RegistrationLink() {
 
   return (
     <>
-      <GoSignIn
-        className="pr-text text-2xl cursor-pointer"
+      <div
+        className="group flex items-center gap-1 cursor-pointer text-[#d0e3ec] hover:text-white"
         onClick={() => {
           openAuthModal();
           setErrors({});
         }}
-      />
+      >
+        <h2 className="hidden md:block group-hover:text-white">
+          {t("login.title")}
+        </h2>
+        <PiUserCircleFill className="text-3xl group-hover:text-white" />
+      </div>
 
       <Modal open={isAuthModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative z-[1500]">

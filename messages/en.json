@@ -7,7 +7,8 @@
     "aboutUs": "About Us",
     "myAccount": "My Account",
     "viewProfile": "View Profile",
-    "searchPlaceholder": "Search for products..."
+    "searchPlaceholder": "Lookin’ for?",
+    "wishlist": "Wishlist"
   },
   "auth": {
     "login": {

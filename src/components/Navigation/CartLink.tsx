@@ -9,9 +9,9 @@ export default function CartLink() {
   const { cartQuantity } = useContext(CartContext);
 
   return (
-    <Link href={"/cart"} className="relative mt-1">
-      <IoCartOutline className={`text-black text-4xl cursor-pointer`} />
-      <div className="text-white absolute text-[13px]  -top-1 left-0 pr-bg rounded-full w-5 h-5 flex justify-center items-center">
+    <Link href={"/cart"} className="relative mt-1 ">
+      <IoCartOutline className={`text-white text-3xl cursor-pointer`} />
+      <div className="pr-text absolute text-[13px] text-[#d0e3ec] hover:text-white -top-1 left-0 bg-white rounded-full w-5 h-5 flex justify-center items-center">
         {cartQuantity ? cartQuantity : 0}
       </div>
     </Link>

@@ -98,7 +98,7 @@ export default function HorizontalProductList({
   };
 
   return (
-    <div className="py-8 relative group">
+    <div className="pt-5 relative group">
       <h2 className="text-2xl font-bold text-gray-900 px-4 md:px-12 mb-4 pr-text">
         {title}
       </h2>

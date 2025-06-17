@@ -7,7 +7,9 @@
     "aboutUs": "من نحن",
     "myAccount": "حسابي",
     "viewProfile": "عرض الملف الشخصي",
-    "searchPlaceholder": "ابحث عن منتجات..."
+    "searchPlaceholder": "ما الذي تبحث عنه؟",
+    "wishlist" : "قائمة الرغبات"
+    
   },
   "auth": {
     "login": {

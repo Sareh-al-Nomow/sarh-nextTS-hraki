@@ -13,7 +13,6 @@ import CartContextProvider from "@/store/CartContext";
 import { AuthModalProvider } from "@/store/AuthModalContext";
 import { SearchProvider } from "@/store/SearchContext";
 import ClientLayoutPart from "./ClientLayoutPart";
-import TopHeader from "@/components/Navigation/TopHeader";
 
 import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
@@ -62,9 +61,6 @@ export default async function RootLayout({
                     <Toaster />
                     <div id="root-modal"></div>
                     <ClientLayoutPart />
-                    <div className="">
-                      <TopHeader />
-                    </div>
                     <Navbar />
                     {children}
                     <Footer />

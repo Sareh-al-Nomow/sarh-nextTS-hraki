@@ -5,54 +5,60 @@ import CartLink from "./CartLink";
 import RegistrationLink from "./RegistrationLink";
 import AccountLink from "./AccountLink";
 import PremiumNavWidget from "./PremiumNavWidget";
-import { BsList } from "react-icons/bs";
 import { useContext } from "react";
 import { AuthContext } from "@/store/AuthContext";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
+import Language from "./Languages";
+import { FaRegHeart } from "react-icons/fa";
 
 export default function Navbar() {
   const { isAuthenticated } = useContext(AuthContext);
-  const t = useTranslations("navbar");
+  // const t = useTranslations("navbar");
 
   return (
-    <header className="z-50 w-full shadow bg-white">
-      <div className="w-full lg:px-20">
+    <header className="z-50 w-full shadow pr-bg">
+      <div className="w-full px-3 lg:px-20">
         <nav
-          dir="ltr"
-          className="container mx-auto flex items-center justify-between py-4"
+          dir="rtl"
+          className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5"
         >
           {/* Left - Logo */}
-          <Link href={"/"} className="flex items-center gap-3 mx-3 z-10">
-            <div className="text-3xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#219EBC] to-[#023047] cursor-pointer">
-              SARAH
+          <div className="flex items-center">
+            {/* Navigation Links */}
+            <div className="flex items-center gap-5 mx-3 md:hidden">
+              <PremiumNavWidget />
             </div>
-          </Link>
+            <Link href={"/"} className="flex items-centerz-10">
+              <div className="text-xl md:text-2xl  lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#229bd8] to-[#219EBC] cursor-pointer">
+                SARAH
+              </div>
+            </Link>
+          </div>
 
           {/* Center - Search */}
-          <div className="hidden md:flex items-center gap-5">
+          <div className="items-center flex-1">
             <SearchField />
           </div>
 
           {/* Right - Actions */}
-          <div className="flex items-center gap-2">
-            {/* <span className="text-sm border px-3 py-1 rounded-lg pr-text cursor-pointer">
-              JOD
-            </span> */}
-            {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
-            <CartLink />
-            <BsList
-              className="text-3xl hidden pr-text cursor-pointer"
-              aria-label="Menu"
-            />
-          </div>
-
-          {/* Navigation Links */}
-          <div className="flex items-center gap-5 mx-3">
-            <span className="hidden md:flex cursor-pointer pr-text font-bold hover:text-[#219EBC] text-[23px] mt-1">
-              {t("home")}
-            </span>
-            <PremiumNavWidget />
+          <div className="flex items-center gap-4">
+            <div className=" hidden md:block">
+              <Language textColor="text-[#d0e3ec]" />
+            </div>
+            <div>
+              {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
+            </div>
+            <div className="h-5 w-[1px] rounded-2xl bg-[#d0e3ec]"></div>
+            <Link
+              href={"/wishlist"}
+              className=" cursor-pointer hidden md:block"
+            >
+              <FaRegHeart className=" font-bold text-[#d0e3ec] text-2xl hover:text-white" />
+            </Link>
+            <div>
+              <CartLink />
+            </div>
           </div>
         </nav>
       </div>

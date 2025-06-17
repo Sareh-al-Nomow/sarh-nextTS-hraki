@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiChevronRight, FiSearch, FiUser } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaSearch } from "react-icons/fa";
+import { FaRegHeart, FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getBrands } from "@/lib/axios/brandsAxios";
 import { getCategories } from "@/lib/axios/categoryAxios";
@@ -13,6 +13,7 @@ import Spinner from "../UI/SpinnerLoading";
 import { Category } from "@/lib/models/categoryModal";
 import { BrandWithProducts } from "@/lib/models/brandsModal";
 import { useTranslations } from "next-intl";
+import Language from "./Languages";
 
 interface Group {
   name: string;
@@ -133,15 +134,18 @@ export default function PremiumNavWidget() {
     <>
       {/* Premium Trigger Button */}
       <button
-        onClick={() => setIsOpen(true)}
-        className="p-2 group"
-        aria-label="Open navigation"
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 group focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+        aria-label={isOpen ? "Close navigation" : "Open navigation"}
+        aria-expanded={isOpen}
+        type="button"
       >
-        <div className="flex flex-col gap-1 items-center">
+        <div className="flex flex-col gap-1.5 items-center relative w-6 h-6">
+          {/* Hamburger lines */}
           {[1, 2, 3].map((i) => (
             <motion.span
               key={i}
-              className="w-6 h-0.5 bg-gray-800 block"
+              className="block bg-[#d0e3ec] hover:bg-white rounded h-1 w-6"
               animate={{
                 width: isOpen ? 0 : 24,
                 opacity: isOpen ? 0 : 1,
@@ -152,19 +156,23 @@ export default function PremiumNavWidget() {
               }}
             />
           ))}
+
+          {/* Cross lines */}
           <motion.span
-            className="absolute w-6 h-0.5 bg-gray-800 origin-center"
+            className="absolute bg-gray-800 rounded h-1 w-6 top-1/2 left-0 origin-center"
             animate={{
               rotate: isOpen ? 45 : 0,
               y: isOpen ? 1 : 0,
+              opacity: isOpen ? 1 : 0,
             }}
             transition={{ duration: 0.3 }}
           />
           <motion.span
-            className="absolute w-6 h-0.5 bg-gray-800 origin-center"
+            className="absolute bg-gray-800 rounded h-1 w-6 top-1/2 left-0 origin-center"
             animate={{
               rotate: isOpen ? -45 : 0,
               y: isOpen ? -1 : 0,
+              opacity: isOpen ? 1 : 0,
             }}
             transition={{ duration: 0.3 }}
           />
@@ -319,6 +327,18 @@ export default function PremiumNavWidget() {
               </div>
 
               <ul>
+                <li className="px-8 py-5 text-[18px]">
+                  <Language textColor="text-black" />
+                </li>
+                <li className="px-8 py-5 text-[18px] flex">
+                  <Link
+                    href={"/wishlist"}
+                    className=" cursor-pointer flex gap-4 items-center"
+                  >
+                    <FaRegHeart className=" hover:opacity-75" />
+                    {t("wishlist")}
+                  </Link>
+                </li>
                 <li className="px-8 py-5 text-[18px]">
                   <Link href={"/contact"} onClick={() => setIsOpen(false)}>
                     {t("pubulareQuestion")}
