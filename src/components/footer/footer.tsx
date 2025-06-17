@@ -44,7 +44,7 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl font-bold mb-4">ShopEase</h2>
+            <h2 className="text-2xl font-bold mb-4">SARAH</h2>
             <p className="text-gray-400 mb-6">{t("description")}</p>
             <div className="flex space-x-4">
               {[FiFacebook, FiTwitter, FiInstagram, FiYoutube].map(

@@ -84,7 +84,7 @@ export default function PremiumUserMenu() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+            className="absolute left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
           >
             {/* User Profile Section */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">

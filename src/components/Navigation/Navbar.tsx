@@ -44,7 +44,7 @@ export default function Navbar() {
           {/* Right - Actions */}
           <div className="flex items-center gap-4">
             <div className=" hidden md:block">
-              <Language textColor="text-[#d0e3ec]" />
+              <Language textColor="text-[#d0e3ec] hover:text-white" />
             </div>
             <div>
               {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
