@@ -515,5 +515,16 @@
         }
       }
     }
+  },
+  "floatingCall": {
+    "panel": {
+      "title": "Call Support",
+      "description": "Speak directly with our support team by phone.",
+      "callNow": "Call Now"
+    },
+    "button": {
+      "callSupport": "Call Support",
+      "ariaLabel": "Call support"
+    }
   }
 }

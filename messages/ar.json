@@ -513,5 +513,16 @@
         }
       }
     }
+  },
+  "floatingCall": {
+    "panel": {
+      "title": "الاتصال بالدعم",
+      "description": "تحدث مباشرةً مع فريق الدعم عبر الهاتف.",
+      "callNow": "اتصل الآن"
+    },
+    "button": {
+      "callSupport": "اتصل بالدعم",
+      "ariaLabel": "اتصل بالدعم"
+    }
   }
 }

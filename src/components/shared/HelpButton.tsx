@@ -1,30 +1,31 @@
 "use client";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaQuestion, FaPhone, FaTimes } from "react-icons/fa";
 import { RiMessage2Fill } from "react-icons/ri";
+import { useTranslations } from "next-intl";
 
 export default function FloatingCallButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [showCallPanel, setShowCallPanel] = useState(false);
+  const t = useTranslations("floatingCall");
 
-  // Animation config
   const spring = {
     type: "spring",
     damping: 20,
     stiffness: 300,
   };
 
-  // Main button variants
   const buttonVariants = {
     inactive: {
       scale: 1,
-      backgroundColor: "#023047", // Dark blue
+      backgroundColor: "#023047",
       transition: spring,
     },
     active: {
       scale: 1.1,
-      backgroundColor: "#219EBC", // Teal
+      backgroundColor: "#219EBC",
       transition: spring,
     },
   };
@@ -46,7 +47,6 @@ export default function FloatingCallButton() {
 
   return (
     <div className="fixed bottom-8 right-8 z-40 font-sans">
-      {/* Call Panel */}
       <AnimatePresence>
         {showCallPanel && (
           <motion.div
@@ -58,7 +58,7 @@ export default function FloatingCallButton() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-gray-800 font-semibold text-lg">
-                  Call Support
+                  {t("panel.title")}
                 </h3>
                 <button
                   onClick={closeAll}
@@ -69,7 +69,7 @@ export default function FloatingCallButton() {
               </div>
 
               <p className="text-gray-600 mb-6 text-base">
-                Speak directly with our support team by phone.
+                {t("panel.description")}
               </p>
 
               <motion.button
@@ -82,7 +82,7 @@ export default function FloatingCallButton() {
                   className="flex items-center justify-center gap-2"
                 >
                   <FaPhone size={16} />
-                  Call Now
+                  {t("panel.callNow")}
                 </a>
               </motion.button>
             </div>
@@ -90,7 +90,6 @@ export default function FloatingCallButton() {
         )}
       </AnimatePresence>
 
-      {/* Call Option Button */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -108,13 +107,12 @@ export default function FloatingCallButton() {
               <div className="bg-white/20 p-2 rounded-full">
                 <FaPhone size={18} />
               </div>
-              <span className="font-medium">Call Support</span>
+              <span className="font-medium">{t("button.callSupport")}</span>
             </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main Floating Button */}
       <motion.button
         className="w-16 h-16 rounded-full flex items-center justify-center relative shadow-lg"
         variants={buttonVariants}
@@ -122,7 +120,7 @@ export default function FloatingCallButton() {
         onClick={toggleMenu}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        aria-label="Call support"
+        aria-label={t("button.ariaLabel")}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -162,7 +160,6 @@ export default function FloatingCallButton() {
           )}
         </AnimatePresence>
 
-        {/* Pulsing ring effect */}
         {!isOpen && (
           <motion.div
             className="absolute inset-0 rounded-full border-2 border-cyan-300 pointer-events-none"

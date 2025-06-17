@@ -12,7 +12,7 @@ export default function CartLink() {
   return (
     <Link
       href="/cart"
-      className="relative flex items-center p-2 rounded-md hover:bg-opacity-10 hover:bg-white transition-colors duration-200"
+      className="relative flex items-center p-2 rounded-md hover:bg-opacity-10 transition-colors duration-200"
       aria-label={`Shopping Cart with ${itemCount} items`}
     >
       <IoCartOutline className="text-white text-2xl md:text-3xl" />
