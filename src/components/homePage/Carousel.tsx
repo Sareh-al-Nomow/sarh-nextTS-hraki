@@ -81,7 +81,7 @@ const Carousel: React.FC<CarouselProps> = ({ collections }) => {
 
   return (
     <div className="mt-5 mx-3 lg:mx-10">
-      <div className="container m-auto w-full rounded-4xl relative">
+      <div className="container m-auto w-full rounded relative">
         {/* Carousel wrapper */}
         <div
           className={`relative h-[100.47px] sm:h-[140px] md:h-[190px] lg:h-[270px] xl:h-[320px] 2xl:h-[360px] overflow-hidden rounded-4xl transition-all duration-300 ${
