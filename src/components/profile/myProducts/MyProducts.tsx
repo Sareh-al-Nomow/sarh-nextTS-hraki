@@ -1,3 +1,5 @@
+"use client";
+
 import Spinner from "@/components/UI/SpinnerLoading";
 import { getOrders } from "@/lib/axios/OrderAxios";
 import { OrderItem } from "@/lib/models/orderModal";
@@ -5,8 +7,11 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import ProductItem from "./ProductItem";
+import { useTranslations } from "next-intl";
 
 const MyProducts = () => {
+  const t = useTranslations("account.myProducts");
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
@@ -37,13 +42,13 @@ const MyProducts = () => {
   if (error) {
     return (
       <div className="text-center py-10">
-        <h3 className="text-red-500"> {error.name}</h3>
+        <h3 className="text-red-500">{error.name}</h3>
         <p className="py-10">{error.message}</p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Retry
+          {t("retry")}
         </button>
       </div>
     );
@@ -52,7 +57,7 @@ const MyProducts = () => {
   if (!data) {
     return (
       <div className="text-center py-10">
-        <p>No Data available</p>
+        <p>{t("noData")}</p>
       </div>
     );
   }
@@ -60,12 +65,10 @@ const MyProducts = () => {
   if (data.length === 0) {
     return (
       <div className="text-center py-10">
-        <p>No Collection available</p>
+        <p>{t("noCollection")}</p>
       </div>
     );
   }
-
-  console.log(mergedItems);
 
   return (
     <motion.div
@@ -76,7 +79,7 @@ const MyProducts = () => {
     >
       <div className="p-6">
         {mergedItems.map((orderItem) => (
-         <ProductItem key={orderItem.order_item_id} item={orderItem}/>
+          <ProductItem key={orderItem.order_item_id} item={orderItem} />
         ))}
       </div>
     </motion.div>

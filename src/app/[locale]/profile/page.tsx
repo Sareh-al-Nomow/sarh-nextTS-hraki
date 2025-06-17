@@ -10,17 +10,19 @@ import AddressesInfo from "@/components/profile/Addresses";
 import { AiFillProduct } from "react-icons/ai";
 import Settings from "@/components/profile/Settings";
 import MyProducts from "@/components/profile/myProducts/MyProducts";
+import { useTranslations } from "next-intl";
 
 export default function AccountPage() {
+  const t = useTranslations("account");
   const { user } = useContext(AuthContext);
 
   const [activeTab, setActiveTab] = useState("profile");
   const [formData, setFormData] = useState({
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
-    phone: "+1 (555) 123-4567",
-    birthday: "2001-03-01",
-    avatar: "/image/users/myPicture.jpg",
+    name: "",
+    email: "",
+    phone: "",
+    birthday: "",
+    avatar: "/image/users/default-avatar.jpg",
   });
 
   useEffect(() => {
@@ -29,22 +31,26 @@ export default function AccountPage() {
         name: user.full_name || "",
         email: user.email || "",
         phone: user.phone_number || "",
-        birthday: user.birthday ? user.birthday.slice(0, 10) : "", // convert to YYYY-MM-DD if needed
-        avatar: user.avatar ?? "",
+        birthday: user.birthday ? user.birthday.slice(0, 10) : "",
+        avatar: user.avatar || "/image/users/default-avatar.jpg",
       });
     }
   }, [user]);
 
   const accountTabs = [
-    { id: "profile", icon: <FiUser size={18} />, label: "Profile" },
-    { id: "security", icon: <FiLock size={18} />, label: "Security" },
+    { id: "profile", icon: <FiUser size={18} />, label: t("tabs.profile") },
+    { id: "security", icon: <FiLock size={18} />, label: t("tabs.security") },
     {
       id: "myproducts",
       icon: <AiFillProduct size={18} />,
-      label: "My Products",
+      label: t("tabs.myProducts"),
     },
-    { id: "addresses", icon: <FiMapPin size={18} />, label: "Addresses" },
-    { id: "notifications", icon: <FiBell size={18} />, label: "Notifications" },
+    { id: "addresses", icon: <FiMapPin size={18} />, label: t("tabs.addresses") },
+    { 
+      id: "notifications", 
+      icon: <FiBell size={18} />, 
+      label: t("tabs.notifications") 
+    },
   ];
 
   return (
@@ -53,58 +59,55 @@ export default function AccountPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Account Settings
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              {t("title")}
             </h1>
             <p className="text-gray-600">
-              Manage your personal information and preferences
+              {t("subtitle")}
             </p>
           </div>
-          {/* <button className="flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors">
-            <FiLogOut size={18} />
-            <span>Sign Out</span>
-          </button> */}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar Navigation */}
-          <div className="w-full lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="w-full lg:w-72 flex-shrink-0">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
               <div className="p-6 flex flex-col items-center border-b border-gray-100">
-                <div className="relative w-20 h-20 rounded-full bg-gray-100 mb-4 overflow-hidden">
+                <div className="relative w-24 h-24 rounded-full bg-gray-100 mb-4 overflow-hidden border-2 border-white shadow-md">
                   <Image
                     src={formData.avatar}
-                    alt="User avatar"
+                    alt={t("avatarAlt")}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
-                <h3 className="font-medium text-gray-900 text-center">
-                  {formData.name}
+                <h3 className="font-medium text-gray-900 text-center text-lg">
+                  {formData.name || t("guest")}
                 </h3>
-                <p className="text-sm text-gray-500 text-center">
-                  {formData.email}
+                <p className="text-sm text-gray-500 text-center mt-1">
+                  {formData.email || t("noEmail")}
                 </p>
               </div>
-              <nav className="p-2">
+              <nav className="p-2 space-y-1">
                 {accountTabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
                       activeTab === tab.id
-                        ? "bg-blue-50 text-blue-600"
+                        ? "bg-blue-50 text-blue-600 font-medium"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
                   >
                     <span
                       className={`${
-                        activeTab === tab.id ? "text-blue-500" : "text-gray-400"
+                        activeTab === tab.id ? "text-blue-500" : "text-gray-500"
                       }`}
                     >
                       {tab.icon}
                     </span>
-                    <span>{tab.label}</span>
+                    <span className="text-left">{tab.label}</span>
                   </button>
                 ))}
               </nav>
@@ -113,15 +116,13 @@ export default function AccountPage() {
 
           {/* Main Content */}
           <div className="flex-1">
-            {activeTab === "profile" && <ProfileInfo />}
-
-            {activeTab === "security" && <SecurityInfo />}
-
-            {activeTab === "myproducts" && <MyProducts />}
-
-            {activeTab === "addresses" && <AddressesInfo />}
-
-            {activeTab === "notifications" && <Settings />}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 min-h-[500px]">
+              {activeTab === "profile" && <ProfileInfo />}
+              {activeTab === "security" && <SecurityInfo />}
+              {activeTab === "myproducts" && <MyProducts />}
+              {activeTab === "addresses" && <AddressesInfo />}
+              {activeTab === "notifications" && <Settings />}
+            </div>
           </div>
         </div>
       </div>

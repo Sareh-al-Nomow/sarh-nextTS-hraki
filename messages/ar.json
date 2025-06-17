@@ -8,8 +8,7 @@
     "myAccount": "حسابي",
     "viewProfile": "عرض الملف الشخصي",
     "searchPlaceholder": "ما الذي تبحث عنه؟",
-    "wishlist" : "قائمة الرغبات"
-    
+    "wishlist": "قائمة الرغبات"
   },
   "auth": {
     "login": {
@@ -362,7 +361,7 @@
   },
 
   "footer": {
-    "description": "وجهتك المتميزة للمنتجات عالية الجودة والخدمة الاستثنائية منذ عام 2010.",
+    "description": "وجهتك المتميزة للمنتجات عالية الجودة والخدمة الاستثنائية منذ عام 2010",
     "sections": {
       "shop": {
         "title": "التسوق",
@@ -393,6 +392,126 @@
       "privacy": "سياسة الخصوصية",
       "terms": "شروط الاستخدام",
       "cookies": "ملفات تعريف الارتباط"
+    }
+  },
+
+  "account": {
+    "title": "إعدادات الحساب",
+    "subtitle": "إدارة معلوماتك الشخصية والتفضيلات",
+    "guest": "مستخدم زائر",
+    "noEmail": "لا يوجد بريد إلكتروني",
+    "avatarAlt": "صورة الملف الشخصي",
+    "tabs": {
+      "profile": "الملف الشخصي",
+      "security": "الأمان",
+      "myProducts": "منتجاتي",
+      "addresses": "العناوين",
+      "notifications": "الإشعارات"
+    },
+    "profile": {
+      "personalInfo": "المعلومات الشخصية",
+      "fullName": "الاسم الكامل",
+      "birthday": "تاريخ الميلاد",
+      "phoneNumber": "رقم الهاتف",
+      "notProvided": "غير متوفر",
+      "editProfile": "تعديل الملف",
+      "cancel": "إلغاء",
+      "saveChanges": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "updateSuccess": "تم تحديث الملف بنجاح!",
+      "updateError": "فشل تحديث الملف",
+      "missingUserId": "معرف المستخدم مفقود. لا يمكن تحديث الملف.",
+      "validationErrors": "أخطاء التحقق",
+      "close": "إغلاق"
+    },
+    "security": {
+      "modal": {
+        "title": "نسيت كلمة المرور",
+        "emailLabel": "يرجى إدخال بريدك الإلكتروني",
+        "emailPlaceholder": "ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر",
+        "successMessage": "تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني",
+        "send": "ارسال",
+        "sending": "... ارسال",
+        "done": "تم",
+        "closeAriaLabel": "إغلاق"
+      },
+      "card": {
+        "title": "كلمة المرور والأمان",
+        "passwordLabel": "كلمة المرور",
+        "changePassword": "تغيير كلمة المرور"
+      }
+    },
+    "settings": {
+      "title": "تفضيلات الإشعارات",
+      "email": {
+        "title": "إشعارات البريد الإلكتروني",
+        "orderUpdates": "تحديثات الطلبات",
+        "promotions": "العروض والترويج",
+        "recommendations": "توصيات المنتجات"
+      },
+      "push": {
+        "title": "إشعارات الدفع",
+        "statusChanges": "تغييرات حالة الطلب",
+        "newArrivals": "المنتجات الجديدة",
+        "accountActivity": "نشاط الحساب"
+      },
+      "save": "حفظ التفضيلات"
+    },
+    "addressInfo": {
+      "edit": "تعديل",
+      "delete": "حذف",
+      "modal": {
+        "title": "حذف العنوان",
+        "deleting": "جاري الحذف...",
+        "delete": "حذف",
+        "close": "إلغاء"
+      },
+      "form": {
+        "title": "تعديل العنوان",
+        "fullName": "الاسم الكامل",
+        "phone": "رقم الهاتف",
+        "address1": "العنوان 1",
+        "address2": "العنوان 2",
+        "country": "الدولة",
+        "city": "المدينة",
+        "postcode": "الرمز البريدي",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ..."
+      },
+      "toast": {
+        "update": "تم تحديث العنوان بنجاح!",
+        "delete": "تم حذف العنوان بنجاح!"
+      }
+    },
+    "myProducts": {
+      "retry": "إعادة المحاولة",
+      "noData": "لا توجد بيانات متاحة",
+      "noCollection": "لا توجد مجموعة متاحة",
+      "myProduct": {
+        "myProducts": {
+          "reviewBtn": "أضف تقييم",
+          "modal": {
+            "title": "اترك تقييمًا لـ {name}"
+          },
+          "form": {
+            "ratingLabel": "تقييمك",
+            "reviewLabel": "مراجعتك",
+            "placeholder": "شارك تجربتك مع هذا المنتج...",
+            "characters": "حرف",
+            "submit": "إرسال التقييم",
+            "cancel": "إلغاء",
+            "submitting": "جارٍ الإرسال...",
+            "errors": {
+              "emptyReview": "يرجى كتابة رأيك"
+            }
+          },
+          "retry": "إعادة المحاولة",
+          "toast": {
+            "addSuccess": "تم إضافة التقييم بنجاح"
+          }
+        }
+      }
     }
   }
 }

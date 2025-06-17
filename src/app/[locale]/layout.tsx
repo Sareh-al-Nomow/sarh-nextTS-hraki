@@ -16,6 +16,7 @@ import ClientLayoutPart from "./ClientLayoutPart";
 
 import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
+import { redirect } from "next/navigation";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -43,7 +44,7 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) {
     // If locale is invalid, show 404
     // You can also redirect or fallback
-    throw new Error("Invalid locale");
+    redirect("/en"); // or any default you prefer
   }
 
   // Load locale messages dynamically

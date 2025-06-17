@@ -6,8 +6,11 @@ import Modal from "../UI/Modal";
 import { useMutation } from "@tanstack/react-query";
 import { updateProfile, UpdateUserRequest } from "@/lib/axios/userAxios";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const ProfileInfo: React.FC = () => {
+  const t = useTranslations("account.profile");
+
   const [userInfo, userInfoError] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +27,7 @@ const ProfileInfo: React.FC = () => {
       updateProfile(data.userData, data.userId),
     onSuccess: (data) => {
       setUser(data);
-      toast.success("Update Profile Successfully!");
+      toast.success(t("updateSuccess"));
       setIsEditing(false);
     },
     onError: (err) => {
@@ -68,7 +71,7 @@ const ProfileInfo: React.FC = () => {
     }
 
     if (user?.id === undefined) {
-      toast.error("User ID is missing. Cannot update profile.");
+      toast.error(t("validationErrors"));
       return;
     }
     mutate({
@@ -87,7 +90,7 @@ const ProfileInfo: React.FC = () => {
       <Modal open={isModalOpen} classesName="pr-bg">
         <div className="pr-bg text-white rounded-2xl w-full max-w-md p-6 relative">
           <h2 className="text-xl font-bold mb-4 text-center">
-            Address input errors
+            {t("validationErrors")}
           </h2>
           <ul className="space-y-2 px-4 list-disc">
             {userInfo.map((err, idx) => (
@@ -104,7 +107,7 @@ const ProfileInfo: React.FC = () => {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 rounded-2xl bg-amber-600"
             >
-              Close
+              {t("cancel")}
             </button>
           </div>
         </div>
@@ -116,14 +119,14 @@ const ProfileInfo: React.FC = () => {
         className="bg-white rounded-xl shadow-sm overflow-hidden"
       >
         <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-          <h2 className="text-lg font-medium">Personal Information</h2>
+          <h2 className="text-lg font-medium"> {t("personalInfo")}</h2>
           {isEditing ? (
             <div className="flex gap-2">
               <button
                 onClick={() => setIsEditing(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg border border-gray-300"
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 disabled={isPending}
@@ -138,7 +141,7 @@ const ProfileInfo: React.FC = () => {
               onClick={() => setIsEditing(true)}
               className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200"
             >
-              Edit Profile
+              {t("editProfile")}
             </button>
           )}
         </div>
@@ -146,7 +149,7 @@ const ProfileInfo: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
+                {t("fullName")}
               </label>
               {isEditing ? (
                 <input
@@ -164,7 +167,7 @@ const ProfileInfo: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Birthday
+                {t("birthday")}
               </label>
               {isEditing ? (
                 <input
@@ -182,7 +185,7 @@ const ProfileInfo: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
+                {t("phoneNumber")}
               </label>
               {isEditing ? (
                 <input

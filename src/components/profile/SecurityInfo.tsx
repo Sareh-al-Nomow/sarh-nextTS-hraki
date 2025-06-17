@@ -4,8 +4,12 @@ import { useState } from "react";
 import { restPasswordRequest } from "@/lib/axios/resetPasswordAxios";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const SecurityInfo = () => {
+  const t = useTranslations("account.security.modal");
+  const tCard = useTranslations("account.security.card");
+
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [successResetPasswordRequest, setSuccessResetPasswordRequest] =
     useState<string | null>(null);
@@ -37,7 +41,6 @@ const SecurityInfo = () => {
     }));
   };
 
-  // send aplly to change password  ...
   function handleForgetPassword() {
     console.log(formInput.email);
     mutateRequestResetPassword({ email: formInput.email });
@@ -56,20 +59,20 @@ const SecurityInfo = () => {
           <button
             onClick={toggleOpenCloseModal}
             className="absolute top-3 right-3 text-5xl text-gray-300 hover:text-white"
-            aria-label="إغلاق"
+            aria-label={t("closeAriaLabel")}
           >
             &times;
           </button>
           {successResetPasswordRequest ? (
             <div>
               <h2 className="text-xl font-bold mb-4 text-center ">
-                Forget Password
+                {t("title")}
               </h2>
               <div className="space-y-4 text-center">
                 <div>
                   <div className="flex justify-center">
                     <label className="block mb-2 text-gray-300">
-                      We Send Reset Password Link to Your email
+                      {t("successMessage")}
                     </label>
                   </div>
                 </div>
@@ -78,7 +81,7 @@ const SecurityInfo = () => {
                   onClick={toggleOpenCloseModal}
                   className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
                 >
-                  Done
+                  {t("done")}
                 </button>
                 <div className="text-center my-4 text-sm"></div>
               </div>
@@ -86,13 +89,13 @@ const SecurityInfo = () => {
           ) : (
             <div>
               <h2 className="text-xl font-bold mb-4 text-center ">
-                Forget Password
+                {t("title")}
               </h2>
               <div className="space-y-4 text-center">
                 <div>
                   <div className="flex justify-center">
                     <label className="block mb-2 text-gray-300">
-                      Please Enter Your Email
+                      {t("emailLabel")}
                     </label>
                   </div>
 
@@ -102,7 +105,7 @@ const SecurityInfo = () => {
                     onChange={handleInputChange}
                     value={formInput.email}
                     className={`w-full p-2 rounded bg-slate-700 text-center border border-slate-600 focus:ring-blue-500 focus:outline-none focus:ring-2`}
-                    placeholder="ادخل بريدك الأكتروني هنا لارسال رابط تغيير كلمة السر"
+                    placeholder={t("emailPlaceholder")}
                   />
                 </div>
 
@@ -112,7 +115,7 @@ const SecurityInfo = () => {
                   onClick={handleForgetPassword}
                   className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded text-white cursor-pointer"
                 >
-                  {isPendingResetPassword ? "... ارسال" : "ارسال"}
+                  {isPendingResetPassword ? t("sending") : t("send")}
                 </button>
               </div>
             </div>
@@ -126,18 +129,18 @@ const SecurityInfo = () => {
         className="bg-white rounded-xl shadow-sm overflow-hidden space-y-6"
       >
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-lg font-medium">Password & Security</h2>
+          <h2 className="text-lg font-medium">{tCard("title")}</h2>
         </div>
         <div className="p-6 space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-blue-50 rounded-lg">
             <div>
-              <h3 className="font-medium">Password</h3>
+              <h3 className="font-medium">{tCard("passwordLabel")}</h3>
             </div>
             <button
               onClick={toggleOpenCloseModal}
               className="px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-100 rounded-lg border border-blue-200 whitespace-nowrap"
             >
-              Change Password
+              {tCard("changePassword")}
             </button>
           </div>
         </div>

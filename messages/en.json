@@ -358,7 +358,7 @@
   },
 
   "footer": {
-    "description": "Your premier destination for quality products and exceptional service since 2010.",
+    "description": "Your premier destination for quality products and exceptional service since 2010",
     "sections": {
       "shop": {
         "title": "Shop",
@@ -394,6 +394,126 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "cookies": "Cookies"
+    }
+  },
+
+  "account": {
+    "title": "Account Settings",
+    "subtitle": "Manage your personal information and preferences",
+    "guest": "Guest User",
+    "noEmail": "No email provided",
+    "avatarAlt": "User profile picture",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security",
+      "myProducts": "My Products",
+      "addresses": "Addresses",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "personalInfo": "Personal Information",
+      "fullName": "Full Name",
+      "birthday": "Birthday",
+      "phoneNumber": "Phone Number",
+      "notProvided": "Not provided",
+      "editProfile": "Edit Profile",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "updateSuccess": "Profile updated successfully!",
+      "updateError": "Failed to update profile",
+      "missingUserId": "User ID is missing. Cannot update profile.",
+      "validationErrors": "Validation Errors",
+      "close": "Close"
+    },
+    "security": {
+      "modal": {
+        "title": "Forget Password",
+        "emailLabel": "Please Enter Your Email",
+        "emailPlaceholder": "Enter your email here to receive a reset link",
+        "successMessage": "We Send Reset Password Link to Your email",
+        "send": "Send",
+        "sending": "... Sending",
+        "done": "Done",
+        "closeAriaLabel": "Close"
+      },
+      "card": {
+        "title": "Password & Security",
+        "passwordLabel": "Password",
+        "changePassword": "Change Password"
+      }
+    },
+    "settings": {
+      "title": "Notification Preferences",
+      "email": {
+        "title": "Email Notifications",
+        "orderUpdates": "Order updates",
+        "promotions": "Promotions and offers",
+        "recommendations": "Product recommendations"
+      },
+      "push": {
+        "title": "Push Notifications",
+        "statusChanges": "Order status changes",
+        "newArrivals": "New arrivals",
+        "accountActivity": "Account activity"
+      },
+      "save": "Save Preferences"
+    },
+    "addressInfo": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "modal": {
+        "title": "Delete address",
+        "deleting": "Deleting...",
+        "delete": "Delete",
+        "close": "Cancel"
+      },
+      "form": {
+        "title": "Edit Address",
+        "fullName": "Full Name",
+        "phone": "Phone Number",
+        "address1": "Address Line 1",
+        "address2": "Address Line 2",
+        "country": "Country",
+        "city": "City",
+        "postcode": "Postcode",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "toast": {
+        "update": "Address updated successfully!",
+        "delete": "Address deleted successfully!"
+      }
+    },
+    "myProducts": {
+      "retry": "Retry",
+      "noData": "No data available",
+      "noCollection": "No collection available",
+      "myProduct": {
+        "myProducts": {
+          "reviewBtn": "Review",
+          "modal": {
+            "title": "Leave a review for {name}"
+          },
+          "form": {
+            "ratingLabel": "Your Rating",
+            "reviewLabel": "Your Review",
+            "placeholder": "Share your experience with this product...",
+            "characters": "characters",
+            "submit": "Submit Review",
+            "cancel": "Cancel",
+            "submitting": "Submitting...",
+            "errors": {
+              "emptyReview": "Please write your opinion"
+            }
+          },
+          "retry": "Retry",
+          "toast": {
+            "addSuccess": "Added review successfully"
+          }
+        }
+      }
     }
   }
 }
