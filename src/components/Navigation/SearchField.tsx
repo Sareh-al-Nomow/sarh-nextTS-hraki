@@ -33,7 +33,7 @@ export default function SearchField() {
         type="text"
         placeholder={t("searchPlaceholder")}
         dir={isRtl ? "rtl" : "ltr"}
-        className="w-full p-2 px-3 md:px-5  text-[15px] md:text-xl shadow rounded-2xl bg-white focus:shadow-black/60 transition-all duration-200"
+        className="w-full p-2 px-3 md:px-5  text-[16px] md:text-xl shadow rounded-2xl bg-white focus:shadow-black/60 transition-all duration-200"
       />
       <FiSearch
         className={`absolute top-2 md:top-[12.5px]  md:text-2xl  ${isRtl ? "left-3" : "right-3"} text-gray-400`}
