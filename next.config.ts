@@ -5,9 +5,15 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true, // disable image optimization to allow images from any domain
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
-  // Add other Next.js config options here if needed
 };
 
 export default withNextIntl(nextConfig);
