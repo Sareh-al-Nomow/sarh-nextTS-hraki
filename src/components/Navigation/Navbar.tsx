@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <header className="z-50 w-full shadow pr-bg">
-      <div className="w-full px-3 lg:px-20">
+      <div className="w-full px-2 lg:px-20">
         <nav
           dir="rtl"
           className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5"

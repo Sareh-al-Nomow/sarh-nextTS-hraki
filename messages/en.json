@@ -526,5 +526,55 @@
       "callSupport": "Call Support",
       "ariaLabel": "Call support"
     }
+  },
+
+  "orders": {
+    "title": "My Orders",
+    "description": "View and manage your order history",
+    "tabs": {
+      "all": "All Orders",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered"
+    },
+    "empty": {
+      "title": "No orders found",
+      "description": "You don't have any {status} orders yet."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "retry": "Retry"
+    },
+    "noData": "No data available",
+    "order": {
+      "orderId": "Order #{id}", 
+      "itemsTitle": "Order Items",
+      "summary": "Summary",
+      "summaryItems": {
+        "price": "Price:",
+        "shipping": "Shipping:",
+        "discount": "Discount:",
+        "total": "Total:"
+      },
+      "tracking": "Tracking Information",
+      "trackingItems": {
+        "orderNumber": "Order Number:",
+        "shippingMethod": "Shipping Method:",
+        "carrier": "Carrier:",
+        "trackingNumber": "Tracking #:",
+        "copy": "Copy",
+        "copySuccess": "Tracking Number Copied"
+      },
+      "actions": {
+        "return": "Return Order",
+        "buyAgain": "Buy Again"
+      },
+      "tabs": {
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      }
+    }
   }
 }

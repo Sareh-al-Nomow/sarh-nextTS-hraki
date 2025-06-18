@@ -1,11 +1,14 @@
+"use client";
+
 import { Order as OrderItem } from "@/lib/models/orderModal";
 import { AnimatePresence, motion } from "framer-motion";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BsBorderStyle } from "react-icons/bs";
-import Image from "next/image";
 import { FiChevronDown, FiTruck } from "react-icons/fi";
 import ReturnModal from "./ReturnModal";
+import ProductItem from "./ProductItem";
+import { useTranslations } from "next-intl";
 
 type OrderStatus = "processing" | "shipped" | "delivered" | "cancelled";
 
@@ -25,6 +28,7 @@ const Order: React.FC<OrderProp> = ({
   expandedOrder,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const t = useTranslations("orders.order");
 
   const toggleOpenModal = () => {
     setIsOpenModal(!isOpenModal);
@@ -32,11 +36,11 @@ const Order: React.FC<OrderProp> = ({
 
   return (
     <>
-    <ReturnModal
-      order={order}
-      isOpenModal={isOpenModal}
-      toggleOpenModal={toggleOpenModal}
-    />
+      <ReturnModal
+        order={order}
+        isOpenModal={isOpenModal}
+        toggleOpenModal={toggleOpenModal}
+      />
       <motion.div
         key={order.order_id}
         initial={{ opacity: 0, y: 10 }}
@@ -44,7 +48,6 @@ const Order: React.FC<OrderProp> = ({
         transition={{ duration: 0.3 }}
         className="bg-white rounded-xl shadow-sm overflow-hidden"
       >
-        {/* Order Header */}
         <div
           className="p-4 flex justify-between items-center cursor-pointer"
           onClick={() =>
@@ -61,11 +64,13 @@ const Order: React.FC<OrderProp> = ({
             >
               <div className="flex items-center gap-1">
                 {getStatusIcon(order.status as OrderStatus)}
-                <span className="capitalize">{order.status}</span>
+                <span className="capitalize">{t(`tabs.${order.status}`)}</span>
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Order #{order.order_id}</p>
+              <p className="text-sm text-gray-500">
+                {t("orderId", { id: order.order_id })}
+              </p>
               <p className="text-xs text-gray-400">
                 {new Date(order.created_at).toLocaleDateString()}
               </p>
@@ -84,7 +89,6 @@ const Order: React.FC<OrderProp> = ({
           </div>
         </div>
 
-        {/* Order Details */}
         <AnimatePresence>
           {expandedOrder === order.order_id && (
             <motion.div
@@ -95,28 +99,14 @@ const Order: React.FC<OrderProp> = ({
               className="overflow-hidden"
             >
               <div className="border-t border-gray-100 p-4">
-                <h4 className="font-medium mb-3">Order Items</h4>
+                <h4 className="font-medium mb-3">{t("itemsTitle")}</h4>
                 <div className="space-y-4">
                   {order.items.map((item) => (
-                    <div key={item.order_item_id} className="flex items-start">
-                      <div className="relative w-16 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
-                        <Image
-                          src={item.product.images[0].origin_image}
-                          alt={item.product_name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="ml-4 flex-1">
-                        <p className="font-medium text-gray-900">
-                          {item.product_name}
-                        </p>
-                        <p className="text-sm text-gray-500">Qty: {item.qty}</p>
-                      </div>
-                      <p className="font-medium">
-                        ${(item.product_price * item.qty).toFixed(2)}
-                      </p>
-                    </div>
+                    <ProductItem
+                      key={item.order_item_id}
+                      item={item}
+                      orderStatus={order.status === "delivered"}
+                    />
                   ))}
                 </div>
 
@@ -124,25 +114,23 @@ const Order: React.FC<OrderProp> = ({
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <h4 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
                       <BsBorderStyle className="text-blue-500" />
-                      Summary
+                      {t("summary")}
                     </h4>
 
                     <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                      {/* Order Number */}
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">
-                          Price:
+                          {t("summaryItems.price")}
                         </span>
                         <span className="text-sm font-semibold text-gray-900">
                           ${order.sub_total}
                         </span>
                       </div>
 
-                      {/* Shipping Method */}
                       {order.shipping_method_name && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Shipping:
+                            {t("summaryItems.shipping")}
                           </span>
                           <span className="text-sm font-semibold text-gray-900">
                             ${order.shipping_fee_incl_tax}
@@ -150,11 +138,10 @@ const Order: React.FC<OrderProp> = ({
                         </div>
                       )}
 
-                      {/* Order Discount */}
                       {order.shipping_method_name && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Discount:
+                            {t("summaryItems.discount")}
                           </span>
                           <span className="text-sm text-red-300 line-through">
                             ${order.discount_amount ?? 0}
@@ -162,11 +149,10 @@ const Order: React.FC<OrderProp> = ({
                         </div>
                       )}
 
-                      {/* Carrier */}
                       {order.grand_total && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Total:
+                            {t("summaryItems.total")}
                           </span>
                           <span className="text-sm font-semibold text-green-600">
                             ${order.grand_total}
@@ -181,25 +167,23 @@ const Order: React.FC<OrderProp> = ({
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <h4 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
                       <FiTruck className="text-blue-500" />
-                      Tracking Information
+                      {t("tracking")}
                     </h4>
 
                     <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                      {/* Order Number */}
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">
-                          Order Number:
+                          {t("trackingItems.orderNumber")}
                         </span>
                         <span className="text-sm font-semibold text-gray-900">
                           {order.order_number}
                         </span>
                       </div>
 
-                      {/* Shipping Method */}
                       {order.shipping_method_name && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Shipping Method:
+                            {t("trackingItems.shippingMethod")}
                           </span>
                           <span className="text-sm font-semibold text-gray-900">
                             {order.shipping_method_name}
@@ -207,11 +191,10 @@ const Order: React.FC<OrderProp> = ({
                         </div>
                       )}
 
-                      {/* Carrier */}
                       {order.shipments?.[0]?.carrier && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Carrier:
+                            {t("trackingItems.carrier")}
                           </span>
                           <span className="text-sm font-semibold text-gray-900">
                             {order.shipments[0].carrier}
@@ -219,11 +202,10 @@ const Order: React.FC<OrderProp> = ({
                         </div>
                       )}
 
-                      {/* Tracking Number */}
                       {order.shipments?.[0]?.tracking_number && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-600">
-                            Tracking #:
+                            {t("trackingItems.trackingNumber")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-gray-900">
@@ -234,11 +216,11 @@ const Order: React.FC<OrderProp> = ({
                                 navigator.clipboard.writeText(
                                   order.shipments[0].tracking_number
                                 );
-                                toast.success("Tracking Number Copied");
+                                toast.success(t("trackingItems.copySuccess"));
                               }}
                               className=" cursor-pointer text-[18px] underline text-blue-500 hover:underline"
                             >
-                              Copy
+                              {t("trackingItems.copy")}
                             </button>
                           </div>
                         </div>
@@ -253,12 +235,12 @@ const Order: React.FC<OrderProp> = ({
                       onClick={toggleOpenModal}
                       className="ml-3 px-4 py-2 pr-text rounded-md font-medium cursor-pointer"
                     >
-                      Retun Order
+                      {t("actions.return")}
                     </h2>
                   )}
                   {order.status === "delivered" && (
                     <button className="ml-3 px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-700">
-                      Buy Again
+                      {t("actions.buyAgain")}
                     </button>
                   )}
                 </div>

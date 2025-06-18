@@ -13,10 +13,13 @@ import { getOrders } from "@/lib/axios/OrderAxios";
 import Spinner from "@/components/UI/SpinnerLoading";
 import type { Order as OrderType } from "@/lib/models/orderModal";
 import Order from "@/components/orders/Order";
+import { useTranslations } from "next-intl";
 
 type OrderStatus = "processing" | "shipped" | "delivered" | "cancelled";
 
 export default function OrdersPage() {
+  const t = useTranslations("orders");
+
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | OrderStatus>("all");
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
@@ -26,7 +29,6 @@ export default function OrdersPage() {
     queryFn: getOrders,
   });
 
-  console.log(data);
   useEffect(() => {
     if (data) {
       setOrders(data);
@@ -75,13 +77,13 @@ export default function OrdersPage() {
   if (error) {
     return (
       <div className="text-center py-10">
-        <h3 className="text-red-500"> {error.name}</h3>
+        <h3 className="text-red-500">{error.name}</h3>
         <p className="py-10">{error.message}</p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Retry
+          {t("error.retry")}
         </button>
       </div>
     );
@@ -90,7 +92,7 @@ export default function OrdersPage() {
   if (!data) {
     return (
       <div className="text-center py-10">
-        <p>No Data available</p>
+        <p>{t("noData")}</p>
       </div>
     );
   }
@@ -99,10 +101,8 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
-          <p className="text-gray-600 mt-1">
-            View and manage your order history
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
+          <p className="text-gray-600 mt-1">{t("description")}</p>
         </div>
 
         {/* Status Tabs */}
@@ -116,7 +116,7 @@ export default function OrdersPage() {
                   : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
             >
-              All Orders
+              {t("tabs.all")}
             </button>
             <button
               onClick={() => setActiveTab("processing")}
@@ -127,7 +127,7 @@ export default function OrdersPage() {
               }`}
             >
               <FiClock size={14} />
-              Processing
+              {t("tabs.processing")}
             </button>
             <button
               onClick={() => setActiveTab("shipped")}
@@ -138,7 +138,7 @@ export default function OrdersPage() {
               }`}
             >
               <FiTruck size={14} />
-              Shipped
+              {t("tabs.shipped")}
             </button>
             <button
               onClick={() => setActiveTab("delivered")}
@@ -149,7 +149,7 @@ export default function OrdersPage() {
               }`}
             >
               <FiCheckCircle size={14} />
-              Delivered
+              {t("tabs.delivered")}
             </button>
           </div>
         </div>
@@ -160,11 +160,12 @@ export default function OrdersPage() {
             <div className="bg-white rounded-lg shadow-sm p-8 text-center">
               <FiPackage className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-lg font-medium text-gray-900">
-                No orders found
+                {t("empty.title")}
               </h3>
               <p className="mt-1 text-gray-500">
-                You dont have any {activeTab === "all" ? "" : activeTab} orders
-                yet.
+                {t("empty.description", {
+                  status: activeTab === "all" ? "" : t(`tabs.${activeTab}`),
+                })}
               </p>
             </div>
           ) : (

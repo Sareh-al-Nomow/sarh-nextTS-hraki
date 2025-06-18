@@ -19,19 +19,19 @@ import { useTranslations } from "next-intl";
 
 interface productItemProps {
   item: OrderItem;
+  orderStatus: boolean;
 }
 
-const ProductItem: React.FC<productItemProps> = ({ item }) => {
+const ProductItem: React.FC<productItemProps> = ({ item, orderStatus }) => {
   const router = useRouter();
   const t = useTranslations("account.myProducts.myProduct.myProducts");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
-  console.log(hoveredStar);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [errorReview, setErrorsReview] = useState<string[] | null>(null);
-
+  console.log(hoveredStar);
   const {
     data: review,
     isLoading,
@@ -111,16 +111,16 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
   }
 
   return (
-    <div className="p-4 border border-gray-200 rounded-lg flex justify-between items-center mb-4">
-      <div className="flex items-center gap-3">
-        <div className=" bg-gray-100 rounded flex items-center justify-center">
+    <div className="p-4 border border-gray-200 rounded-lg flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto">
+        <div className="bg-gray-100 rounded flex items-center justify-center">
           <Image
             src={item.product.images[0].origin_image}
             alt={item.product_name || "Product image"}
             width={70}
             height={50}
             priority
-            className=" cursor-pointer"
+            className="cursor-pointer"
             onClick={handleViewProduct}
           />
         </div>
@@ -132,21 +132,24 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
           </p>
         </div>
       </div>
-      <div>
-        {review && review[0] ? (
-          <StarRating rating={review[0]?.rating ?? 0} interactive={false} />
-        ) : (
+
+      <div className="w-full md:w-auto text-end">
+      {review && review[0] ? (
+        <StarRating rating={review[0]?.rating ?? 0} interactive={false} />
+      ) : (
+        orderStatus && (
           <button
             onClick={toggleDetails}
             disabled={isLoading}
-            className="flex items-center gap-1 border border-blue-700 pr-text hover:bg-blue-50 transition rounded-full px-4 py-1.5 font-medium disabled:opacity-50"
+            className="flex flex-wrap items-center gap-1 border border-blue-700 pr-text hover:bg-blue-50 transition rounded-full px-4 py-1.5 font-medium disabled:opacity-50"
           >
             {[1, 2, 3, 4, 5].map((star) => (
               <FaRegStar key={star} size={16} className="pr-text" />
             ))}
             <span className="ml-1 pr-text font-bold">{t("reviewBtn")}</span>
           </button>
-        )}
+        )
+      )}
       </div>
 
       <Modal open={isModalOpen} classesName="pr-bg">
@@ -193,7 +196,7 @@ const ProductItem: React.FC<productItemProps> = ({ item }) => {
               </div>
             </div>
 
-            <div className="flex gap-3 justify-end">
+            <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 type="submit"
                 disabled={isPending}

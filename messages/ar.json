@@ -524,5 +524,55 @@
       "callSupport": "اتصل بالدعم",
       "ariaLabel": "اتصل بالدعم"
     }
+  },
+  "orders": {
+    "title": "طلباتي",
+    "description": "عرض وإدارة سجل الطلبات الخاصة بك",
+    "tabs": {
+      "all": "كل الطلبات",
+      "processing": "قيد المعالجة",
+      "shipped": "تم الشحن",
+      "delivered": "تم التوصيل"
+    },
+    "empty": {
+      "title": "لم يتم العثور على طلبات",
+      "description": "ليس لديك أي طلبات {status} حتى الآن."
+    },
+    "error": {
+      "title": "حدث خطأ ما",
+      "retry": "إعادة المحاولة"
+    },
+    "noData": "لا توجد بيانات متاحة",
+    "order": {
+      "orderId": "الطلب رقم {id}",
+      "itemsTitle": "عناصر الطلب",
+      "summary": "الملخص",
+      "summaryItems": {
+        "price": "السعر:",
+        "shipping": "الشحن:",
+        "discount": "الخصم:",
+        "total": "الإجمالي:"
+      },
+      "tracking": "معلومات التتبع",
+      "trackingItems": {
+        "orderNumber": "رقم الطلب:",
+        "shippingMethod": "طريقة الشحن:",
+        "carrier": "شركة الشحن:",
+        "trackingNumber": "رقم التتبع:",
+        "copy": "نسخ",
+        "copySuccess": "تم نسخ رقم التتبع"
+      },
+      "actions": {
+        "return": "إرجاع الطلب",
+        "buyAgain": "اشترِ مرة أخرى"
+      },
+      "tabs": {
+        "processing": "قيد المعالجة",
+        "shipped": "تم الشحن",
+        "delivered": "تم التوصيل",
+        "cancelled": "أُلغيت",
+        "pending": "قيد الانتظار"
+      }
+    }
   }
 }
