@@ -133,7 +133,7 @@ export default function Products() {
 
       {/* Loading spinner when loading more */}
       {isLoading && currentPage > 1 && (
-        <div className="flex justify-center py-6">
+        <div className="flex justify-center py-6 pb-20">
           <Spinner />
         </div>
       )}
