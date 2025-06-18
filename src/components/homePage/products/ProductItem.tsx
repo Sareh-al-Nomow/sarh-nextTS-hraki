@@ -3,13 +3,13 @@
 import Image from "next/image";
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiHeart, FiShoppingCart, FiStar, FiX } from "react-icons/fi";
+import { FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { CartContext } from "@/store/CartContext";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
-import StarRating from "@/components/shared/StarRating";
+// import StarRating from "@/components/shared/StarRating";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -121,7 +121,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
           </h3>
 
           <div className="flex items-center mt-1 xs:mt-2">
-            <div className="flex">
+            {/* <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
@@ -132,10 +132,10 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   } w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-3.5 sm:h-3.5`}
                 />
               ))}
-            </div>
-            <span className="text-[10px] xs:text-xs text-gray-500 ml-0.5 xs:ml-1">
+            </div> */}
+            {/* <span className="text-[10px] xs:text-xs text-gray-500 ml-0.5 xs:ml-1">
               ({product.rating.toFixed(1)})
-            </span>
+            </span> */}
           </div>
 
           <div className="mt-2 xs:mt-3 flex justify-between items-center">
@@ -270,7 +270,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   <h2 className="text-lg sm:text-xl font-bold">
                     {quickViewProduct.name}
                   </h2>
-                  <StarRating rating={quickViewProduct.rating} />
+                  {/* <StarRating rating={quickViewProduct.rating} /> */}
                 </div>
 
                 {/* Price */}

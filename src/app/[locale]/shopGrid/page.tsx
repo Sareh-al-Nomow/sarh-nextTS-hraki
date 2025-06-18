@@ -20,6 +20,7 @@ import { SearchContext } from "@/store/SearchContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import { getBrands } from "@/lib/axios/brandsAxios";
 import { organizeBrands } from "@/utils/organizeBrands";
+import { getCollectionById } from "@/lib/axios/collectionsAxios";
 
 const MAX_PRICE = 5000;
 
@@ -49,6 +50,9 @@ const ShopGridPage = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [selectedBrandIds, setSelectedBrandIds] = useState<number[]>([]);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<
+    number | null
+  >(null);
 
   const param = useSearchParams();
   const { clearSearchTerm } = useContext(SearchContext);
@@ -81,7 +85,8 @@ const ShopGridPage = () => {
       // Add filters if they exist
       if (productQuery.name?.trim()) query.name = productQuery.name.trim();
       if (productQuery.categoryId) query.categoryId = productQuery.categoryId;
-      if (productQuery.collectionId) query.collectionId = productQuery.collectionId;
+      if (productQuery.collectionId)
+        query.collectionId = productQuery.collectionId;
       if (productQuery.brandId && productQuery.brandId.length > 0) {
         // If GetProductsParams expects a single number, use the first brandId
         query.brandId = productQuery.brandId[0];
@@ -129,6 +134,19 @@ const ShopGridPage = () => {
     ? organizeCategories(categoriesData.data)
     : null;
 
+  const {
+    data: collectionData,
+    isLoading: isLoadingCollection,
+    error: errorCollection,
+  } = useQuery({
+    queryKey: ["collection", selectedCollectionId],
+    queryFn: ({ signal }) =>
+      getCollectionById(signal, Number(selectedCollectionId)),
+    enabled: !!selectedCollectionId,
+  });
+
+  console.log(collectionData);
+
   // Transform products data
   useEffect(() => {
     const displayProducts = productsData?.data.map((p) => transformProduct(p));
@@ -174,6 +192,7 @@ const ShopGridPage = () => {
 
     if (collectionID) {
       const collectionId = Number(collectionID);
+      setSelectedCollectionId(collectionId);
       initialQuery.collectionId = collectionId;
     }
 
@@ -439,7 +458,7 @@ const ShopGridPage = () => {
   };
 
   // Loading and error states
-  if (isLoadingCategory) {
+  if (isLoadingCategory || isLoadingCollection) {
     return (
       <div className="my-40">
         <Spinner />
@@ -447,14 +466,18 @@ const ShopGridPage = () => {
     );
   }
 
-  if (error || errorCategory) {
+  if (error || errorCategory || errorCollection) {
     return (
       <div className="my-20">
-        <h1>{error?.name || errorCategory?.name}</h1>
-        <h3>{error?.message || errorCategory?.message}</h3>
+        <h1>{error?.name || errorCategory?.name || errorCollection?.name}</h1>
+        <h3>
+          {error?.message || errorCategory?.message || errorCollection?.message}
+        </h3>
       </div>
     );
   }
+
+  console.log(collectionData);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -467,10 +490,11 @@ const ShopGridPage = () => {
       >
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Discover Our Collection
+            {collectionData?.name ?? " Discover Our Collection "}
           </h1>
           <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            Premium products curated for exceptional experiences
+            {collectionData?.description ??
+              "Premium products curated for exceptional experiences"}
           </p>
         </div>
       </motion.div>

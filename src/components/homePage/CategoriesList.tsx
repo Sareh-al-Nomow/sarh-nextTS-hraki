@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Spinner from "../UI/SpinnerLoading";
 import { useTranslations } from "next-intl";
-import { organizeCategories } from "@/utils/organizeCategories";
 
 export default function CategoriesList() {
   const t = useTranslations("category");
@@ -19,7 +18,7 @@ export default function CategoriesList() {
     queryFn: getCategories,
   });
 
-  const displayCategories = organizeCategories(categories?.data ?? []);
+  // const displayCategories = organizeCategories(categories?.data ?? []);
 
   console.log(categories?.data);
 
@@ -46,15 +45,15 @@ export default function CategoriesList() {
         <h2 className="text-2xl md:text-3xl font-bold pr-text mb-10 ">
           {t("title")}
         </h2>
-        {!displayCategories.allParent && (
+        {!categories?.data && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-6">
             <h1> {t("noCategory")}</h1>
           </div>
         )}
         <div className="gap-6">
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10">
-            {displayCategories.allParent &&
-              displayCategories.allParent.map((cat, index) => (
+            {categories?.data &&
+              categories?.data.map((cat, index) => (
                 <Link
                   href={`/shopGrid?categoryid=${cat.id}`}
                   key={index}
