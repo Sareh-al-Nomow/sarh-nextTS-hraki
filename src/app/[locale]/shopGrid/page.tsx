@@ -55,10 +55,11 @@ const ShopGridPage = () => {
 
   // Product query with pagination
   const [productQuery, setProductQuery] = useState<
-    Omit<GetProductsParams, "name" | "limit" | "brandId"> & {
+    Omit<GetProductsParams, "name" | "limit" | "brandId" | "collectionId"> & {
       name?: string;
       limit?: number;
       brandId?: number[];
+      collectionId?: number;
     }
   >({
     page: 1,
@@ -80,6 +81,7 @@ const ShopGridPage = () => {
       // Add filters if they exist
       if (productQuery.name?.trim()) query.name = productQuery.name.trim();
       if (productQuery.categoryId) query.categoryId = productQuery.categoryId;
+      if (productQuery.collectionId) query.collectionId = productQuery.collectionId;
       if (productQuery.brandId && productQuery.brandId.length > 0) {
         // If GetProductsParams expects a single number, use the first brandId
         query.brandId = productQuery.brandId[0];
@@ -141,14 +143,16 @@ const ShopGridPage = () => {
     const cateID = param.get("categoryid");
     const brandID = param.get("brandid");
     const searchTerm = param.get("query");
+    const collectionID = param.get("collectionId");
 
     const initialQuery: Omit<
       GetProductsParams,
-      "name" | "limit" | "brandId"
+      "name" | "limit" | "brandId" | "brandId" | "collectionId"
     > & {
       name?: string;
       limit?: number;
       brandId?: number[];
+      collectionId?: number;
     } = { page: 1 };
 
     if (cateID) {
@@ -168,12 +172,17 @@ const ShopGridPage = () => {
       initialQuery.brandId = [brandId];
     }
 
+    if (collectionID) {
+      const collectionId = Number(collectionID);
+      initialQuery.collectionId = collectionId;
+    }
+
     if (searchTerm) {
       setSearchQuery(searchTerm);
       initialQuery.name = searchTerm;
     }
 
-    if (cateID || brandID || searchTerm) {
+    if (cateID || brandID || searchTerm || collectionID) {
       setProductQuery(initialQuery);
     }
   }, [param, clearSearchTerm]);

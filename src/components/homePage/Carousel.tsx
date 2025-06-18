@@ -78,6 +78,13 @@ const Carousel: React.FC<CarouselProps> = ({ collections }) => {
     console.log("تم النقر على الصورة");
     router.push(`/shopGrid`);
   }
+  if (collections.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p>No Banner available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-5 mx-3 lg:mx-10">
@@ -161,7 +168,7 @@ const Carousel: React.FC<CarouselProps> = ({ collections }) => {
                 <div
                   onClick={() =>
                     router.push(
-                      `/shopGrid?collections=${collections[activeIndex].collection_id}`
+                      `/shopGrid?collectionId=${collections[activeIndex].collection_id}`
                     )
                   }
                   className=" cursor-pointer bg-transparent flex-1"

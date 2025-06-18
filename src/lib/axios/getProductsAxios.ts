@@ -8,6 +8,7 @@ export interface GetProductsParams {
   name?: string;
   categoryId?: number;
   brandId?: number;
+  collectionId?: number;
   visibility?: boolean;
   status?: "active" | "inactive";
   lang?: string;

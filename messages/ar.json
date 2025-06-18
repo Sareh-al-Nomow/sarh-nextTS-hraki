@@ -574,5 +574,11 @@
         "pending": "قيد الانتظار"
       }
     }
+  },
+  "searchFiles": {
+    "searchPlaceholder": "ابحث عن المنتجات...",
+    "searchResults": "نتائج البحث",
+    "viewAll": "عرض الكل",
+    "noResults": "لم يتم العثور على نتائج لـ"
   }
 }

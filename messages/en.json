@@ -547,7 +547,7 @@
     },
     "noData": "No data available",
     "order": {
-      "orderId": "Order #{id}", 
+      "orderId": "Order #{id}",
       "itemsTitle": "Order Items",
       "summary": "Summary",
       "summaryItems": {
@@ -576,5 +576,11 @@
         "cancelled": "Cancelled"
       }
     }
+  },
+  "searchFiles": {
+    "searchPlaceholder": "Search for products...",
+    "searchResults": "Search Results",
+    "viewAll": "View all",
+    "noResults": "No results found for"
   }
 }

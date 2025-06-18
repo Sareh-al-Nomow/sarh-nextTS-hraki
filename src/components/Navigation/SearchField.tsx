@@ -6,47 +6,51 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, useRef } from "react";
 import { FiSearch, FiX, FiChevronRight } from "react-icons/fi";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { getSearchProducts } from "@/lib/axios/searchAxios";
+import { Product } from "@/lib/models/productsModal";
+import { transformProductCartItem } from "@/utils/trnsformProductCartItem";
 
 // Mock product data - replace with your API call
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  rating: number;
-  category: string;
-};
+// type Product = {
+//   id: number;
+//   name: string;
+//   price: number;
+//   image: string;
+//   rating: number;
+//   category: string;
+// };
 
-const mockSearchResults = (query: string): Product[] => {
-  if (!query) return [];
+// const mockSearchResults = (query: string): Product[] => {
+//   if (!query) return [];
 
-  return [
-    {
-      id: 1,
-      name: "Wireless Noise-Cancelling Headphones",
-      price: 199.99,
-      image: "/image/categories/book.jpg",
-      rating: 4.5,
-      category: "Audio",
-    },
-    {
-      id: 2,
-      name: "Smart Watch Series 5",
-      price: 249.99,
-      image: "/image/categories/book.jpg",
-      rating: 4.2,
-      category: "Wearables",
-    },
-    {
-      id: 3,
-      name: "Premium Bluetooth Speaker",
-      price: 129.99,
-      image: "/image/categories/book.jpg",
-      rating: 4.7,
-      category: "Audio",
-    },
-  ];
-};
+//   return [
+//     {
+//       id: 1,
+//       name: "Wireless Noise-Cancelling Headphones",
+//       price: 199.99,
+//       image: "/image/categories/book.jpg",
+//       rating: 4.5,
+//       category: "Audio",
+//     },
+//     {
+//       id: 2,
+//       name: "Smart Watch Series 5",
+//       price: 249.99,
+//       image: "/image/categories/book.jpg",
+//       rating: 4.2,
+//       category: "Wearables",
+//     },
+//     {
+//       id: 3,
+//       name: "Premium Bluetooth Speaker",
+//       price: 129.99,
+//       image: "/image/categories/book.jpg",
+//       rating: 4.7,
+//       category: "Audio",
+//     },
+//   ];
+// };
 
 export default function SearchField() {
   const t = useTranslations("navbar");
@@ -54,11 +58,23 @@ export default function SearchField() {
   const isRtl = locale === "ar";
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const router = useRouter();
+
+  const {
+    data: resultData,
+    isLoading,
+    // error,
+  } = useQuery({
+    queryKey: ["products", searchTerm],
+    queryFn: ({ signal }) =>
+      getSearchProducts({ q: searchTerm, limit: 5 }, signal),
+    enabled: searchTerm.trim() !== "", // لا تنفذ الاستعلام إذا كان الحقل فارغ
+  });
+
+  console.log(resultData);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -83,15 +99,10 @@ export default function SearchField() {
       return;
     }
 
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      const searchResults = mockSearchResults(searchTerm);
-      setResults(searchResults);
-      setIsLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
+    if (resultData) {
+      setResults(resultData.data);
+    }
+  }, [searchTerm, resultData]);
 
   const handleSearch = () => {
     if (searchTerm.trim() === "") return;
@@ -110,11 +121,12 @@ export default function SearchField() {
     setResults([]);
   };
 
-  const navigateToProduct = (productId: number) => {
-    router.push(`/product/${productId}`);
+  const navigateToProduct = (urlKey: string) => {
+    router.push(`/product/${urlKey}`);
     setIsFocused(false);
   };
 
+  const displayedProducts = results.map(transformProductCartItem);
   return (
     <div ref={searchRef} className="w-full relative">
       {/* Search Input - Maintained your exact styling */}
@@ -134,7 +146,7 @@ export default function SearchField() {
           <button
             onClick={clearSearch}
             className={`absolute top-1/2 -translate-y-1/2 p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors ${
-              isRtl ? "left-3" : "right-3 md:right-12"
+              isRtl ? "left-3" : "right-3"
             }`}
           >
             <FiX className="text-gray-500" />
@@ -161,14 +173,14 @@ export default function SearchField() {
                 <h3 className="font-medium text-gray-700">Search Results</h3>
               </div>
               <ul className="py-2 max-h-[60vh] overflow-y-auto">
-                {results.map((product) => (
+                {displayedProducts.map((product) => (
                   <li
                     key={product.id}
                     className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
                   >
                     <button
                       className="w-full text-left p-4 flex items-center gap-4 group"
-                      onClick={() => navigateToProduct(product.id)}
+                      onClick={() => navigateToProduct(product.url_key)}
                     >
                       <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                         <Image
@@ -185,12 +197,10 @@ export default function SearchField() {
                         </h4>
                         <div className="flex items-center mt-1">
                           <span className="text-primary font-semibold">
-                            ${product.price.toFixed(2)}
+                            ${product.price}
                           </span>
                           <span className="mx-2 text-gray-300">|</span>
-                          <span className="text-sm text-gray-500">
-                            {product.category}
-                          </span>
+                          <span className="text-sm text-gray-500"></span>
                         </div>
                         <div className="flex items-center mt-1">
                           {[...Array(5)].map((_, i) => (

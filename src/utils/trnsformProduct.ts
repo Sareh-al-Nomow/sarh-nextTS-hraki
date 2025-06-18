@@ -12,8 +12,7 @@ export function transformProduct(product: Product): FrontendProduct {
       : undefined,
     image:
       product.images?.find((img) => img.is_main)?.origin_image ||
-      product.images?.[0]?.origin_image ||
-      "/placeholder-product.jpg",
+      product.images?.[0]?.origin_image,
     rating: product.meanRating || 0,
     description: product.description?.description || "",
     short_description: product.description?.short_description || "",

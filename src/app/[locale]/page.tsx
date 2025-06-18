@@ -46,13 +46,13 @@ export default function Home() {
     );
   }
 
-  if (data?.collections?.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p>No Collection available</p>
-      </div>
-    );
-  }
+  // if (data?.collections?.length === 0) {
+  //   return (
+  //     <div className="text-center py-10">
+  //       <p>No Collection available</p>
+  //     </div>
+  //   );
+  // }
 
   const collections = data?.collections?.filter(
     (collection) => collection.type === "section"
@@ -69,7 +69,14 @@ export default function Home() {
     <>
       <Carousel collections={banners} />
       <CategoriesList />
-      <Collections collections={collections} />
+      {data?.collections?.length === 0 ? (
+        <div className="text-center py-10">
+          <p>No Collection available</p>
+        </div>
+      ) : (
+        <Collections collections={collections} />
+      )}
+      {/* <Collections collections={collections} /> */}
       <Products />
       <ModernHelpButton />
     </>

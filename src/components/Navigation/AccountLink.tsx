@@ -65,7 +65,7 @@ export default function PremiumUserMenu() {
               className="object-cover"
             />
           ) : (
-            <FiUser className="text-[#d0e3ec]" size={23} />
+            <FiUser size={23} />
           )}
         </div>
         <motion.div
