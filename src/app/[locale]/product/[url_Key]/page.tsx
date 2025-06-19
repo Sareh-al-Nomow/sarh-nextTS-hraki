@@ -1,6 +1,5 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiShoppingCart,
@@ -8,31 +7,45 @@ import {
   FiShare2,
   FiChevronLeft,
   FiChevronRight,
+  FiMinus,
+  FiPlus,
+  FiStar,
 } from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
-import AdditionalInformation from "@/components/productDetails/AddtionInformation";
+import { use, useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProductByUrlKey } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import Spinner from "@/components/UI/SpinnerLoading";
-import ReviewsSection from "@/components/productDetails/ReviewsSection";
-import StarRating from "@/components/shared/StarRating";
 import { getReviewsForProductById } from "@/lib/axios/reviewAxiox";
+import ReviewsSection from "@/components/productDetails/ReviewsSection";
+import AdditionalInformation from "@/components/productDetails/AddtionInformation";
+import StarRating from "@/components/shared/StarRating";
+import { AuthModalContext } from "@/store/AuthModalContext";
+import { AuthContext } from "@/store/AuthContext";
+import { CartContext } from "@/store/CartContext";
+import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
 };
 
+const colors = [
+  { name: "gold", hex: "#D4AF37" },
+  { name: "platinum", hex: "#E5E4E2" },
+  { name: "onyx", hex: "#353839" },
+];
 export default function ProductDetails({ params }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<FrontendProduct | null>();
-  // const [selectedColor, setSelectedColor] = useState(0);
-  // const [selectedSize, setSelectedSize] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [activeTab, setActiveTab] = useState("description");
+  const [selectedColor, setSelectedColor] = useState("gold");
+  const [likedProduct, setLikedProduct] = useState<boolean>(false);
 
   const { url_Key } = use(params);
 
@@ -41,8 +54,11 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     queryFn: ({ signal }) => getProductByUrlKey(url_Key, signal),
     enabled: !!url_Key,
   });
-  console.log(data);
-  // eazar one
+
+  const { openAuthModal } = useContext(AuthModalContext);
+  const { addToCart } = useContext(CartContext);
+  const { isAuthenticated } = useContext(AuthContext);
+
   const {
     data: productReviews,
     isLoading: isLoadingReviews,
@@ -58,7 +74,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
   useEffect(() => {
     if (data) {
-      console.log(data.data);
       const formatedProduct = data?.data?.map(transformProduct);
       setProduct(formatedProduct[0]);
     }
@@ -99,6 +114,45 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     );
   };
 
+  function handleAddToCart() {
+    if (isAuthenticated) {
+      if (product?.id !== undefined) {
+        addToCart(product.id, quantity);
+        setQuantity(1);
+      }
+    } else {
+      openAuthModal();
+    }
+  }
+
+  useEffect(() => {
+    const stored = localStorage.getItem("wishlist");
+    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
+
+    if (stored) {
+      const isExsist = product
+        ? wishlist.some((p) => p.id === product.id)
+        : false;
+
+      setLikedProduct(isExsist);
+    }
+  }, [product]);
+
+  const toggleLike = (product: FrontEndProductCartItem) => {
+    const stored = localStorage.getItem("wishlist");
+    let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
+
+    const exists = wishlist.some((p) => p.id === product.id);
+
+    if (exists) {
+      wishlist = wishlist.filter((p) => p.id !== product.id);
+    } else {
+      wishlist.push(product);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    setLikedProduct((prev) => !prev);
+  };
+
   if (isLoading) {
     return (
       <div className="my-40">
@@ -112,7 +166,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       <div className="text-center py-10">
         <h1 className="text-red-500"> {error?.name || errorReviews?.name}</h1>
         <p className="text-red-200">
-          {" "}
           {error?.message || errorReviews?.message}
         </p>
         <button
@@ -125,19 +178,38 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     );
   }
 
-  // const totalRate =
-  //   productReviews?.reduce((acc, re) => acc + re.rating, 0) || 0;
+  const handleShareProduct = async () => {
+    try {
+      if (!product) {
+        alert("Product information is not available.");
+        return;
+      }
+      const productUrl = `${window.location.origin}/products/${product.url_key}`;
+      const shareData = {
+        title: product.name,
+        text: product.description,
+        url: productUrl,
+      };
 
-  // const averageRate =
-  //   productReviews && productReviews.length > 0
-  //     ? totalRate / productReviews.length
-  //     : 0;
+      // Check if the Web Share API is available (mobile devices)
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for desktop browsers
+        await navigator.clipboard.writeText(productUrl);
+        alert("Product URL copied to clipboard!");
 
-  console.log(product);
-  console.log(product?.images);
+        // Alternatively, you could implement social media sharing here
+        // or open a modal with sharing options
+      }
+    } catch (error) {
+      console.error("Error sharing product:", error);
+      // Handle error appropriately
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white min-h-screen">
       {/* Navigation Bar */}
       <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-30">
         <motion.button
@@ -160,21 +232,19 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="flex flex-col lg:flex-row gap-8"
-        >
+      <main className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">
+        <div className="flex flex-col lg:flex-row gap-8 sm:gap-16">
           {/* Image Gallery */}
           <div className="lg:w-1/2">
             <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="bg-white rounded-xl shadow-sm p-4 overflow-hidden relative"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="sticky top-4 sm:top-24"
             >
+              {/* Main Image */}
               <div
-                className="relative h-96 bg-gray-100 rounded-lg mb-4 overflow-hidden cursor-zoom-in"
+                className="bg-gray-50 p-4 sm:p-8 rounded-xl mb-4 sm:mb-6 flex items-center justify-center h-[300px] sm:h-[400px] md:h-[500px] relative overflow-hidden cursor-zoom-in"
                 onClick={() => setIsZoomed(!isZoomed)}
               >
                 <AnimatePresence mode="wait">
@@ -186,9 +256,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       scale: isZoomed ? 1.5 : 1,
                       cursor: isZoomed ? "zoom-out" : "zoom-in",
                     }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full h-full flex items-center justify-center"
+                    transition={{ duration: 0.4 }}
+                    className="relative w-full h-full"
                   >
                     <Image
                       src={
@@ -196,15 +265,16 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                         "https://sarehnomow.fsn1.your-objectstorage.com/images/2d4aec3a-850a-471b-a61e-194053ec7331.png"
                       }
                       alt={product?.name ?? "Product image"}
-                      width={600}
-                      height={600}
-                      className="object-contain w-full h-full"
+                      fill
+                      className="object-contain"
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                     />
                   </motion.div>
                 </AnimatePresence>
 
                 {/* Navigation arrows */}
-                <div className="absolute inset-0 flex items-center justify-between px-2">
+                <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -212,7 +282,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       e.stopPropagation();
                       prevImage();
                     }}
-                    className="bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
+                    className="pointer-events-auto bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
                   >
                     <FiChevronLeft className="text-xl text-gray-700" />
                   </motion.button>
@@ -223,7 +293,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       e.stopPropagation();
                       nextImage();
                     }}
-                    className="bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
+                    className="pointer-events-auto bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
                   >
                     <FiChevronRight className="text-xl text-gray-700" />
                   </motion.button>
@@ -258,7 +328,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 )}
               </div>
 
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              {/* Thumbnail Gallery */}
+              <div className="grid grid-cols-4 gap-2 sm:gap-4">
                 {product &&
                   product.images &&
                   product.images.map((image, index) => (
@@ -268,19 +339,21 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setCurrentImage(index)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                          className={`bg-gray-50 p-2 sm:p-3 rounded-lg transition-all ${
                             currentImage === index
-                              ? "border-blue-500 ring-2 ring-blue-200"
-                              : "border-transparent hover:border-gray-300"
+                              ? "ring-2 ring-black"
+                              : "hover:ring-1 hover:ring-gray-300"
                           }`}
                         >
-                          <Image
-                            src={image.origin_image}
-                            alt={`Thumbnail ${index + 1}`}
-                            width={80}
-                            height={80}
-                            className="w-full h-full object-cover"
-                          />
+                          <div className="relative aspect-square h-16 sm:h-20 md:h-28 w-full">
+                            <Image
+                              src={image.origin_image}
+                              alt={`Thumbnail ${index + 1}`}
+                              fill
+                              className="object-contain"
+                              sizes="(max-width: 768px) 25vw, 150px"
+                            />
+                          </div>
                         </motion.button>
                       )}
                     </div>
@@ -292,98 +365,119 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           {/* Product Details */}
           <div className="lg:w-1/2">
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-xl shadow-sm p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="flex justify-between items-start mb-4">
-                <motion.h2
-                  whileHover={{ x: 2 }}
-                  className="text-2xl font-bold text-gray-800"
-                >
-                  {product?.name}
-                </motion.h2>
+              {/* Product Title */}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+                {product?.name}
+              </h1>
+
+              {/* Vendor */}
+              <div className="mb-4 sm:mb-6">
+                <a href={"/store"} className="group inline-block">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm sm:text-lg font-medium text-gray-900 group-hover:text-black transition-colors">
+                      Martini Premium Spirits{" "}
+                    </span>
+                    <div className="flex items-center">
+                      <FiStar className="h-3 w-3 sm:h-4 sm:w-4 text-black fill-black" />
+                      <span className="ml-1 text-sm sm:text-base text-gray-600">
+                        5
+                      </span>
+                    </div>
+                    <span className="text-gray-400">•</span>
+                    <span className="text-xs sm:text-sm text-gray-500">
+                      Since 1949
+                    </span>
+                  </div>
+                </a>
               </div>
 
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400 mr-2">
-                  <StarRating rating={product?.meanRating ?? 0} />
+              {/* Rating */}
+              <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 flex-wrap">
+                <div className="flex">
+                  <StarRating rating={product?.rating ?? 0} />
                 </div>
-                {/* <span className="text-gray-500 text-sm">
-                  {product?.rating?.toFixed(1)} ({product?.reviews?.length ?? 0} reviews)
-                </span> */}
+                <span className="text-sm sm:text-base text-gray-600">
+                  {product?.meanRating?.toFixed(1)} (
+                  {productReviews?.length || 0} reviews)
+                </span>
+                <button className="text-xs sm:text-sm text-gray-500 underline ml-2 sm:ml-4">
+                  Add your review
+                </button>
               </div>
 
-              <motion.p
-                whileHover={{ backgroundColor: "#f9fafb" }}
-                className="text-gray-600 mb-6 p-3 rounded-lg bg-gray-50"
-              >
-                {product?.description}
-              </motion.p>
-
-              {/* Color Selection */}
-              {/* <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Color:{" "}
-                  <span className="font-normal">
-                    {product.colors[selectedColor].name}
+              {/* Price */}
+              <div className="mb-6 sm:mb-8">
+                <div className="flex items-end gap-2">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+                    ${product?.price?.toFixed(2) || "--"}
                   </span>
+                  {product &&
+                    typeof product.originalPrice === "number" &&
+                    typeof product.price === "number" &&
+                    product.originalPrice > product.price && (
+                      <>
+                        <span className="text-gray-500 line-through text-sm">
+                          ${product.originalPrice}
+                        </span>
+                        <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
+                          Save $
+                          {(product.originalPrice - product.price).toFixed(2)}
+                        </span>
+                      </>
+                    )}
+                </div>
+              </div>
+
+              {/* Color Options */}
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3 uppercase tracking-wider">
+                  Color: {selectedColor}
                 </h3>
-                <div className="flex gap-3">
-                  {product.colors.map((color, index) => (
+                <div className="flex gap-2 sm:gap-3">
+                  {colors.map((color) => (
                     <motion.button
-                      key={index}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setSelectedColor(index)}
-                      className={`w-10 h-10 rounded-full border-2 flex items-center justify-center ${
-                        selectedColor === index
-                          ? "border-blue-500 ring-2 ring-blue-200"
-                          : "border-gray-200 hover:border-gray-300"
+                      key={color.name}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setSelectedColor(color.name)}
+                      className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center ${
+                        selectedColor === color.name
+                          ? "ring-2 ring-offset-1 sm:ring-offset-2 ring-black"
+                          : ""
                       }`}
-                      style={{ backgroundColor: color.value }}
+                      style={{ backgroundColor: color.hex }}
                       aria-label={color.name}
-                      title={color.name}
                     >
-                      {selectedColor === index && (
+                      {selectedColor === color.name && (
                         <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-4 h-4 bg-white rounded-full"
-                        />
+                          layoutId="colorCheckmark"
+                          className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 sm:h-3 sm:w-3 text-black"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </motion.div>
                       )}
                     </motion.button>
                   ))}
                 </div>
-              </div> */}
-
-              {/* Size Selection */}
-              {/* <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Size
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size, index) => (
-                    <motion.button
-                      key={index}
-                      whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setSelectedSize(index)}
-                      className={`px-4 py-2 rounded-md border transition-all ${
-                        selectedSize === index
-                          ? "border-blue-500 bg-blue-50 text-blue-600 font-medium"
-                          : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    >
-                      {size}
-                    </motion.button>
-                  ))}
-                </div>
-              </div> */}
+              </div>
 
               {/* Features */}
-              <div className="mb-6">
+              <div className="mb-6 sm:mb-8">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
                   Key Features
                 </h3>
@@ -405,86 +499,133 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 </ul>
               </div>
 
-              {/* Price and Quantity */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-end gap-2">
-                  <span className="text-2xl font-bold text-gray-800">
-                    {product ? `$${product.price.toFixed(2)}` : "--"}
-                  </span>
-                  {product &&
-                    typeof product.originalPrice === "number" &&
-                    typeof product.price === "number" &&
-                    product.originalPrice > product.price && (
-                      <>
-                        <span className="text-gray-500 line-through text-sm">
-                          ${product.originalPrice}
-                        </span>
-                        <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
-                          Save $
-                          {(product.originalPrice - product.price).toFixed(2)}
-                        </span>
-                      </>
-                    )}
-                </div>
-
-                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
-                  <motion.button
-                    whileHover={{ backgroundColor: "#f3f4f6" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={decreaseQuantity}
-                    className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                  >
-                    -
-                  </motion.button>
-                  <span className="px-4 py-2 border-x border-gray-300 font-medium">
-                    {quantity}
-                  </span>
-                  <motion.button
-                    whileHover={{ backgroundColor: "#f3f4f6" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={increaseQuantity}
-                    className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                  >
-                    +
-                  </motion.button>
-                </div>
+              {/* Tabs */}
+              <div className="border-b border-gray-200 mb-6 sm:mb-8 overflow-x-auto">
+                <nav className="flex gap-4 sm:gap-6 md:gap-8 min-w-max">
+                  {[
+                    { id: "description", label: "Description" },
+                    { id: "additional", label: "Additional Info" },
+                    { id: "reviews", label: "Reviews" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`pb-3 sm:pb-4 px-1 font-medium relative text-xs sm:text-sm uppercase tracking-wider whitespace-nowrap ${
+                        activeTab === tab.id
+                          ? "text-black"
+                          : "text-gray-500 hover:text-gray-900"
+                      }`}
+                    >
+                      {tab.label}
+                      {activeTab === tab.id && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                        />
+                      )}
+                    </button>
+                  ))}
+                </nav>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <motion.button
-                  whileHover={{
-                    scale: 1.02,
-                    boxShadow: "0 4px 12px rgba(59, 130, 246, 0.2)",
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
-                >
-                  <FiShoppingCart />
-                  Add to Cart
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 border border-gray-300 hover:bg-gray-100 rounded-lg transition-colors"
-                  aria-label="Share product"
-                >
-                  <FiShare2 />
-                </motion.button>
+              {/* Tab Content */}
+              <div className="mb-6 sm:mb-8">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-4 sm:space-y-6"
+                  >
+                    {activeTab === "description" && (
+                      <p className="text-gray-700 leading-relaxed text-base sm:text-lg">
+                        {product?.description}
+                      </p>
+                    )}
+
+                    {activeTab === "additional" && <AdditionalInformation />}
+
+                    {activeTab === "reviews" && (
+                      <>
+                        {isLoadingReviews ? (
+                          <Spinner />
+                        ) : (
+                          <ReviewsSection
+                            productReviews={productReviews ?? []}
+                          />
+                        )}
+                      </>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Add to Cart */}
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 sticky bottom-0 sm:bottom-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
+                  <div className="flex items-center border border-gray-200 rounded-full px-3 py-1 sm:px-4 sm:py-2 w-full sm:w-auto justify-between sm:justify-normal">
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={decreaseQuantity}
+                      className="text-gray-600 hover:text-black"
+                    >
+                      <FiMinus className="h-4 w-4" />
+                    </motion.button>
+                    <span className="mx-3 sm:mx-4 w-6 sm:w-8 text-center font-medium text-sm sm:text-base">
+                      {quantity}
+                    </span>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={increaseQuantity}
+                      className="text-gray-600 hover:text-black"
+                    >
+                      <FiPlus className="h-4 w-4" />
+                    </motion.button>
+                  </div>
+                  <motion.button
+                    onClick={handleAddToCart}
+                    whileHover={{
+                      scale: 1.02,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 bg-black text-white py-3 sm:py-4 px-4 sm:px-6 rounded-full font-medium flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg w-full sm:w-auto"
+                  >
+                    <FiShoppingCart className="text-lg sm:text-xl" />
+                    <span>
+                      Add to Cart - $
+                      {product ? (product.price * quantity).toFixed(2) : "0.00"}
+                    </span>
+                  </motion.button>
+                  <div className="flex gap-1 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
+                      onClick={() => product && toggleLike(product)}
+                    >
+                      <FiHeart
+                        className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                          likedProduct ? "fill-red-500 text-red-500" : ""
+                        }`}
+                      />
+                    </motion.button>
+                    <motion.button
+                      onClick={handleShareProduct}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
+                    >
+                      <FiShare2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </motion.button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
-        </motion.div>
-
-        {/* addition infromation */}
-        <AdditionalInformation />
-
-        {/* Reviews Section */}
-        {isLoadingReviews ? (
-          <Spinner />
-        ) : (
-          <ReviewsSection productReviews={productReviews ?? []} />
-        )}
+        </div>
       </main>
     </div>
   );

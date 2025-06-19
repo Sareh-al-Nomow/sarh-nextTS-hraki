@@ -211,16 +211,12 @@ const CheckoutPage = () => {
                     {t("tabs.shipping")}
                   </button>
                   <button
-                    disabled={!orderData.delevaryMethodId}
+                    disabled={readyToPay}
                     onClick={() => setActiveTab("payment")}
                     className={`flex-1 text-center pb-2 ${
                       activeTab === "payment"
                         ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
-                        : `${
-                            orderData.delevaryMethodId
-                              ? "text-black "
-                              : "text-gray-500"
-                          } `
+                        : `${readyToPay ? "text-black " : "text-gray-500"} `
                     }`}
                   >
                     {t("tabs.payment")}
