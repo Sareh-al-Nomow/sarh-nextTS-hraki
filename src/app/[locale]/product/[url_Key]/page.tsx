@@ -40,7 +40,6 @@ const colors = [
 export default function ProductDetails({ params }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<FrontendProduct | null>();
-  const [isFavorite, setIsFavorite] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
@@ -82,7 +81,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  const toggleFavorite = () => setIsFavorite(!isFavorite);
 
   const discountPercentage =
     product &&
@@ -298,23 +296,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                     <FiChevronRight className="text-xl text-gray-700" />
                   </motion.button>
                 </div>
-
-                {/* Favorite button */}
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite();
-                  }}
-                  className={`absolute top-4 right-4 p-2 rounded-full shadow-md ${
-                    isFavorite
-                      ? "bg-red-500 text-white"
-                      : "bg-white text-gray-600"
-                  }`}
-                >
-                  <FiHeart className="text-xl" />
-                </motion.button>
 
                 {/* Discount badge */}
                 {discountPercentage > 0 && (
@@ -573,7 +554,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                     >
                       <FiMinus className="h-4 w-4" />
                     </motion.button>
-                    <span className="mx-3 sm:mx-4 w-6 sm:w-8 text-center font-medium text-sm sm:text-base">
+                    <span className="mx-3 py-1 sm:mx-4 w-6 sm:w-8 text-center font-medium text-sm sm:text-base">
                       {quantity}
                     </span>
                     <motion.button
@@ -599,7 +580,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       {product ? (product.price * quantity).toFixed(2) : "0.00"}
                     </span>
                   </motion.button>
-                  <div className="flex gap-1 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">
+                  <div className="flex gap-3 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -607,7 +588,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       onClick={() => product && toggleLike(product)}
                     >
                       <FiHeart
-                        className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                        className={`h-6 w-6 sm:h-7 sm:w-7 ${
                           likedProduct ? "fill-red-500 text-red-500" : ""
                         }`}
                       />
@@ -618,7 +599,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       whileTap={{ scale: 0.9 }}
                       className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
                     >
-                      <FiShare2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <FiShare2 className="h-6 w-6 sm:h-7 sm:w-7" />
                     </motion.button>
                   </div>
                 </div>

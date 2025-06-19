@@ -65,7 +65,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
         initial="hidden"
         animate="visible"
         whileHover="hover"
-        className="flex-shrink-0 w-52 xs:w-56 sm:w-52 md:w-56 lg:w-60  xl:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-4 group cursor-pointer"
+        className="flex-shrink-0 w-48 xs:w-56 sm:w-52 md:w-56 lg:w-60  xl:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-4 group cursor-pointer"
       >
         {/* Product Image */}
         <div
@@ -116,7 +116,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
         {/* Product Info */}
         <div className="p-2 xs:p-3 sm:p-4">
-          <h3 className="font-bold text-gray-900 line-clamp-2 text-xs xs:text-sm sm:text-[15px]">
+          <h3 className="font-bold text-gray-900 line-clamp-2 text-[14px] sm:text-[16px]">
             {product.name}
           </h3>
 
@@ -140,11 +140,11 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
           <div className="mt-2 xs:mt-3 flex justify-between items-center">
             <div>
-              <span className="font-bold text-gray-900 text-xs xs:text-sm sm:text-base">
+              <span className="font-bold text-gray-900 text-[14px] sm:text-base">
                 ${product.price}
               </span>
               {product.originalPrice && (
-                <span className="text-[10px] xs:text-xs text-gray-500 line-through ml-1 xs:ml-2">
+                <span className="text-[14px]  sm:text-base text-red-300 line-through ml-1 xs:ml-2">
                   ${product.originalPrice}
                 </span>
               )}
@@ -170,7 +170,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                     likedProducts.includes(product.id)
                       ? "fill-red-500 text-red-500"
                       : "text-gray-700"
-                  } w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4`}
+                  } w-5 h-5 xs:w-5.5 xs:h-5.5 sm:w-5 sm:h-5`}
                 />
               </motion.button>
 
@@ -189,7 +189,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   }}
                   disabled={isLoadingAddToCart}
                 >
-                  <FiShoppingCart className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4" />
+                  <FiShoppingCart className="w-5 h-5 xs:w-5.5 xs:h-5.5 sm:w-5 sm:h-5 p-[3px]" />
                 </motion.button>
               ) : (
                 <button
@@ -297,7 +297,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   {quickViewProduct.stock_availability ? (
                     <button
                       onClick={handleAddToCart}
-                      className="cursor-pointer bg-black text-white py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-800 transition text-xs sm:text-sm"
+                      className="cursor-pointer bg-black text-white py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-800 transition sm:text-sm"
                     >
                       <FiShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" /> Add
                       to Cart
@@ -305,7 +305,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   ) : (
                     <button
                       disabled
-                      className="cursor-not-allowed bg-gray-200 text-gray-600 py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition text-xs sm:text-sm"
+                      className="cursor-not-allowed bg-gray-200 text-gray-600 py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition sm:text-sm"
                       aria-label="This item is currently out of stock"
                     >
                       <FiShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 opacity-50" />
@@ -315,7 +315,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
                   <Link
                     href={`/product/${quickViewProduct.url_key}`}
-                    className="border border-black py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-50 transition text-xs sm:text-sm"
+                    className="border border-black py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-50 transition sm:text-sm"
                   >
                     View Details
                   </Link>
