@@ -65,7 +65,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
         initial="hidden"
         animate="visible"
         whileHover="hover"
-        className="flex-shrink-0 w-40 xs:w-44 sm:w-48 md:w-56 lg:w-60 xl:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-4 group cursor-pointer"
+        className="flex-shrink-0 w-52 xs:w-56 sm:w-52 md:w-56 lg:w-60  xl:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-4 group cursor-pointer"
       >
         {/* Product Image */}
         <div
