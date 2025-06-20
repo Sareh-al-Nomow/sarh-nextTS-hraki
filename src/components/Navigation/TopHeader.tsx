@@ -28,8 +28,8 @@ const EcommerceHeader = () => {
                   LIMITED
                 </span>
                 <p>
-                  Summer Sale! Get 25% off on all items. Use code:{" "}
-                  <strong>SUNNY25</strong>
+                  Summer Sale! Get 50% off on all items. Use code:{" "}
+                  <strong>ali</strong>
                 </p>
                 <FiArrowRight className="ml-1" />
               </motion.div>
