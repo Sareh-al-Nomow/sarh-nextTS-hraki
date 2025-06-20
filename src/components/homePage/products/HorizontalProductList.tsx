@@ -32,7 +32,7 @@ export default function HorizontalProductList({
 }: {
   title?: string;
   products: FrontEndProductCartItem[];
-  id: number;
+  id?: number;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
