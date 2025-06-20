@@ -19,12 +19,8 @@ export function transformProductCartItem(
       new Date(product.created_at) >
       new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     tags: [
-      !product.inventory?.stock_availability ? "OUT OF STOCK" : undefined,
+      !product.inventory?.stock_availability ?"OUT OF STOCK" : undefined,
       product.old_price ? "SALE" : undefined,
-      // new Date(product.created_at) >
-      // new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-      //   ? "NEW"
-      //   : undefined,
     ].filter(Boolean) as string[],
     short_description: product.description.short_description,
     features: product.attributes

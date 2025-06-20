@@ -15,6 +15,7 @@ const CollectionList: React.FC<CollectionListProp> = ({ collection }) => {
   return (
     <div className="bg-gradient-to-r from-blue-50 to-cyan-50">
       <HorizontalProductList
+        id={collection.collection_id}
         title={collection.name}
         products={displayedProducts}
       />

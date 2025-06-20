@@ -8,7 +8,8 @@
     "myAccount": "حسابي",
     "viewProfile": "عرض الملف الشخصي",
     "searchPlaceholder": "ما الذي تبحث عنه؟",
-    "wishlist": "قائمة الرغبات"
+    "wishlist": "قائمة الرغبات",
+    "login" : "تسجيل الدخول"
   },
   "auth": {
     "login": {

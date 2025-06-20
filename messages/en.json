@@ -8,7 +8,8 @@
     "myAccount": "My Account",
     "viewProfile": "View Profile",
     "searchPlaceholder": "Lookin’ for?",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "login": "Login"
   },
   "auth": {
     "login": {

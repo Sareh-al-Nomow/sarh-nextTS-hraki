@@ -104,7 +104,7 @@ export default function Products() {
         className="px-6 py-1 bg-gradient-to-r from-blue-50 to-cyan-50"
       >
         <h1 className="text-3xl font-bold text-gray-900 pr-text">
-          Premium Collection
+          New Arrivals
         </h1>
         <p className="text-gray-600 mt-2">
           Showing {allProducts.length} of {data?.total || 0} products

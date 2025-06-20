@@ -146,9 +146,9 @@ export default function FloatingCallButton() {
               <motion.div
                 className="absolute -top-1 -right-1 bg-white rounded-full w-5 h-5 flex items-center justify-center"
                 animate={{
-                  scale: [1, 1.2, 1],
+                  scale: [0.5, 1, 0.5],
                   transition: {
-                    duration: 1.5,
+                    duration: 0.5,
                     repeat: Infinity,
                     repeatDelay: 1,
                   },
@@ -168,7 +168,7 @@ export default function FloatingCallButton() {
               opacity: [0.5, 0],
             }}
             transition={{
-              duration: 2,
+              duration: 0.5,
               repeat: Infinity,
               ease: "easeOut",
             }}

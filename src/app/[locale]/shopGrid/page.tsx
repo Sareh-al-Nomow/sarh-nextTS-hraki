@@ -153,7 +153,7 @@ const ShopGridPage = () => {
     if (displayProducts) {
       setProducts(displayProducts);
     }
-    window.scrollTo(0, 400);
+    window.scrollTo(0, 330);
   }, [productsData?.data]);
 
   // Handle initial URL params

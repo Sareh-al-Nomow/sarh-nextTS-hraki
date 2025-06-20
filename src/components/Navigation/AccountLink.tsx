@@ -56,7 +56,7 @@ export default function PremiumUserMenu() {
         className="flex items-center gap-1 rounded-full transition-all"
         aria-label="User menu"
       >
-        <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
+        <div className="flex items-center relative w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-200  justify-center overflow-hidden">
           {user?.avatar ? (
             <Image
               src={user.avatar}
@@ -65,14 +65,14 @@ export default function PremiumUserMenu() {
               className="object-cover"
             />
           ) : (
-            <FiUser size={23} />
+            <FiUser size={23} className="text-gray-600" />
           )}
         </div>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <FiChevronDown className="text-[#d0e3ec]" size={18} />
+          <FiChevronDown className="text-gray-600" size={18} />
         </motion.div>
       </motion.button>
 

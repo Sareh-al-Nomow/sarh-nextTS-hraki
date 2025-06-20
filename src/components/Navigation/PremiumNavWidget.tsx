@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiX, FiChevronRight, FiSearch, FiUser } from "react-icons/fi";
+import { FiX, FiChevronRight, FiSearch, FiUser, FiLogIn } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaRegHeart, FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getBrands } from "@/lib/axios/brandsAxios";
 import { getCategories } from "@/lib/axios/categoryAxios";
-import Spinner from "../UI/SpinnerLoading";
 import { Category } from "@/lib/models/categoryModal";
 import { BrandWithProducts } from "@/lib/models/brandsModal";
 import { useTranslations } from "next-intl";
 import Language from "./Languages";
+import { AuthContext } from "@/store/AuthContext";
 
 interface Group {
   name: string;
@@ -23,6 +23,7 @@ interface Group {
 
 export default function PremiumNavWidget() {
   const t = useTranslations("navbar");
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   const [groups, setGroups] = useState<Group[]>([]);
   console.log(groups);
@@ -105,7 +106,7 @@ export default function PremiumNavWidget() {
   if (isLoadingBrands || isLoadingCategories) {
     return (
       <div className="my-40 mt-56">
-        <Spinner />
+        <p>Loading...</p>
       </div>
     );
   }
@@ -145,7 +146,7 @@ export default function PremiumNavWidget() {
           {[1, 2, 3].map((i) => (
             <motion.span
               key={i}
-              className="block bg-[#d0e3ec] hover:bg-white rounded h-1 w-6"
+              className="block bg-gradient-to-r from-[#1a7a9a] to-[#1e8cb5] hover:bg-white rounded h-1 w-6"
               animate={{
                 width: isOpen ? 0 : 24,
                 opacity: isOpen ? 0 : 1,
@@ -202,7 +203,7 @@ export default function PremiumNavWidget() {
                 damping: 25,
                 stiffness: 300,
               }}
-              className="fixed flex-1 overflow-y-auto min-h-0 px-3 top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-xl flex flex-col border-l border-gray-100"
+              className="fixed flex-1 overflow-y-auto min-h-0 px-3 top-0 right-0 h-full w-3/4 max-w-md bg-white z-50 shadow-xl flex flex-col border-l border-gray-100"
             >
               {/* Minimal Header */}
               <div className="flex justify-between items-center p-5">
@@ -351,25 +352,40 @@ export default function PremiumNavWidget() {
                 </li>
               </ul>
               {/* User Section */}
-              <div className="p-5 border-t border-gray-100">
-                <Link
-                  href="/profile"
-                  className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-all"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                    <FiUser className="text-gray-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[22px]">
-                      {t("myAccount")}
+              {isAuthenticated ? (
+                <div className="p-5 border-t border-gray-100">
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                      <FiUser className="text-gray-500" />
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {t("viewProfile")}
+                    <div>
+                      <div className="font-medium text-[22px]">
+                        {user?.full_name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {t("viewProfile")}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </div>
+                  </Link>
+                </div>
+              ) : (
+                <div className=" bg-white bottom-0 p-5 border-t border-gray-100">
+                  <Link
+                    href="/login"
+                    className="flex items-center justify-center gap-2 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all w-full"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <FiLogIn className="text-lg" />
+                    <span className="font-medium text-[16px]">
+                      {t("login")}
+                    </span>
+                  </Link>
+                </div>
+              )}
             </motion.div>
           </>
         )}

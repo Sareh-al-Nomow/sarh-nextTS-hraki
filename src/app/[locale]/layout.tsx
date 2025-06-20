@@ -17,6 +17,7 @@ import ClientLayoutPart from "./ClientLayoutPart";
 import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 import { redirect } from "next/navigation";
+import TopHeader from "@/components/Navigation/TopHeader";
 
 const dosis = Dosis({
   variable: "--font-dosis",
@@ -62,6 +63,7 @@ export default async function RootLayout({
                     <Toaster />
                     <div id="root-modal"></div>
                     <ClientLayoutPart />
+                    <TopHeader />
                     <Navbar />
                     {children}
                     <Footer />

@@ -6,6 +6,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import ProductItem from "./ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
+import { useRouter } from "next/navigation";
 
 // const itemVariants = {
 //   hidden: { opacity: 0, x: 20 },
@@ -26,16 +27,20 @@ import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 
 export default function HorizontalProductList({
   title = "Featured Products",
+  id = 0,
   products,
 }: {
   title?: string;
   products: FrontEndProductCartItem[];
+  id: number;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
+
+  const router = useRouter();
 
   // Check if content overflows
   useEffect(() => {
@@ -97,11 +102,45 @@ export default function HorizontalProductList({
     );
   };
 
+  function viewAllHandler() {
+    router.push(`/shopGrid?collectionId=${id}`);
+  }
+
   return (
-    <div className="pt-5 relative group">
-      <h2 className="text-2xl font-bold text-gray-900 px-4 md:px-12 mb-4 pr-text">
-        {title}
-      </h2>
+    <div className="pt-8 relative group">
+      <motion.div
+        className="flex justify-between items-center w-full px-4 md:px-12 mb-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.h2
+          className="text-3xl font-bold pr-text"
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          {title}
+        </motion.h2>
+
+        <motion.button
+          onClick={viewAllHandler}
+          className=" cursor-pointer px-5 py-2.5 rounded-xl font-semibold text-white pr-bg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 flex items-center gap-2"
+          whileHover={{
+            scale: 1.05,
+            background: "linear-gradient(to right, #212249, #023047)",
+            boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.3)",
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Explore All
+          <motion.span
+            animate={{ x: [0, 4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          >
+            →
+          </motion.span>
+        </motion.button>
+      </motion.div>
 
       <div className="relative">
         {/* Left Arrow */}

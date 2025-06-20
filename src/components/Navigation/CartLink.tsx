@@ -15,7 +15,7 @@ export default function CartLink() {
       className="relative flex items-center p-2 rounded-md hover:bg-opacity-10 transition-colors duration-200"
       aria-label={`Shopping Cart with ${itemCount} items`}
     >
-      <IoCartOutline className="text-white text-2xl md:text-3xl" />
+      <IoCartOutline className="text-gray-600 text-2xl md:text-3xl" />
 
       {itemCount > 0 && (
         <span

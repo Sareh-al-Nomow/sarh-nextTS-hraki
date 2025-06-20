@@ -18,14 +18,26 @@ const itemVariants = {
     y: 0,
     transition: {
       type: "spring",
-      stiffness: 100,
-      damping: 10,
+      stiffness: 120,
+      damping: 12,
     },
   },
   hover: {
     y: -8,
-    transition: { duration: 0.2 },
+    transition: { duration: 0.3, ease: "easeOut" },
   },
+};
+
+const badgeVariants = {
+  hidden: { scale: 0 },
+  visible: (i: number) => ({
+    scale: 1,
+    transition: {
+      delay: i * 0.1,
+      type: "spring",
+      stiffness: 150,
+    },
+  }),
 };
 
 type ProductItemProp = {
@@ -41,11 +53,11 @@ const ProductItem: React.FC<ProductItemProp> = ({
 }) => {
   const { addToCart, isLoadingAddToCart } = useContext(CartContext);
   const { isAuthenticated } = useContext(AuthContext);
+  const { openAuthModal } = useContext(AuthModalContext);
 
   const [quickViewProduct, setQuickViewProduct] =
     useState<FrontEndProductCartItem | null>(null);
-
-  const { openAuthModal } = useContext(AuthModalContext);
+  const [isHovering, setIsHovering] = useState(false);
 
   function handleAddToCart() {
     if (isAuthenticated) {
@@ -58,149 +70,173 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
   return (
     <>
-      {/* Product Grid */}
+      {/* Product Card */}
       <motion.div
         key={product.id}
         variants={itemVariants}
         initial="hidden"
         animate="visible"
         whileHover="hover"
-        className="flex-shrink-0 w-48 xs:w-56 sm:w-52 md:w-56 lg:w-60  xl:w-64 bg-white rounded-xl shadow-sm overflow-hidden relative mb-4 group cursor-pointer"
+        onHoverStart={() => setIsHovering(true)}
+        onHoverEnd={() => setIsHovering(false)}
+        className="flex-shrink-0 w-full max-w-[250px] bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden relative mb-4 group cursor-pointer transition-all duration-300 border border-gray-100 hover:border-gray-200"
       >
-        {/* Product Image */}
-        <div
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setQuickViewProduct(product);
-          }}
-          className="relative aspect-square"
-        >
-          <Image
-            src={product.image ?? "/image/products/img.png"}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 360px) 140px, (max-width: 480px) 180px, (max-width: 640px) 200px, (max-width: 768px) 220px, (max-width: 1024px) 240px, 256px"
-            priority={false}
-          />
+        {/* Product Image Container */}
+        <div className="relative aspect-square overflow-hidden">
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setQuickViewProduct(product);
+            }}
+            className="relative w-full h-full"
+          >
+            <Image
+              src={product.image ?? "/image/products/img.png"}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 360px) 140px, (max-width: 480px) 180px, (max-width: 640px) 200px, (max-width: 768px) 220px, (max-width: 1024px) 240px, 256px"
+              priority={false}
+            />
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
-            {product.isNew && (
-              <span className="bg-black text-white text-[10px] xs:text-xs px-1.5 xs:px-2 py-0.5 xs:py-1 rounded-full">
-                NEW
-              </span>
-            )}
-            {product.tags?.map((tag, i) => (
-              <motion.span
-                key={i}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className={`text-[10px] xs:text-xs px-1.5 xs:px-2 py-0.5 xs:py-1 rounded-full ${
-                  tag === "HOT"
-                    ? "bg-red-500"
-                    : tag === "BESTSELLER"
-                    ? "bg-purple-500"
-                    : tag === "NEW"
-                    ? "bg-blue-500"
-                    : "bg-green-500"
-                } text-white`}
+            {/* Badges */}
+            <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
+              {product.isNew && (
+                <motion.span
+                  variants={badgeVariants}
+                  custom={0}
+                  className="bg-black text-white text-xs px-2 py-1 rounded-full font-medium"
+                >
+                  NEW
+                </motion.span>
+              )}
+              {product.tags?.map((tag, i) => (
+                <motion.span
+                  key={i}
+                  variants={badgeVariants}
+                  custom={i + 1}
+                  className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    tag === "HOT"
+                      ? "bg-gradient-to-r from-red-500 to-orange-500"
+                      : tag === "BESTSELLER"
+                      ? "bg-gradient-to-r from-purple-500 to-pink-500"
+                      : tag === "NEW"
+                      ? "bg-gradient-to-r from-blue-500 to-cyan-500"
+                      : "bg-gradient-to-r from-green-500 to-emerald-500"
+                  } text-white shadow-sm`}
+                >
+                  {tag}
+                </motion.span>
+              ))}
+            </div>
+
+            {/* Quick Shop Button (appears on hover) */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={
+                isHovering ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }
+              }
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-3 left-0 right-0 flex justify-center"
+            >
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setQuickViewProduct(product);
+                }}
+                className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg hover:bg-gray-800 transition-all"
               >
-                {tag}
-              </motion.span>
-            ))}
+                Quick Shop
+              </button>
+            </motion.div>
           </div>
         </div>
 
         {/* Product Info */}
-        <div className="p-2 xs:p-3 sm:p-4">
-          <h3 className="font-bold text-gray-900 line-clamp-2 text-[14px] sm:text-[16px]">
-            {product.name}
-          </h3>
+        <div className="p-4">
+          <div className="flex justify-between items-start">
+            <h3 className="font-bold text-gray-900 line-clamp-2 text-base leading-tight">
+              {product.name}
+            </h3>
 
-          <div className="flex items-center mt-1 xs:mt-2">
-            {/* <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <FiStar
-                  key={i}
-                  className={`${
-                    i < Math.floor(product.rating)
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-300"
-                  } w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-3.5 sm:h-3.5`}
-                />
-              ))}
-            </div> */}
-            {/* <span className="text-[10px] xs:text-xs text-gray-500 ml-0.5 xs:ml-1">
-              ({product.rating.toFixed(1)})
-            </span> */}
+            {/* Like Button */}
+            <motion.button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike(product);
+              }}
+              className="p-1"
+              whileTap={{ scale: 0.9 }}
+              aria-label={
+                likedProducts.includes(product.id)
+                  ? "Unlike product"
+                  : "Like product"
+              }
+            >
+              <FiHeart
+                className={`${
+                  likedProducts.includes(product.id)
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-400 group-hover:text-gray-600"
+                } w-5 h-5 transition-colors`}
+              />
+            </motion.button>
           </div>
 
-          <div className="mt-2 xs:mt-3 flex justify-between items-center">
+          {/* Rating
+          {product.rating ? (
+            <div className="flex items-center mt-1">
+              <div className="flex">
+                <StarRating rating={product.rating}></StarRating>
+              </div>
+              <span className="text-xs text-gray-500 ml-1">
+                ({product.rating.toFixed(1)})
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center mt-1">
+              <div className="flex">
+                <StarRating rating={0}></StarRating>
+              </div>
+              <span className="text-xs text-gray-500 ml-1">
+              </span>
+            </div>
+          )} */}
+
+          <div className="mt-3 flex justify-between items-end">
             <div>
-              <span className="font-bold text-gray-900 text-[14px] sm:text-base">
+              <span className="font-bold text-gray-900 text-lg">
                 ${product.price}
               </span>
               {product.originalPrice && (
-                <span className="text-[14px]  sm:text-base text-red-300 line-through ml-1 xs:ml-2">
+                <span className="text-sm text-gray-400 line-through ml-2">
                   ${product.originalPrice}
                 </span>
               )}
             </div>
 
-            <div className="flex gap-1 xs:gap-2 sm:gap-3">
-              {/* Like Button */}
+            {/* Add to Cart Button */}
+            {product.stock_availability ? (
               <motion.button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleLike(product);
-                }}
-                className="p-1 xs:p-1.5 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
                 whileTap={{ scale: 0.9 }}
-                aria-label={
-                  likedProducts.includes(product.id)
-                    ? "Unlike product"
-                    : "Like product"
-                }
+                className={`p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-all ${
+                  isLoadingAddToCart ? "opacity-70 cursor-wait" : ""
+                }`}
+                aria-label="Add to cart"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart();
+                }}
+                disabled={isLoadingAddToCart}
               >
-                <FiHeart
-                  className={`${
-                    likedProducts.includes(product.id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-700"
-                  } w-5 h-5 xs:w-5.5 xs:h-5.5 sm:w-5 sm:h-5`}
-                />
+                <FiShoppingCart className="w-4 h-4" />
               </motion.button>
-
-              {/* Add to Cart / Out of Stock Button */}
-              {product.stock_availability ? (
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  className={`p-1 xs:p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors cursor-pointer ${
-                    isLoadingAddToCart ? "opacity-40 cursor-wait" : ""
-                  }`}
-                  aria-label="Add to cart"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setQuickViewProduct(product);
-                  }}
-                  disabled={isLoadingAddToCart}
-                >
-                  <FiShoppingCart className="w-5 h-5 xs:w-5.5 xs:h-5.5 sm:w-5 sm:h-5 p-[3px]" />
-                </motion.button>
-              ) : (
-                <button
-                  disabled
-                  className="cursor-not-allowed bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center transition-colors px-1.5 xs:px-2 py-0.5 text-[10px] xs:text-xs"
-                  aria-label="This item is currently out of stock"
-                >
-                  <span>Out of Stock</span>
-                </button>
-              )}
-            </div>
+            ) : (
+              <span className="text-xs text-gray-500">Out of Stock</span>
+            )}
           </div>
         </div>
       </motion.div>
@@ -212,18 +248,19 @@ const ProductItem: React.FC<ProductItemProp> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-[1000] flex items-center justify-center p-2 xs:p-4"
+            className="fixed inset-0 bg-black/70 z-[1000] flex items-center justify-center p-4"
             onClick={() => setQuickViewProduct(null)}
           >
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className="bg-white rounded-xl w-full max-w-xs sm:max-w-md overflow-hidden z-[1001]"
+              transition={{ type: "spring", damping: 15 }}
+              className="bg-white rounded-xl w-full max-w-md overflow-hidden z-[1001] shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Image Container with Close Button */}
-              <div className="relative h-40 sm:h-48 w-full">
+              {/* Image Container */}
+              <div className="relative h-64 w-full">
                 <Image
                   src={product.image ?? "/image/products/img.png"}
                   alt={quickViewProduct.name}
@@ -235,19 +272,19 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 {/* Close Button */}
                 <button
                   onClick={() => setQuickViewProduct(null)}
-                  className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition z-10"
+                  className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow hover:bg-white transition z-10"
                   aria-label="Close quick view"
                 >
-                  <FiX className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-800" />
+                  <FiX className="w-4 h-4 text-gray-800" />
                 </button>
 
                 {/* Badges */}
                 {quickViewProduct.tags && quickViewProduct.tags.length > 0 && (
-                  <div className="absolute top-2 left-2 flex gap-1 z-10">
+                  <div className="absolute top-4 left-4 flex gap-2 z-10">
                     {quickViewProduct.tags.slice(0, 2).map((tag, index) => (
                       <span
                         key={index}
-                        className={`text-[10px] xs:text-xs px-1.5 xs:px-2 py-0.5 rounded-full ${
+                        className={`text-xs px-2 py-1 rounded-full font-medium ${
                           tag === "HOT"
                             ? "bg-red-500"
                             : tag === "BESTSELLER"
@@ -255,7 +292,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                             : tag === "NEW"
                             ? "bg-blue-500"
                             : "bg-green-500"
-                        } text-white`}
+                        } text-white shadow-sm`}
                       >
                         {tag}
                       </span>
@@ -265,21 +302,23 @@ const ProductItem: React.FC<ProductItemProp> = ({
               </div>
 
               {/* Product Details */}
-              <div className="p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-4">
-                <div className="flex justify-between items-start">
-                  <h2 className="text-lg sm:text-xl font-bold">
+              <div className="p-6 space-y-4">
+                {/* <div className="flex justify-between items-start">
+                  <h2 className="text-xl font-bold text-gray-900">
                     {quickViewProduct.name}
                   </h2>
-                  {/* <StarRating rating={quickViewProduct.rating} /> */}
-                </div>
+                  {quickViewProduct.rating && (
+                    <StarRating rating={quickViewProduct.rating}></StarRating>
+                  )}
+                </div> */}
 
                 {/* Price */}
-                <div className="flex items-center gap-2">
-                  <span className="text-lg sm:text-xl font-bold">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl font-bold text-gray-900">
                     ${quickViewProduct.price}
                   </span>
                   {quickViewProduct.originalPrice && (
-                    <span className="text-xs sm:text-sm text-gray-500 line-through">
+                    <span className="text-sm text-gray-400 line-through">
                       ${quickViewProduct.originalPrice}
                     </span>
                   )}
@@ -287,35 +326,34 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
                 {/* Description */}
                 {quickViewProduct.short_description && (
-                  <p className="text-xs sm:text-sm text-gray-600">
+                  <p className="text-sm text-gray-600">
                     {quickViewProduct.short_description}
                   </p>
                 )}
 
                 {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-3 sm:pt-4">
+                <div className="grid grid-cols-2 gap-3 pt-4">
                   {quickViewProduct.stock_availability ? (
                     <button
                       onClick={handleAddToCart}
-                      className="cursor-pointer bg-black text-white py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-800 transition sm:text-sm"
+                      className="flex items-center justify-center gap-2 bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-all font-medium"
                     >
-                      <FiShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" /> Add
-                      to Cart
+                      <FiShoppingCart className="w-4 h-4" />
+                      Add to Cart
                     </button>
                   ) : (
                     <button
                       disabled
-                      className="cursor-not-allowed bg-gray-200 text-gray-600 py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition sm:text-sm"
-                      aria-label="This item is currently out of stock"
+                      className="cursor-not-allowed bg-gray-100 text-gray-400 py-3 rounded-lg flex items-center justify-center gap-2 font-medium"
                     >
-                      <FiShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 opacity-50" />
-                      <span>Out of Stock</span>
+                      <FiShoppingCart className="w-4 h-4" />
+                      Out of Stock
                     </button>
                   )}
 
                   <Link
                     href={`/product/${quickViewProduct.url_key}`}
-                    className="border border-black py-2 sm:py-3 rounded-lg flex items-center justify-center gap-1 sm:gap-2 hover:bg-gray-50 transition sm:text-sm"
+                    className="border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition font-medium"
                   >
                     View Details
                   </Link>

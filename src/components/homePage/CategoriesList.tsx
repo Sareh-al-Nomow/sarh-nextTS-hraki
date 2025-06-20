@@ -18,10 +18,6 @@ export default function CategoriesList() {
     queryFn: getCategories,
   });
 
-  // const displayCategories = organizeCategories(categories?.data ?? []);
-
-  console.log(categories?.data);
-
   if (isLoading) {
     return (
       <div className="my-20">
@@ -40,7 +36,7 @@ export default function CategoriesList() {
   }
 
   return (
-    <section className="px-4 py-6 md:py-10 text-center">
+    <section className="py-6 md:py-10 text-center">
       <div className="container mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold pr-text mb-10 ">
           {t("title")}
@@ -50,8 +46,8 @@ export default function CategoriesList() {
             <h1> {t("noCategory")}</h1>
           </div>
         )}
-        <div className="gap-6">
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10">
+        <div className="relative">
+          <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 overflow-x-auto gap-10 sm:gap-4 md:gap-5 pb-4 custom-scroll">
             {categories?.data &&
               categories?.data.map((cat, index) => (
                 <Link

@@ -218,7 +218,7 @@ export default function RegistrationLink() {
         <h2 className="hidden md:block group-hover:text-white">
           {t("login.title")}
         </h2>
-        <PiUserCircleFill className="text-3xl group-hover:text-white" />
+        <PiUserCircleFill className="text-3xl text-gray-600 group-hover:text-white" />
       </div>
 
       <Modal open={isAuthModalOpen} classesName="pr-bg">

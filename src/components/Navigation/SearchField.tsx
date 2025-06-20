@@ -139,7 +139,7 @@ export default function SearchField() {
           type="text"
           placeholder={t("searchPlaceholder")}
           dir={isRtl ? "rtl" : "ltr"}
-          className="w-full p-2 px-3 md:px-5 text-[16px] md:text-xl shadow rounded-2xl bg-white focus:shadow-black/60 transition-all duration-200"
+          className="w-full p-2 px-3 md:px-5 text-[16px] md:text-xl shadow rounded-xl bg-white focus:shadow-black/60 transition-all duration-200"
         />
 
         {searchTerm ? (
@@ -162,7 +162,7 @@ export default function SearchField() {
 
       {/* Expanded Results Dropdown */}
       {isFocused && (results.length > 0 || searchTerm) && (
-        <div className="absolute z-50 mt-2 w-[calc(100%+200px)] -left-[100px] bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden animate-fadeIn">
+        <div className="absolute z-50 mt-2 w-[calc(100%+200px)] -left-[92px] bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden animate-fadeIn">
           {isLoading ? (
             <div className="p-4 flex justify-center">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
