@@ -27,6 +27,7 @@ import { AuthModalContext } from "@/store/AuthModalContext";
 import { AuthContext } from "@/store/AuthContext";
 import { CartContext } from "@/store/CartContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
+import toast from "react-hot-toast";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
@@ -179,10 +180,10 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const handleShareProduct = async () => {
     try {
       if (!product) {
-        alert("Product information is not available.");
+        toast.error("Product information is not available.");
         return;
       }
-      const productUrl = `${window.location.origin}/products/${product.url_key}`;
+      const productUrl = `${window.location.origin}/product/${product.url_key}`;
       const shareData = {
         title: product.name,
         text: product.description,
