@@ -280,6 +280,7 @@ const ShopGridPage = () => {
     });
   };
 
+
   // Handle brand selection
   const toggleBrandId = (brandId: number) => {
     setSelectedBrandIds((prev) => {
@@ -746,7 +747,7 @@ const ShopGridPage = () => {
           {/* Products Grid */}
           <div className="flex-1">
             {/* Results Count */}
-            <div className="mb-6 flex justify-between items-center">
+            {/* <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
                 Showing {products?.length || 0} of {productsData?.total || 0}{" "}
                 products (Page {pagination.page})
@@ -794,7 +795,7 @@ const ShopGridPage = () => {
                   ) : null;
                 })}
               </div>
-            </div>
+            </div> */}
 
             {/* Products */}
             {isLoadingFetchProducts ? (

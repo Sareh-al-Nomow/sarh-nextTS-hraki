@@ -300,25 +300,31 @@ export default function PremiumNavWidget() {
                             }}
                             className="pl-6 overflow-hidden"
                           >
-                            {category.subcategories.map((subcategory) => (
-                              <motion.li
-                                key={subcategory}
-                                initial={{ opacity: 0, x: 10 }}
-                                animate={{
-                                  opacity: 1,
-                                  x: 0,
-                                  transition: { delay: 0.1 },
-                                }}
-                              >
-                                <Link
-                                  href={`/shopGrid?${category.name}=${subcategory}`}
-                                  className="block py-3 px-4 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
-                                  onClick={() => setIsOpen(false)}
+                            {category.subcategories.map(
+                              (subcategory, index) => (
+                                <motion.li
+                                  key={subcategory}
+                                  initial={{ opacity: 0, x: 10 }}
+                                  animate={{
+                                    opacity: 1,
+                                    x: 0,
+                                    transition: { delay: 0.1 },
+                                  }}
                                 >
-                                  {subcategory}
-                                </Link>
-                              </motion.li>
-                            ))}
+                                  <Link
+                                    href={`/shopGrid?${
+                                      category.name === "Categories"
+                                        ? "categoryid"
+                                        : "brandid"
+                                    }=${category.ids[index]}`}
+                                    className="block py-3 px-4 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
+                                    onClick={() => setIsOpen(false)}
+                                  >
+                                    {subcategory}
+                                  </Link>
+                                </motion.li>
+                              )
+                            )}
                           </motion.ul>
                         )}
                       </AnimatePresence>
@@ -328,7 +334,7 @@ export default function PremiumNavWidget() {
               </div>
 
               <ul>
-                <li className="px-8 py-5 text-[18px]">
+                <li className="px-8 py-5 text-[18px] pr-5">
                   <Language textColor="text-black" />
                 </li>
                 <li className="px-8 py-5 text-[18px] flex">
@@ -336,8 +342,8 @@ export default function PremiumNavWidget() {
                     href={"/wishlist"}
                     className=" cursor-pointer flex gap-4 items-center"
                   >
-                    <FaRegHeart className=" hover:opacity-75" />
                     {t("wishlist")}
+                    <FaRegHeart className=" hover:opacity-75" />
                   </Link>
                 </li>
                 <li className="px-8 py-5 text-[18px]">
