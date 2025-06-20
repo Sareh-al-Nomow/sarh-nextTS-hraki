@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRef } from "react";
 import {
   FiArrowRight,
-  FiChevronDown,
   FiHeart,
   FiShare2,
   FiShoppingCart,
@@ -294,35 +293,6 @@ const VendorPage = () => {
               </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* View More Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <Link href="/shopGrid">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-8 py-4 font-medium text-white"
-            >
-              View All Products
-              <motion.span
-                animate={{ y: [0, 5, 0] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 1.5,
-                  ease: "easeInOut",
-                }}
-              >
-                <FiChevronDown />
-              </motion.span>
-            </motion.button>
-          </Link>
         </motion.div>
       </div>
     </div>
