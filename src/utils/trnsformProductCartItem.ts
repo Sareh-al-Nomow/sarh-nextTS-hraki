@@ -15,9 +15,6 @@ export function transformProductCartItem(
     price: product.price ?? 0,
     originalPrice: product.old_price ? product.old_price.toFixed(2) : undefined,
     rating: product.meanRating || 0,
-    isNew:
-      new Date(product.created_at) >
-      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     tags: [
       !product.inventory?.stock_availability ? "OUT OF STOCK" : undefined,
       product.old_price ? "SALE" : undefined,

@@ -23,7 +23,7 @@ export default function AnnouncementBar() {
         <div className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
           <span className="mr-2">🚀</span>
           <span>
-            {t("message")} <strong>walled</strong>
+            {t("message")} <strong>waleed</strong>
           </span>
         </div>
         <BecomeVendor />
