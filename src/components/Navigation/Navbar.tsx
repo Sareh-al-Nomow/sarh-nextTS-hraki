@@ -25,7 +25,6 @@ export default function Navbar() {
       <header className="z-40 w-full bg-white shadow-sm">
         <div className="w-full px-2 lg:px-20">
           <nav
-            dir="rtl"
             className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5"
           >
             {/* Left - Logo */}
