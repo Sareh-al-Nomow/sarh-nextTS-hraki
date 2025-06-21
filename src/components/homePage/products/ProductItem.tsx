@@ -69,6 +69,8 @@ const ProductItem: React.FC<ProductItemProp> = ({
     }
   }
 
+  console.log(product);
+
   return (
     <>
       {/* Product Card */}

@@ -9,7 +9,6 @@ export interface GetProductsParams {
   page?: number;
   limit?: number;
   q?: string;
-
   lang?: string;
 }
 

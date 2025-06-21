@@ -81,7 +81,16 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     }
   }, [data]);
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const increaseQuantity = () => {
+    if (
+      product?.inventory?.qty !== undefined &&
+      quantity >= product.inventory.qty
+    ) {
+      toast.error(`No Avilable Quantity`);
+      return;
+    }
+    setQuantity((prev) => prev + 1);
+  };
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
@@ -202,6 +211,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       console.error("Error sharing product:", error);
     }
   };
+
+  console.log(product);
 
   return (
     <div className="bg-white min-h-screen">
@@ -547,66 +558,83 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
               {/* Add to Cart */}
               <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 sticky bottom-0 sm:bottom-6 shadow-sm">
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
-                  <div className="flex items-center border border-gray-200 rounded-full px-3 py-1 sm:px-4 sm:py-2 w-full sm:w-auto justify-between sm:justify-normal">
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      onClick={decreaseQuantity}
-                      className="text-gray-600 hover:text-black"
-                    >
-                      <FiMinus className="h-4 w-4" />
-                    </motion.button>
-                    <span className="mx-3 py-1 sm:mx-4 w-6 sm:w-8 text-center font-medium text-sm sm:text-base">
-                      {quantity}
-                    </span>
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      onClick={increaseQuantity}
-                      className="text-gray-600 hover:text-black"
-                    >
-                      <FiPlus className="h-4 w-4" />
-                    </motion.button>
-                  </div>
-                  <motion.button
-                    onClick={handleAddToCart}
-                    whileHover={{
-                      scale: 1.02,
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 bg-black text-white py-3 sm:py-4 px-4 sm:px-6 rounded-full font-medium flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg w-full sm:w-auto"
-                  >
-                    <FiShoppingCart className="text-lg sm:text-xl" />
-                    <span>
-                      {t("addToCart", {
-                        price: product
-                          ? (product.price * quantity).toFixed(2)
-                          : "0.00",
-                      })}
-                    </span>
-                  </motion.button>
-                  <div className="flex gap-3 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
-                      onClick={() => product && toggleLike(product)}
-                    >
-                      <FiHeart
-                        className={`h-6 w-6 sm:h-7 sm:w-7 ${
-                          likedProduct ? "fill-red-500 text-red-500" : ""
-                        }`}
-                      />
-                    </motion.button>
-                    <motion.button
-                      onClick={handleShareProduct}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
-                    >
-                      <FiShare2 className="h-6 w-6 sm:h-7 sm:w-7" />
-                    </motion.button>
-                  </div>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center w-full">
+                  {product?.stock_availability ? (
+                    <div className="flex flex-col gap-3 sm:gap-4 w-full">
+                      {/* Quantity Selector - Full width */}
+                      <div className="flex items-center border border-gray-200 rounded-full px-3 py-1 sm:px-4 sm:py-2 w-full justify-between">
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={decreaseQuantity}
+                          className="text-gray-600 hover:text-black"
+                        >
+                          <FiMinus className="h-4 w-4" />
+                        </motion.button>
+                        <span className="mx-3 py-1 sm:mx-4 w-6 sm:w-8 text-center font-medium text-sm sm:text-base">
+                          {quantity}
+                        </span>
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={increaseQuantity}
+                          className="text-gray-600 hover:text-black"
+                        >
+                          <FiPlus className="h-4 w-4" />
+                        </motion.button>
+                      </div>
+
+                      {/* Add to Cart Button - Full width */}
+                      <motion.button
+                        onClick={handleAddToCart}
+                        whileHover={{
+                          scale: 1.02,
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-black text-white py-3 sm:py-4 px-4 sm:px-6 rounded-full font-medium flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg"
+                      >
+                        <FiShoppingCart className="text-lg sm:text-xl" />
+                        <span>
+                          {t("addToCart", {
+                            price: product
+                              ? (product.price * quantity).toFixed(2)
+                              : "0.00",
+                          })}
+                        </span>
+                      </motion.button>
+                    </div>
+                  ) : (
+                    <div className="w-full">
+                      <div className="bg-gray-100 text-gray-600 py-3 sm:py-4 px-4 sm:px-6 rounded-full font-medium text-center text-base sm:text-lg w-full">
+                        Out of Stock
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Wishlist and Share Buttons - Only show when in stock */}
+                  {product?.stock_availability && (
+                    <div className="flex gap-3 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
+                        onClick={() => product && toggleLike(product)}
+                      >
+                        <FiHeart
+                          className={`h-6 w-6 sm:h-7 sm:w-7 ${
+                            likedProduct ? "fill-red-500 text-red-500" : ""
+                          }`}
+                        />
+                      </motion.button>
+                      <motion.button
+                        onClick={handleShareProduct}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="p-2 sm:p-3 bg-gray-100 rounded-full text-gray-700 hover:text-black"
+                      >
+                        <FiShare2 className="h-6 w-6 sm:h-7 sm:w-7" />
+                      </motion.button>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

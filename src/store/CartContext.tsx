@@ -242,6 +242,7 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     },
     onError: (error: Error) => {
       setCartError(error.message);
+      toast.error(error.message);
     },
   });
 
@@ -316,7 +317,7 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
       console.log(exsistingItem);
       updateCartItemQuantityMutate({
         cart_item_id: exsistingItem.cart_item_id,
-        qty: exsistingItem.qty + 1,
+        qty: exsistingItem.qty,
       });
     } else {
       console.log("add new");

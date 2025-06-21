@@ -31,7 +31,7 @@ export function transformProduct(product: Product): FrontendProduct {
         : undefined,
     ].filter(Boolean) as string[],
     inventory: {
-      stock_availability: product.inventory?.stock_availability || false,
+      stock_availability: product.inventory?.qty === 0 ? false : true,
       qty: product.inventory?.qty || 0,
     },
     images: product.images?.map((img) => ({
@@ -54,6 +54,6 @@ export function transformProduct(product: Product): FrontendProduct {
     url_key: product.description.url_key,
     // reviews: product.reviews
     meanRating: product.meanRating,
-    stock_availability: product.inventory.stock_availability ?? true, // or set appropriate default/fallback
+    stock_availability: product.inventory.qty === 0 ? false : true, // or set appropriate default/fallback
   };
 }

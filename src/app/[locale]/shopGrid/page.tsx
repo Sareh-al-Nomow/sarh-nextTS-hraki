@@ -26,7 +26,7 @@ const ShopGridPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
-  const [priceRange, setPriceRange] = useState<PriceRange>([0, 1000]);
+  const [priceRange, setPriceRange] = useState<PriceRange>([0, 2500]);
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
