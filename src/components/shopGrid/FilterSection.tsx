@@ -40,7 +40,7 @@ const FilterSection = <T extends { id: number }>({
           <motion.label
             key={item.id}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center group cursor-pointer"
+            className="flex items-center group gap-2 cursor-pointer"
           >
             <div className="relative">
               <input
@@ -56,7 +56,7 @@ const FilterSection = <T extends { id: number }>({
               </div>
             </div>
             <span
-              className={`ml-2 text-sm ${
+              className={`text-sm ${
                 selectedIds.includes(item.id)
                   ? "text-blue-600"
                   : "text-gray-600"

@@ -59,7 +59,7 @@ const PaymentTap: React.FC = () => {
               : "border-gray-200 hover:border-gray-300"
           }`}
         >
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <input
               type="radio"
               id="credit-card"
@@ -70,7 +70,7 @@ const PaymentTap: React.FC = () => {
             />
             <label
               htmlFor="credit-card"
-              className="ml-3 block text-sm font-medium text-gray-700"
+              className=" block text-sm font-medium text-gray-700"
             >
               {t("methods.creditCard")}
             </label>
@@ -85,7 +85,7 @@ const PaymentTap: React.FC = () => {
               : "border-gray-200 hover:border-gray-300"
           }`}
         >
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <input
               type="radio"
               id="paypal"
@@ -96,7 +96,7 @@ const PaymentTap: React.FC = () => {
             />
             <label
               htmlFor="paypal"
-              className="ml-3 block text-sm font-medium text-gray-700"
+              className=" block text-sm font-medium text-gray-700"
             >
               {t("methods.cashOnDelivery")}
             </label>
@@ -104,14 +104,14 @@ const PaymentTap: React.FC = () => {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-gray-200">
-        <div className="flex items-center">
+      {/* <div className="pt-4 border-t border-gray-200">
+        <div className="flex items-center gap-2">
           <input
             type="checkbox"
             id="terms"
             className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
           />
-          <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
+          <label htmlFor="terms" className=" block text-sm text-gray-700">
             {t("terms")}
             <a href="#" className="text-indigo-600 hover:text-indigo-500">
               {t("termsLinks.terms")}
@@ -122,7 +122,7 @@ const PaymentTap: React.FC = () => {
             </a>
           </label>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-between pt-4">
         <button

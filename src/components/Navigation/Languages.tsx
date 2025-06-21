@@ -81,7 +81,7 @@ export default function Language({ textColor }: { textColor: string }) {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1  rounded-md focus:outline-none ${textColor}`}
+        className={`flex items-center gap-2 py-1  rounded-md focus:outline-none ${textColor}`}
         aria-label="Select language"
         aria-haspopup="true"
         aria-expanded={isOpen}

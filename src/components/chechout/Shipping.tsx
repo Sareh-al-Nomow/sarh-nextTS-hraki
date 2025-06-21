@@ -86,7 +86,7 @@ const Shipping: React.FC<{
                 key={index}
                 className="flex items-center justify-between border p-4 border-gray-200 rounded-md hover:border-indigo-500 cursor-pointer"
               >
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                   <input
                     type="radio"
                     id={method.method.name}
@@ -101,7 +101,7 @@ const Shipping: React.FC<{
                   />
                   <label
                     htmlFor={method.method.name}
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                    className=" block text-sm font-medium text-gray-700"
                   >
                     {method.method.name}
                   </label>
