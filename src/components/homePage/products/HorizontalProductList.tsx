@@ -7,6 +7,7 @@ import ProductItem from "./ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // const itemVariants = {
 //   hidden: { opacity: 0, x: 20 },
@@ -34,6 +35,8 @@ export default function HorizontalProductList({
   products: FrontEndProductCartItem[];
   id?: number;
 }) {
+  const t = useTranslations("HorizontalProductList");
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -132,7 +135,7 @@ export default function HorizontalProductList({
           }}
           whileTap={{ scale: 0.95 }}
         >
-          Explore All
+          {t("ExploreAll")}
           <motion.span
             animate={{ x: [0, 4, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}

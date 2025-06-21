@@ -9,7 +9,7 @@ import { CartContext } from "@/store/CartContext";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
-// import StarRating from "@/components/shared/StarRating";
+import { useTranslations } from "next-intl";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -51,6 +51,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
   toggleLike,
   likedProducts,
 }) => {
+  const t = useTranslations("ProductItem");
   const { addToCart, isLoadingAddToCart } = useContext(CartContext);
   const { isAuthenticated } = useContext(AuthContext);
   const { openAuthModal } = useContext(AuthModalContext);
@@ -108,7 +109,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                   custom={0}
                   className="bg-black text-white text-xs px-2 py-1 rounded-full font-medium"
                 >
-                  NEW
+                  {t("badges.new")}
                 </motion.span>
               )}
               {product.tags?.map((tag, i) => (
@@ -126,7 +127,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                       : "bg-gradient-to-r from-green-500 to-emerald-500"
                   } text-white shadow-sm`}
                 >
-                  {tag}
+                  {t(`badges.${tag.toLowerCase()}`)}
                 </motion.span>
               ))}
             </div>
@@ -148,7 +149,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 }}
                 className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg hover:bg-gray-800 transition-all"
               >
-                Quick Shop
+                {t("quickShop")}
               </button>
             </motion.div>
           </div>
@@ -171,8 +172,8 @@ const ProductItem: React.FC<ProductItemProp> = ({
               whileTap={{ scale: 0.9 }}
               aria-label={
                 likedProducts.includes(product.id)
-                  ? "Unlike product"
-                  : "Like product"
+                  ? t("ariaLabels.unlike")
+                  : t("ariaLabels.like")
               }
             >
               <FiHeart
@@ -184,26 +185,6 @@ const ProductItem: React.FC<ProductItemProp> = ({
               />
             </motion.button>
           </div>
-
-          {/* Rating
-          {product.rating ? (
-            <div className="flex items-center mt-1">
-              <div className="flex">
-                <StarRating rating={product.rating}></StarRating>
-              </div>
-              <span className="text-xs text-gray-500 ml-1">
-                ({product.rating.toFixed(1)})
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-center mt-1">
-              <div className="flex">
-                <StarRating rating={0}></StarRating>
-              </div>
-              <span className="text-xs text-gray-500 ml-1">
-              </span>
-            </div>
-          )} */}
 
           <div className="mt-3 flex justify-between items-end">
             <div>
@@ -224,7 +205,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 className={`p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-all ${
                   isLoadingAddToCart ? "opacity-70 cursor-wait" : ""
                 }`}
-                aria-label="Add to cart"
+                aria-label={t("ariaLabels.addToCart")}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -235,7 +216,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 <FiShoppingCart className="w-4 h-4" />
               </motion.button>
             ) : (
-              <span className="text-xs text-gray-500">Out of Stock</span>
+              <span className="text-xs text-gray-500">{t("outOfStock")}</span>
             )}
           </div>
         </div>
@@ -273,7 +254,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 <button
                   onClick={() => setQuickViewProduct(null)}
                   className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow hover:bg-white transition z-10"
-                  aria-label="Close quick view"
+                  aria-label={t("ariaLabels.close")}
                 >
                   <FiX className="w-4 h-4 text-gray-800" />
                 </button>
@@ -294,7 +275,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                             : "bg-green-500"
                         } text-white shadow-sm`}
                       >
-                        {tag}
+                        {t(`badges.${tag.toLowerCase()}`)}
                       </span>
                     ))}
                   </div>
@@ -303,16 +284,6 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
               {/* Product Details */}
               <div className="p-6 space-y-4">
-                {/* <div className="flex justify-between items-start">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    {quickViewProduct.name}
-                  </h2>
-                  {quickViewProduct.rating && (
-                    <StarRating rating={quickViewProduct.rating}></StarRating>
-                  )}
-                </div> */}
-
-                {/* Price */}
                 <div className="flex items-center gap-3">
                   <span className="text-xl font-bold text-gray-900">
                     ${quickViewProduct.price}
@@ -339,7 +310,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                       className="flex items-center justify-center gap-2 bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-all font-medium"
                     >
                       <FiShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      {t("addToCart")}
                     </button>
                   ) : (
                     <button
@@ -347,7 +318,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                       className="cursor-not-allowed bg-gray-100 text-gray-400 py-3 rounded-lg flex items-center justify-center gap-2 font-medium"
                     >
                       <FiShoppingCart className="w-4 h-4" />
-                      Out of Stock
+                      {t("outOfStock")}
                     </button>
                   )}
 
@@ -355,7 +326,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                     href={`/product/${quickViewProduct.url_key}`}
                     className="border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition font-medium"
                   >
-                    View Details
+                    {t("viewDetails")}
                   </Link>
                 </div>
               </div>

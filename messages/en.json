@@ -9,7 +9,29 @@
     "viewProfile": "View Profile",
     "searchPlaceholder": "Lookin’ for?",
     "wishlist": "Wishlist",
-    "login": "Login"
+    "login": "Login",
+    "browse": "browse",
+    "BecomeVendor": {
+      "button": "Become a Vendor",
+      "title": "Become a Vendor",
+      "form": {
+        "name": "Your Name",
+        "shopName": "Shop Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "submit": "Submit Application",
+        "success": "Your application has been submitted successfully!"
+      }
+    },
+    "topHeader": {
+      "announcement": {
+        "limited": "LIMITED",
+        "text": "Summer Sale! Get 50% off on all items. Use code:"
+      }
+    },
+    "AnnouncementBar": {
+      "message": "Free shipping on all orders | Use code:"
+    }
   },
   "auth": {
     "login": {
@@ -583,5 +605,95 @@
     "searchResults": "Search Results",
     "viewAll": "View all",
     "noResults": "No results found for"
+  },
+  "shopGrid": {
+    "Toolbar": {
+      "searchPlaceholder": "Search products...",
+      "sortOptions": {
+        "featured": "Featured",
+        "priceLow": "Price: Low to High",
+        "priceHigh": "Price: High to Low"
+      },
+      "filters": "Filters"
+    },
+    "PriceRangeSlider": {
+      "title": "Price Range",
+      "minLabel": "Min:",
+      "maxLabel": "Max:"
+    },
+    "ProductGrid": {
+      "subcategories": "Subcategories",
+      "noProducts": {
+        "title": "No products found",
+        "description": "We couldn't find any items matching your criteria",
+        "action": "Reset filters"
+      }
+    },
+    "FilterSidebar": {
+      "Filters": "Filters",
+      "ResetAll": "Reset all"
+    }
+  },
+  "HorizontalProductList": {
+    "ExploreAll": "Explore All"
+  },
+
+  "ProductDetails": {
+    "title": "Product Details",
+    "colorLabel": "Color: {color}",
+    "keyFeatures": "Key Features",
+    "tabs": {
+      "description": "Description",
+      "additional": "Additional Info",
+      "reviews": "Reviews"
+    },
+    "addToCart": "Add to Cart - ${price}",
+    "quantity": "Quantity",
+    "save": "Save ${amount}",
+    "since": "Since {year}",
+    "addReview": "Add your review",
+    "reviewsCount": "{rating} ({count} reviews)",
+    "share": {
+      "copied": "Product URL copied to clipboard!",
+      "error": "Product information is not available."
+    },
+    "vendor": {
+      "name": "Martini Premium Spirits",
+      "rating": "5"
+    },
+    "error": {
+      "title": "Error",
+      "retry": "Retry"
+    }
+  },
+  "ProductItem": {
+    "badges": {
+      "new": "NEW",
+      "hot": "HOT",
+      "bestseller": "BESTSELLER",
+      "sale": "SALE"
+    },
+    "quickShop": "Quick Shop",
+    "outOfStock": "Out of Stock",
+    "addToCart": "Add to Cart",
+    "viewDetails": "View Details",
+    "ariaLabels": {
+      "like": "Like product",
+      "unlike": "Unlike product",
+      "addToCart": "Add to cart",
+      "close": "Close quick view"
+    }
+  },
+  "Products": {
+    "header": {
+      "title": "New Arrivals",
+      "count": "Showing {shown} of {total} products"
+    },
+    "viewMore": "View More",
+    "empty": "No products available",
+    "error": {
+      "loading": "Failed to load products",
+      "retry": "Retry"
+    }
   }
 }

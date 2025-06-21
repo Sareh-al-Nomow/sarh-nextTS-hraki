@@ -2,8 +2,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiArrowRight } from "react-icons/fi";
+import { useTranslations, useLocale } from "next-intl";
 
 const EcommerceHeader = () => {
+  const t = useTranslations("navbar.topHeader");
+  const locale = useLocale();
+  const isRTL = locale === "ar"; // Add other RTL languages if needed
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(true);
 
   return (
@@ -17,21 +21,23 @@ const EcommerceHeader = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
+            dir={isRTL ? "rtl" : "ltr"}
           >
             <div className="container mx-auto px-4 py-2 flex items-center justify-between">
               <motion.div
-                className="flex items-center gap-2 cursor-pointer"
-                whileHover={{ x: 2 }}
+                className={`flex items-center gap-2 cursor-pointer ${
+                  isRTL ? "flex-row-reverse" : ""
+                }`}
+                whileHover={{ x: isRTL ? -2 : 2 }}
                 onClick={() => (window.location.href = "#sale")}
               >
                 <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs font-bold">
-                  LIMITED
+                  {t("announcement.limited")}
                 </span>
-                <p>
-                  Summer Sale! Get 50% off on all items. Use code:{" "}
-                  <strong>ali</strong>
+                <p className={isRTL ? "text-right" : "text-left"}>
+                  {t("announcement.text")} <strong>ali</strong>
                 </p>
-                <FiArrowRight className="ml-1" />
+                <FiArrowRight className={isRTL ? "mr-1 rotate-180" : "ml-1"} />
               </motion.div>
 
               <motion.button

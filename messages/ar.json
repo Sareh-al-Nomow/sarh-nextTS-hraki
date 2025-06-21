@@ -9,7 +9,29 @@
     "viewProfile": "عرض الملف الشخصي",
     "searchPlaceholder": "ما الذي تبحث عنه؟",
     "wishlist": "قائمة الرغبات",
-    "login" : "تسجيل الدخول"
+    "login": "تسجيل الدخول",
+    "browse": "تصفح",
+    "BecomeVendor": {
+      "button": "كن بائعًا",
+      "title": "كن بائعًا",
+      "form": {
+        "name": "اسمك",
+        "shopName": "اسم المتجر",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "submit": "تقديم الطلب",
+        "success": "تم تقديم طلبك بنجاح!"
+      }
+    },
+    "topHeader": {
+      "announcement": {
+        "limited": "محدود",
+        "text": "تخفيضات الصيف! احصل على خصم 50٪ على جميع المنتجات. استخدم الكود:"
+      }
+    },
+    "AnnouncementBar": {
+      "message": "شحن مجاني على جميع الطلبات | استخدم الكود:"
+    }
   },
   "auth": {
     "login": {
@@ -395,7 +417,6 @@
       "cookies": "ملفات تعريف الارتباط"
     }
   },
-
   "account": {
     "title": "إعدادات الحساب",
     "subtitle": "إدارة معلوماتك الشخصية والتفضيلات",
@@ -581,5 +602,96 @@
     "searchResults": "نتائج البحث",
     "viewAll": "عرض الكل",
     "noResults": "لم يتم العثور على نتائج لـ"
+  },
+
+  "shopGrid": {
+    "Toolbar": {
+      "searchPlaceholder": "ابحث عن المنتجات...",
+      "sortOptions": {
+        "featured": "مميز",
+        "priceLow": "السعر: من الأقل للأعلى",
+        "priceHigh": "السعر: من الأعلى للأقل"
+      },
+      "filters": "الفلاتر"
+    },
+    "PriceRangeSlider": {
+      "title": "نطاق السعر",
+      "minLabel": "الحد الأدنى:",
+      "maxLabel": "الحد الأقصى:"
+    },
+    "ProductGrid": {
+      "subcategories": "الفئات الفرعية",
+      "noProducts": {
+        "title": "لا توجد منتجات",
+        "description": "لم نتمكن من العثور على أي عناصر تطابق معاييرك",
+        "action": "إعادة تعيين الفلاتر"
+      }
+    },
+    "FilterSidebar": {
+      "Filters": "فلاتر",
+      "ResetAll": "إعادة تعيين الفلاتر"
+    }
+  },
+  "HorizontalProductList": {
+    "ExploreAll": "عرض الكل"
+  },
+
+  "ProductDetails": {
+    "title": "تفاصيل المنتج",
+    "colorLabel": "اللون: {color}",
+    "keyFeatures": "الميزات الرئيسية",
+    "tabs": {
+      "description": "الوصف",
+      "additional": "معلومات إضافية",
+      "reviews": "التقييمات"
+    },
+    "addToCart": "أضف إلى السلة - {price} دولار",
+    "quantity": "الكمية",
+    "save": "وفر {amount} دولار",
+    "since": "منذ عام {year}",
+    "addReview": "أضف تقييمك",
+    "reviewsCount": "{rating} ({count} تقييمات)",
+    "share": {
+      "copied": "تم نسخ رابط المنتج إلى الحافظة!",
+      "error": "معلومات المنتج غير متوفرة."
+    },
+    "vendor": {
+      "name": "مارتيني المشروبات الممتازة",
+      "rating": "5"
+    },
+    "error": {
+      "title": "خطأ",
+      "retry": "إعادة المحاولة"
+    }
+  },
+  "ProductItem": {
+    "badges": {
+      "new": "جديد",
+      "hot": "مميز",
+      "bestseller": "الأكثر مبيعاً",
+      "sale": "خصم"
+    },
+    "quickShop": "شراء سريع",
+    "outOfStock": "غير متوفر",
+    "addToCart": "أضف إلى السلة",
+    "viewDetails": "عرض التفاصيل",
+    "ariaLabels": {
+      "like": "إعجاب بالمنتج",
+      "unlike": "إزالة الإعجاب عن المنتج",
+      "addToCart": "إضافة إلى السلة",
+      "close": "إغلاق العرض السريع"
+    }
+  },
+  "Products": {
+    "header": {
+      "title": "وصل حديثاً",
+      "count": "عرض {shown} من أصل {total} منتج"
+    },
+    "viewMore": "عرض المزيد",
+    "empty": "لا توجد منتجات متاحة",
+    "error": {
+      "loading": "فشل تحميل المنتجات",
+      "retry": "إعادة المحاولة"
+    }
   }
 }

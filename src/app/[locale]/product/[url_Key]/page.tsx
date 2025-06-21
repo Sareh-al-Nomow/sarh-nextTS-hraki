@@ -28,6 +28,7 @@ import { AuthContext } from "@/store/AuthContext";
 import { CartContext } from "@/store/CartContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
@@ -39,6 +40,7 @@ const colors = [
   { name: "onyx", hex: "#353839" },
 ];
 export default function ProductDetails({ params }: ProductDetailsProps) {
+  const t = useTranslations("ProductDetails");
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<FrontendProduct | null>();
   const [currentImage, setCurrentImage] = useState(0);
@@ -171,7 +173,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Retry
+          {t("error.retry")}
         </button>
       </div>
     );
@@ -180,7 +182,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const handleShareProduct = async () => {
     try {
       if (!product) {
-        toast.error("Product information is not available.");
+        toast.error(t("share.error"));
         return;
       }
       const productUrl = `${window.location.origin}/product/${product.url_key}`;
@@ -190,20 +192,14 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
         url: productUrl,
       };
 
-      // Check if the Web Share API is available (mobile devices)
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        // Fallback for desktop browsers
         await navigator.clipboard.writeText(productUrl);
-        alert("Product URL copied to clipboard!");
-
-        // Alternatively, you could implement social media sharing here
-        // or open a modal with sharing options
+        alert(t("share.copied"));
       }
     } catch (error) {
       console.error("Error sharing product:", error);
-      // Handle error appropriately
     }
   };
 
@@ -226,7 +222,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-xl font-semibold text-gray-800"
         >
-          Product Details
+          {t("title")}
         </motion.h1>
       </header>
 
@@ -263,7 +259,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                         product?.images?.[currentImage]?.origin_image ??
                         "https://sarehnomow.fsn1.your-objectstorage.com/images/2d4aec3a-850a-471b-a61e-194053ec7331.png"
                       }
-                      alt={product?.name ?? "Product image"}
+                      alt={product?.name ?? t("title")}
                       fill
                       className="object-contain"
                       priority
@@ -330,7 +326,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                           <div className="relative aspect-square h-16 sm:h-20 md:h-28 w-full">
                             <Image
                               src={image.origin_image}
-                              alt={`Thumbnail ${index + 1}`}
+                              alt={`${t("title")} ${index + 1}`}
                               fill
                               className="object-contain"
                               sizes="(max-width: 768px) 25vw, 150px"
@@ -361,17 +357,17 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 <a href={"/store"} className="group inline-block">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm sm:text-lg font-medium text-gray-900 group-hover:text-black transition-colors">
-                      Martini Premium Spirits{" "}
+                      {t("vendor.name")}{" "}
                     </span>
                     <div className="flex items-center">
                       <FiStar className="h-3 w-3 sm:h-4 sm:w-4 text-black fill-black" />
                       <span className="ml-1 text-sm sm:text-base text-gray-600">
-                        5
+                        {t("vendor.rating")}
                       </span>
                     </div>
                     <span className="text-gray-400">•</span>
                     <span className="text-xs sm:text-sm text-gray-500">
-                      Since 1949
+                      {t("since", { year: 1949 })}
                     </span>
                   </div>
                 </a>
@@ -383,11 +379,13 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                   <StarRating rating={product?.rating ?? 0} />
                 </div>
                 <span className="text-sm sm:text-base text-gray-600">
-                  {product?.meanRating?.toFixed(1)} (
-                  {productReviews?.length || 0} reviews)
+                  {t("reviewsCount", {
+                    rating: product?.meanRating?.toFixed(1) || "0",
+                    count: productReviews?.length || 0,
+                  })}
                 </span>
                 <button className="text-xs sm:text-sm text-gray-500 underline ml-2 sm:ml-4">
-                  Add your review
+                  {t("addReview")}
                 </button>
               </div>
 
@@ -406,8 +404,11 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                           ${product.originalPrice}
                         </span>
                         <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
-                          Save $
-                          {(product.originalPrice - product.price).toFixed(2)}
+                          {t("save", {
+                            amount: (
+                              product.originalPrice - product.price
+                            ).toFixed(2),
+                          })}
                         </span>
                       </>
                     )}
@@ -417,7 +418,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
               {/* Color Options */}
               <div className="mb-6 sm:mb-8">
                 <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3 uppercase tracking-wider">
-                  Color: {selectedColor}
+                  {t("colorLabel", { color: selectedColor })}
                 </h3>
                 <div className="flex gap-2 sm:gap-3">
                   {colors.map((color) => (
@@ -461,7 +462,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
               {/* Features */}
               <div className="mb-6 sm:mb-8">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  Key Features
+                  {t("keyFeatures")}
                 </h3>
                 <ul className="space-y-2">
                   {product &&
@@ -485,9 +486,9 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
               <div className="border-b border-gray-200 mb-6 sm:mb-8 overflow-x-auto">
                 <nav className="flex gap-4 sm:gap-6 md:gap-8 min-w-max">
                   {[
-                    { id: "description", label: "Description" },
-                    { id: "additional", label: "Additional Info" },
-                    { id: "reviews", label: "Reviews" },
+                    { id: "description", label: t("tabs.description") },
+                    { id: "additional", label: t("tabs.additional") },
+                    { id: "reviews", label: t("tabs.reviews") },
                   ].map((tab) => (
                     <button
                       key={tab.id}
@@ -577,8 +578,11 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                   >
                     <FiShoppingCart className="text-lg sm:text-xl" />
                     <span>
-                      Add to Cart - $
-                      {product ? (product.price * quantity).toFixed(2) : "0.00"}
+                      {t("addToCart", {
+                        price: product
+                          ? (product.price * quantity).toFixed(2)
+                          : "0.00",
+                      })}
                     </span>
                   </motion.button>
                   <div className="flex gap-3 sm:gap-2 w-full sm:w-auto justify-center sm:justify-normal">

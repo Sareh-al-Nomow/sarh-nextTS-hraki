@@ -9,10 +9,12 @@ import Spinner from "../../UI/SpinnerLoading";
 import { getProducts } from "@/lib/axios/getProductsAxios";
 import { transformProduct } from "@/utils/trnsformProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
+import { useTranslations } from "next-intl";
 
 const ITEMS_PER_PAGE = 10;
 
 export default function Products() {
+  const t = useTranslations("Products");
   const [likedProducts, setLikedProducts] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState<FrontEndProductCartItem[]>([]);
@@ -33,7 +35,6 @@ export default function Products() {
       ),
   });
 
-  // Handle successful query response
   useEffect(() => {
     if (data) {
       const newProducts = data.data.map(
@@ -44,7 +45,6 @@ export default function Products() {
     }
   }, [data, currentPage]);
 
-  // Rest of your component remains the same...
   const toggleLike = (product: FrontEndProductCartItem) => {
     const stored = localStorage.getItem("wishlist");
     let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
@@ -75,12 +75,12 @@ export default function Products() {
   if (isError) {
     return (
       <div className="text-center py-10">
-        <p className="text-red-500">Failed to load products</p>
+        <p className="text-red-500">{t("error.loading")}</p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Retry
+          {t("error.retry")}
         </button>
       </div>
     );
@@ -89,12 +89,11 @@ export default function Products() {
   if (allProducts.length === 0 && !isLoading) {
     return (
       <div className="text-center py-10">
-        <p>No products available</p>
+        <p>{t("empty")}</p>
       </div>
     );
   }
 
-  console.log(allProducts);
   return (
     <div className="bg-gray-50 min-h-screen bg-gradient-to-r from-blue-50 to-cyan-50">
       {/* Header */}
@@ -103,11 +102,14 @@ export default function Products() {
         animate={{ opacity: 1 }}
         className="px-6 py-1 bg-gradient-to-r from-blue-50 to-cyan-50"
       >
-        <h1 className="text-3xl font-bold text-gray-900 pr-text">
-          New Arrivals
+        <h1 className="text-3xl font-bold text-gray-900 pr-text text-center">
+          {t("header.title")}
         </h1>
-        <p className="text-gray-600 mt-2">
-          Showing {allProducts.length} of {data?.total || 0} products
+        <p className="text-gray-600 mt-2 text-center">
+          {t("header.count", {
+            shown: allProducts.length,
+            total: data?.total || 0,
+          })}
         </p>
       </motion.header>
 
@@ -152,9 +154,7 @@ export default function Products() {
             className="px-8 py-3 mb-8 bg-gradient-to-r from-[#219EBC] to-[#2EC4B6] text-white rounded-full font-medium shadow-md hover:shadow-lg transition"
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
-            View More
-            {/* ({data?.total ? data.total - allProducts.length : 0}{" "}
-            remaining) */}
+            {t("viewMore")}
           </motion.button>
         </motion.div>
       )}
