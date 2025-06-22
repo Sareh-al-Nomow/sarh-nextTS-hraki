@@ -6,31 +6,32 @@ export async function convertCurrency(
   if (from === to) return amount;
 
   try {
-    // جلب أسعار العملات مقابل from (الأساسية)
     const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
 
     if (!res.ok) {
-      console.error("Failed to fetch rates:", res.status);
+      console.error("❌ Failed to fetch currency rates:", res.status);
       return amount;
     }
 
     const data = await res.json();
 
-    if (data.result !== "success" || !data.rates) {
-      console.error("Invalid data from rates API:", data);
+    if (data.result !== "success" || typeof data.rates !== "object") {
+      console.error("❌ Invalid response structure:", data);
       return amount;
     }
 
     const rate = data.rates[to];
 
-    if (!rate || typeof rate !== "number") {
-      console.error(`Rate for currency ${to} not found`);
+    if (typeof rate !== "number" || isNaN(rate)) {
+      console.warn(
+        `⚠️ Currency '${to}' is not supported. Using default amount.`
+      );
       return amount;
     }
 
     return amount * rate;
   } catch (error) {
-    console.error("Error fetching currency rates:", error);
+    console.error("❌ Error converting currency:", error);
     return amount;
   }
 }

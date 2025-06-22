@@ -13,7 +13,7 @@ export function transformProductCartItem(
       "/placeholder-product.jpg",
     url_key: product.description?.url_key || "",
     price: product.price ?? 0,
-    originalPrice: product.old_price ? product.old_price.toFixed(2) : undefined,
+    originalPrice: product.old_price ?? undefined,
     rating: product.meanRating || 0,
     tags: [
       !product.inventory?.stock_availability ? "OUT OF STOCK" : undefined,

@@ -7,9 +7,9 @@ import { ProductsResponse } from "@/lib/models/productsModal";
 import ProductItem from "./ProductItem";
 import Spinner from "../../UI/SpinnerLoading";
 import { getProducts } from "@/lib/axios/getProductsAxios";
-import { transformProduct } from "@/utils/trnsformProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import { useTranslations } from "next-intl";
+import { transformProductCartItem } from "@/utils/trnsformProductCartItem";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -38,7 +38,7 @@ export default function Products() {
   useEffect(() => {
     if (data) {
       const newProducts = data.data.map(
-        transformProduct
+        transformProductCartItem
       ) as FrontEndProductCartItem[];
       setAllProducts((prev) => [...prev, ...newProducts]);
       setHasMore(currentPage < (data.totalPages || 1));

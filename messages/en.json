@@ -635,9 +635,11 @@
     }
   },
   "HorizontalProductList": {
+    "dir": "ltr",
+    "ScrollPrevious": "Scroll previous",
+    "ScrollNext": "Scroll next",
     "ExploreAll": "Explore All"
   },
-
   "ProductDetails": {
     "title": "Product Details",
     "colorLabel": "Color: {color}",

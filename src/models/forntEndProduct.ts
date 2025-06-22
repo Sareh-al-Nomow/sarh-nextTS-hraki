@@ -17,7 +17,7 @@ export interface FrontendProduct {
   name: string;
   url_key: string;
   price: number;
-  originalPrice?: string;
+  originalPrice?: number | undefined;
   image: string;
   rating: number;
   colors?: string[];

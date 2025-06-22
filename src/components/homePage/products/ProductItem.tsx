@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -61,7 +60,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
     useState<FrontEndProductCartItem | null>(null);
   const [isHovering, setIsHovering] = useState(false);
 
-  const { userCurrency, rate } = useCurrency();
+  const { rate, userCurrency } = useCurrency();
 
   function converPrice(price: number) {
     return price * rate;
@@ -87,10 +86,10 @@ const ProductItem: React.FC<ProductItemProp> = ({
         whileHover="hover"
         onHoverStart={() => setIsHovering(true)}
         onHoverEnd={() => setIsHovering(false)}
-        className="flex-shrink-0 w-full max-w-[250px] bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden relative mb-4 group cursor-pointer transition-all duration-300 border border-gray-100 hover:border-gray-200"
+        className="flex-shrink-0 w-full max-w-[280px] bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden relative mb-4 cursor-pointer transition-all duration-300 border border-gray-100 hover:border-gray-200 flex flex-col h-full"
       >
         {/* Product Image Container */}
-        <div className="relative aspect-square overflow-hidden">
+        <div className="relative aspect-square overflow-hidden flex-1">
           <div
             onClick={(e) => {
               e.preventDefault();
@@ -163,9 +162,9 @@ const ProductItem: React.FC<ProductItemProp> = ({
         </div>
 
         {/* Product Info */}
-        <div className="p-4">
-          <div className="flex justify-between items-start">
-            <h3 className="font-bold text-gray-900 line-clamp-2 text-base leading-tight">
+        <div className="p-4 flex flex-col flex-1">
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-gray-900 text-base leading-tight min-h-[3.5rem] line-clamp-2">
               {product.name}
             </h3>
 
@@ -175,7 +174,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 e.stopPropagation();
                 toggleLike(product);
               }}
-              className="p-1"
+              className="p-1 flex-shrink-0"
               whileTap={{ scale: 0.9 }}
               aria-label={
                 likedProducts.includes(product.id)
@@ -187,20 +186,21 @@ const ProductItem: React.FC<ProductItemProp> = ({
                 className={`${
                   likedProducts.includes(product.id)
                     ? "fill-red-500 text-red-500"
-                    : "text-gray-400 group-hover:text-gray-600"
+                    : "text-gray-400 hover:text-gray-600"
                 } w-5 h-5 transition-colors`}
               />
             </motion.button>
           </div>
 
           <div className="mt-3 flex justify-between items-end">
-            <div>
+            <div className="flex flex-col">
               <span className="font-bold text-gray-900 text-lg">
                 {userCurrency} {converPrice(Number(product.price)).toFixed(2)}
               </span>
               {product.originalPrice && (
-                <span className="text-sm text-gray-400 line-through ml-2">
-                  ${product.originalPrice}
+                <span className="text-sm text-gray-400 line-through">
+                  {userCurrency}{" "}
+                  {converPrice(Number(product.originalPrice)).toFixed(2)}
                 </span>
               )}
             </div>
@@ -291,13 +291,21 @@ const ProductItem: React.FC<ProductItemProp> = ({
 
               {/* Product Details */}
               <div className="p-6 space-y-4">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {quickViewProduct.name}
+                </h2>
+
                 <div className="flex items-center gap-3">
                   <span className="text-xl font-bold text-gray-900">
-                    ${quickViewProduct.price}
+                    {userCurrency}{" "}
+                    {converPrice(Number(quickViewProduct.price)).toFixed(2)}
                   </span>
                   {quickViewProduct.originalPrice && (
                     <span className="text-sm text-gray-400 line-through">
-                      ${quickViewProduct.originalPrice}
+                      {userCurrency}{" "}
+                      {converPrice(
+                        Number(quickViewProduct.originalPrice)
+                      ).toFixed(2)}
                     </span>
                   )}
                 </div>

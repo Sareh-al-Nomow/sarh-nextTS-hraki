@@ -4,7 +4,7 @@ export interface FrontEndProductCartItem {
   image: string; // URL to the image
   url_key: string; // used for the product detail page
   price: string | number;
-  originalPrice?: string | number;
+  originalPrice?: number;
   rating: number; // from 0 to 5
   isNew?: boolean;
   tags?: string[]; // e.g., ["HOT", "NEW"]

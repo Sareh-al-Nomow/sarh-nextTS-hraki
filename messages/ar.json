@@ -632,8 +632,12 @@
       "ResetAll": "إعادة تعيين الفلاتر"
     }
   },
+
   "HorizontalProductList": {
-    "ExploreAll": "عرض الكل"
+    "dir": "ltr",
+    "ScrollPrevious": "Scroll previous",
+    "ScrollNext": "Scroll next",
+    "ExploreAll": "عرض المزيد"
   },
 
   "ProductDetails": {

@@ -7,9 +7,7 @@ export function transformProduct(product: Product): FrontendProduct {
     uuid: product.uuid,
     name: product.description?.name || "Unnamed Product",
     price: product.price ?? 0,
-    originalPrice: product.old_price
-      ? `$${product.old_price.toFixed(2)}`
-      : undefined,
+    originalPrice: product.old_price ?? undefined,
     image:
       product.images?.find((img) => img.is_main)?.origin_image ||
       product.images?.[0]?.origin_image,

@@ -10,6 +10,7 @@ import Spinner from "@/components/UI/SpinnerLoading";
 import Image from "next/image";
 import { BiX } from "react-icons/bi";
 import { useLocale, useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 const CartPage = () => {
   const {
@@ -24,6 +25,12 @@ const CartPage = () => {
     applyCoupon,
     deleteAppliedCoupon,
   } = useContext(CartContext);
+
+  const { rate, userCurrency } = useCurrency();
+
+  function converPrice(price: number) {
+    return price * rate;
+  }
 
   const t = useTranslations("cart");
   const locale = useLocale();
@@ -132,7 +139,7 @@ const CartPage = () => {
                         transition={{ delay: index * 0.1 }}
                         className="p-6"
                       >
-                        <div className="flex flex-col sm:flex-row">
+                        <div className="flex flex-col gap-4 sm:flex-row">
                           <div className="w-24 h-24 rounded-md bg-gray-200 overflow-hidden">
                             <Image
                               src={item.image}
@@ -144,7 +151,7 @@ const CartPage = () => {
                             />
                           </div>
 
-                          <div className="mt-4 sm:mt-0 sm:ml-6 flex-grow">
+                          <div className="mt-4 sm:mt-0 flex-grow">
                             <div className="flex justify-between">
                               <h3 className="text-lg font-medium text-gray-900">
                                 {item.product_name}
@@ -217,7 +224,12 @@ const CartPage = () => {
                               </div>
 
                               <p className="text-lg font-medium text-gray-900">
-                                ${(item.product_price * item.qty).toFixed(2)}
+                                {userCurrency}{" "}
+                                {converPrice(
+                                  Number(
+                                    (item.product_price * item.qty).toFixed(2)
+                                  )
+                                ).toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -249,7 +261,10 @@ const CartPage = () => {
                       {t("orderSummary.subtotal")}
                     </span>
                     <span className="text-gray-900">
-                      ${summaryCart.subTotal ?? 0}
+                      {userCurrency}{" "}
+                      {converPrice(Number(summaryCart.subTotal ?? 0)).toFixed(
+                        2
+                      )}
                     </span>
                   </div>
 
@@ -258,7 +273,8 @@ const CartPage = () => {
                       {t("orderSummary.tax")}
                     </span>
                     <span className="text-gray-900">
-                      ${summaryCart.tax ?? 0}
+                      {userCurrency}{" "}
+                      {converPrice(Number(summaryCart.tax ?? 0)).toFixed(2)}
                     </span>
                   </div>
 
@@ -268,7 +284,10 @@ const CartPage = () => {
                         {t("orderSummary.discount")}
                       </span>
                       <span className="text-red-300 line-through">
-                        ${summaryCart.discount ?? 0}
+                        {userCurrency}{" "}
+                        {converPrice(Number(summaryCart.discount ?? 0)).toFixed(
+                          2
+                        )}
                       </span>
                     </div>
                   )}
@@ -278,7 +297,10 @@ const CartPage = () => {
                       {t("orderSummary.total")}
                     </span>
                     <span className="font-medium text-gray-900">
-                      ${summaryCart.grandTotal ?? 0}
+                      {userCurrency}{" "}
+                      {converPrice(Number(summaryCart.grandTotal ?? 0)).toFixed(
+                        2
+                      )}
                     </span>
                   </div>
                 </div>

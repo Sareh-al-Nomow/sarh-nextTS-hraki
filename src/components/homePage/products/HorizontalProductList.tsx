@@ -9,23 +9,6 @@ import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-// const itemVariants = {
-//   hidden: { opacity: 0, x: 20 },
-//   visible: {
-//     opacity: 1,
-//     x: 0,
-//     transition: {
-//       type: "spring",
-//       stiffness: 100,
-//       damping: 10,
-//     },
-//   },
-//   hover: {
-//     y: -5,
-//     transition: { duration: 0.2 },
-//   },
-// };
-
 export default function HorizontalProductList({
   title = "Featured Products",
   id = 0,
@@ -36,6 +19,7 @@ export default function HorizontalProductList({
   id?: number;
 }) {
   const t = useTranslations("HorizontalProductList");
+  const isRTL = t("dir") === "rtl"; // Add a translation key for direction
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -45,7 +29,6 @@ export default function HorizontalProductList({
 
   const router = useRouter();
 
-  // Check if content overflows
   useEffect(() => {
     const stored = localStorage.getItem("wishlist");
     const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
@@ -70,7 +53,14 @@ export default function HorizontalProductList({
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -400 : 400;
+      // Reverse the scroll direction for RTL languages
+      const effectiveDirection = isRTL
+        ? direction === "left"
+          ? "right"
+          : "left"
+        : direction;
+
+      const scrollAmount = effectiveDirection === "left" ? -400 : 400;
       scrollRef.current.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
@@ -81,8 +71,16 @@ export default function HorizontalProductList({
   const checkScrollPosition = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+      // For RTL, we need to check scroll position differently
+      if (isRTL) {
+        // In RTL, the scrollLeft starts at 0 and goes negative
+        const maxScrollLeft = scrollWidth - clientWidth;
+        setShowLeftArrow(scrollLeft < 0);
+        setShowRightArrow(scrollLeft > -maxScrollLeft + 1);
+      } else {
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+      }
     }
   };
 
@@ -110,7 +108,7 @@ export default function HorizontalProductList({
   }
 
   return (
-    <div className="pt-8 relative group">
+    <div className="pt-8 relative group" dir={isRTL ? "rtl" : "ltr"}>
       <motion.div
         className="flex justify-between items-center w-full px-4 md:px-12 mb-6"
         initial={{ opacity: 0, y: -10 }}
@@ -127,7 +125,7 @@ export default function HorizontalProductList({
 
         <motion.button
           onClick={viewAllHandler}
-          className=" cursor-pointer px-5 py-2.5 rounded-xl font-semibold text-white pr-bg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 flex items-center gap-2"
+          className="cursor-pointer px-5 py-2.5 rounded-xl font-semibold text-white pr-bg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 flex items-center gap-2"
           whileHover={{
             scale: 1.05,
             background: "linear-gradient(to right, #212249, #023047)",
@@ -140,23 +138,34 @@ export default function HorizontalProductList({
             animate={{ x: [0, 4, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
           >
-            →
+            {isRTL ? "←" : "→"}
           </motion.span>
         </motion.button>
       </motion.div>
 
       <div className="relative">
-        {/* Left Arrow */}
+        {/* Left Arrow - becomes "previous" arrow */}
         {isOverflowing && showLeftArrow && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => scroll("left")}
-            className="absolute left-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-r from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            className={`absolute ${
+              isRTL ? "right-0" : "left-0"
+            } top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-r from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center`}
+            style={{
+              background: isRTL
+                ? "linear-gradient(to left, white, transparent)"
+                : "linear-gradient(to right, white, transparent)",
+            }}
             whileHover={{ scale: 1.1 }}
-            aria-label="Scroll left"
+            aria-label={t("ScrollPrevious")}
           >
-            <FiChevronLeft className="h-6 w-6 text-gray-800" />
+            {isRTL ? (
+              <FiChevronRight className="h-6 w-6 text-gray-800" />
+            ) : (
+              <FiChevronLeft className="h-6 w-6 text-gray-800" />
+            )}
           </motion.button>
         )}
 
@@ -168,6 +177,7 @@ export default function HorizontalProductList({
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
+            direction: isRTL ? "rtl" : "ltr",
           }}
         >
           {products.map((product) => (
@@ -180,17 +190,28 @@ export default function HorizontalProductList({
           ))}
         </div>
 
-        {/* Right Arrow */}
+        {/* Right Arrow - becomes "next" arrow */}
         {isOverflowing && showRightArrow && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => scroll("right")}
-            className="absolute right-0 top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-l from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            className={`absolute ${
+              isRTL ? "left-0" : "right-0"
+            } top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-l from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center`}
+            style={{
+              background: isRTL
+                ? "linear-gradient(to right, white, transparent)"
+                : "linear-gradient(to left, white, transparent)",
+            }}
             whileHover={{ scale: 1.1 }}
-            aria-label="Scroll right"
+            aria-label={t("ScrollNext")}
           >
-            <FiChevronRight className="h-6 w-6 text-gray-800" />
+            {isRTL ? (
+              <FiChevronLeft className="h-6 w-6 text-gray-800" />
+            ) : (
+              <FiChevronRight className="h-6 w-6 text-gray-800" />
+            )}
           </motion.button>
         )}
       </div>
