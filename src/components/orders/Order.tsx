@@ -230,19 +230,19 @@ const Order: React.FC<OrderProp> = ({
                 )}
 
                 <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
-                  {order.status === "delivered" && (
-                    <h2
-                      onClick={toggleOpenModal}
-                      className="ml-3 px-4 py-2 pr-text rounded-md font-medium cursor-pointer"
-                    >
-                      {t("actions.return")}
-                    </h2>
-                  )}
-                  {order.status === "delivered" && (
-                    <button className="ml-3 px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-700">
-                      {t("actions.buyAgain")}
-                    </button>
-                  )}
+                  {/* {order.status === "delivered" && ( */}
+                  <h2
+                    onClick={toggleOpenModal}
+                    className="ml-3 px-4 py-2 pr-text rounded-md font-medium cursor-pointer"
+                  >
+                    {t("actions.return")}
+                  </h2>
+                  {/* // )} */}
+                  {/* {order.status === "delivered" && ( */}
+                  <button className="ml-3 px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-700">
+                    {t("actions.buyAgain")}
+                  </button>
+                  {/* )} */}
                 </div>
               </div>
             </motion.div>

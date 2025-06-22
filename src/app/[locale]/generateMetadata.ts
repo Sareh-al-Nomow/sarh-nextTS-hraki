@@ -52,12 +52,12 @@ export async function generateMetadata({
       description: settings.meta_description,
       images: [settings.store_logo],
     },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}`,
-      languages: {
-        en: `${process.env.NEXT_PUBLIC_SITE_URL}/en`,
-        ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar`,
-      },
-    },
+    // alternates: {
+    //   canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}`,
+    //   languages: {
+    //     en: `${process.env.NEXT_PUBLIC_SITE_URL}/en`,
+    //     ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar`,
+    //   },
+    // },
   };
 }

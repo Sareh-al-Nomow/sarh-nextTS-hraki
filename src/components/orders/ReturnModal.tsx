@@ -328,10 +328,10 @@ const ReturnModal: React.FC<RetrunModalProp> = ({
               <h3 className="font-medium text-gray-700">
                 Order #{order.order_id}
               </h3>
-              <label className="flex items-center text-sm text-gray-600 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                  className=" h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                   checked={
                     Object.values(selectedItems).every(
                       (item) => item.checked
