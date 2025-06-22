@@ -25,7 +25,6 @@ export default function PremiumNavWidget() {
   const { isAuthenticated, user } = useContext(AuthContext);
 
   const [groups, setGroups] = useState<Group[]>([]);
-  console.log(groups);
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
@@ -38,7 +37,6 @@ export default function PremiumNavWidget() {
     queryFn: getBrands,
   });
 
-  console.log(brandsData);
 
   const {
     data: categoriesData,

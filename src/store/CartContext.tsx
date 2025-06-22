@@ -188,7 +188,6 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
   });
 
   const updateCartState = useCallback((cart: Cart) => {
-    console.log("updated cart items  :", cart.items);
     setCartItems(cart.items);
     setCartQuantity(cart.total_qty);
     setSummaryCart({

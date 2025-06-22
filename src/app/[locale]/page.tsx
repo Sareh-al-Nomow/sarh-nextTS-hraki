@@ -62,8 +62,6 @@ export default function Home() {
     (collection) => collection.type === "banner"
   );
 
-  // Debugging logs - remove in production
-  console.log("All collections:", data?.collections);
 
   return (
     <>

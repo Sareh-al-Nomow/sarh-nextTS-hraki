@@ -19,7 +19,6 @@ export default function PremiumUserMenu() {
   const t = useTranslations("accountCard");
   const locale = useLocale();
   const isRTL = locale === "ar"; // Add other RTL languages if needed
-  console.log(isRTL);
 
   const { user, logout } = useContext(AuthContext);
   const router = useRouter();

@@ -74,8 +74,6 @@ export default function SearchField() {
     enabled: searchTerm.trim() !== "", // لا تنفذ الاستعلام إذا كان الحقل فارغ
   });
 
-  console.log(resultData);
-
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
