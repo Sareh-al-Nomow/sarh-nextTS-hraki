@@ -10,6 +10,7 @@ import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import { useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -59,6 +60,12 @@ const ProductItem: React.FC<ProductItemProp> = ({
   const [quickViewProduct, setQuickViewProduct] =
     useState<FrontEndProductCartItem | null>(null);
   const [isHovering, setIsHovering] = useState(false);
+
+  const { userCurrency, rate } = useCurrency();
+
+  function converPrice(price: number) {
+    return price * rate;
+  }
 
   function handleAddToCart() {
     if (isAuthenticated) {
@@ -189,7 +196,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
           <div className="mt-3 flex justify-between items-end">
             <div>
               <span className="font-bold text-gray-900 text-lg">
-                ${product.price}
+                {userCurrency} {converPrice(Number(product.price)).toFixed(2)}
               </span>
               {product.originalPrice && (
                 <span className="text-sm text-gray-400 line-through ml-2">

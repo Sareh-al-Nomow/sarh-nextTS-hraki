@@ -7,13 +7,15 @@ import {
   FiFacebook,
   FiTwitter,
   FiInstagram,
-  FiYoutube,
   FiCreditCard,
   FiTruck,
   FiShield,
+  FiPrinter,
 } from "react-icons/fi";
+import { useSettings } from "@/store/SettingsContext";
 
 export default function Footer() {
+  const settings = useSettings();
   const t = useTranslations("footer");
 
   return (
@@ -35,17 +37,17 @@ export default function Footer() {
               {t("description")}
             </p>
             <div className="flex justify-center sm:justify-start space-x-4">
-              <Link href="#">
+              <Link href={settings.social_media_links.facebook}>
                 <FiFacebook className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
               </Link>
-              <Link href="#">
+              <Link href={settings.social_media_links.twitter}>
                 <FiTwitter className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
               </Link>
-              <Link href="#">
+              <Link href={settings.social_media_links.instagram}>
                 <FiInstagram className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
               </Link>
-              <Link href="#">
-                <FiYoutube className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
+              <Link href={settings.social_media_links.pinterest}>
+                <FiPrinter className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
               </Link>
             </div>
           </motion.div>
