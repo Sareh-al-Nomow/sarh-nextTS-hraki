@@ -86,7 +86,7 @@ const ProductItem: React.FC<ProductItemProp> = ({
         whileHover="hover"
         onHoverStart={() => setIsHovering(true)}
         onHoverEnd={() => setIsHovering(false)}
-        className="flex-shrink-0 w-full max-w-[220px] bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden relative mb-4 cursor-pointer transition-all duration-300 border border-gray-100 hover:border-gray-200 flex flex-col h-full"
+        className="flex-shrink-0 w-full max-w-[200px] bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden relative mb-4 cursor-pointer transition-all duration-300 border border-gray-100 hover:border-gray-200 flex flex-col h-full"
       >
         {/* Product Image Container */}
         <div className="relative aspect-square overflow-hidden flex-1">
