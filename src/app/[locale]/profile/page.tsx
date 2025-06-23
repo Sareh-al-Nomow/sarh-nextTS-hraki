@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 
 export default function AccountPage() {
   const t = useTranslations("account");
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const [activeTab, setActiveTab] = useState("profile");
   const [formData, setFormData] = useState({
@@ -61,6 +61,14 @@ export default function AccountPage() {
               {t("title")}
             </h1>
             <p className="text-gray-600">{t("subtitle")}</p>
+          </div>
+          <div className="">
+            <button
+              className="text-white bg-red-600 hover:bg-red-700 text-lg px-6 py-2 rounded-xl transition-all shadow-md"
+              onClick={logout}
+            >
+              Logout
+            </button>
           </div>
         </div>
 
