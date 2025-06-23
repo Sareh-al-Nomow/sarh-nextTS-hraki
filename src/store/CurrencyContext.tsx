@@ -1,15 +1,21 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import {
+  getSavedUserCurrency,
+  saveUserCurrency,
+} from "@/utils/currencyStorage";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type CurrencyContextType = {
   userCurrency: string;
   rate: number;
+  setUserCurrency: (currency: string) => void;
 };
 
 const defaultCurrencyContext: CurrencyContextType = {
   userCurrency: "USD",
   rate: 1,
+  setUserCurrency: () => {},
 };
 
 export const CurrencyContext = createContext<CurrencyContextType>(
@@ -24,12 +30,28 @@ type Props = {
 };
 
 export default function CurrencyProvider({
-  userCurrency,
+  userCurrency: initialCurrency,
   rate,
   children,
 }: Props) {
+  const [userCurrency, setUserCurrency] = useState(initialCurrency);
+
+  useEffect(() => {
+    const saved = getSavedUserCurrency();
+    if (saved) {
+      setUserCurrency(saved);
+    }
+  }, []);
+
+  const handleCurrencyChange = (currency: string) => {
+    setUserCurrency(currency);
+    saveUserCurrency(currency);
+  };
+
   return (
-    <CurrencyContext.Provider value={{ userCurrency, rate }}>
+    <CurrencyContext.Provider
+      value={{ userCurrency, rate, setUserCurrency: handleCurrencyChange }}
+    >
       {children}
     </CurrencyContext.Provider>
   );

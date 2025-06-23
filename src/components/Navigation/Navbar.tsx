@@ -12,6 +12,7 @@ import Language from "./Languages";
 import { FaRegHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
 import AnnouncementBar from "./AnnouncementBar";
+import CurrencySelector from "./CurrencySelector";
 
 export default function Navbar() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -24,9 +25,7 @@ export default function Navbar() {
       {/* Main Header */}
       <header className="z-40 w-full bg-white shadow-sm">
         <div className="w-full px-2 lg:px-20">
-          <nav
-            className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5"
-          >
+          <nav className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5">
             {/* Left - Logo */}
             <div className="flex items-center gap-1 md:gap-4">
               <div className="flex items-center md:hidden">
@@ -50,9 +49,12 @@ export default function Navbar() {
             {/* Right - Actions */}
             <div className="flex items-center gap-2 md:gap-4">
               <div className="hidden md:block">
-                <Language textColor="text-gray-600 hover:text-[#1a7a9a]" />
+                <Language />
               </div>
               <div>
+                <CurrencySelector />
+              </div>
+              <div className="hidden md:block">
                 {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
               </div>
               <div className="h-5 w-[1px] rounded-2xl bg-gray-300" />

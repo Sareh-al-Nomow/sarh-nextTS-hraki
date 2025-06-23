@@ -19,6 +19,9 @@ export type Settings = {
   // ✅ طرق الدفع المقبولة
   payment_methods: string[]; // مثال: ['credit_card', 'paypal']
 
+  // ✅ العملات المتاحة
+  available_currencies: string[]; // مثال: ['USD', 'JOD']
+
   // ✅ معلومات عامة عن المتجر
   store_logo: string; // رابط شعار المتجر
   store_name: string; // اسم المتجر

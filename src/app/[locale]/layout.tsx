@@ -101,6 +101,8 @@ export default async function RootLayout({
     rate
   );
 
+  console.log(settings.available_currencies);
+
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body className={`${dosis.variable} antialiased`}>

@@ -13,6 +13,7 @@ import { BrandWithProducts } from "@/lib/models/brandsModal";
 import { useTranslations } from "next-intl";
 import Language from "./Languages";
 import { AuthContext } from "@/store/AuthContext";
+// import CurrencySelector from "./CurrencySelector";
 
 interface Group {
   name: string;
@@ -36,7 +37,6 @@ export default function PremiumNavWidget() {
     queryKey: ["brands"],
     queryFn: getBrands,
   });
-
 
   const {
     data: categoriesData,
@@ -213,7 +213,7 @@ export default function PremiumNavWidget() {
                   <FiX className="text-gray-500" size={22} />
                 </button>
               </div>
-              
+
               {/* Premium Category Navigation */}
               <div className="flex-1  px-3">
                 <ul className="space-y-1">
@@ -303,8 +303,11 @@ export default function PremiumNavWidget() {
               </div>
 
               <ul>
+                {/* <li className="px-8 py-5 text-[18px] pr-5">
+                  <CurrencySelector />
+                </li> */}
                 <li className="px-8 py-5 text-[18px] pr-5">
-                  <Language textColor="text-black" />
+                  <Language />
                 </li>
                 <li className="px-8 py-5 text-[18px] flex">
                   <Link
