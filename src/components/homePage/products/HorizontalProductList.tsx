@@ -126,7 +126,7 @@ export default function HorizontalProductList({
 
         <motion.button
           onClick={viewAllHandler}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium text-xl shadow-md hover:shadow-lg transition-all"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
