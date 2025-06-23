@@ -229,6 +229,7 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
       mutationFn: AddToCart,
       onSuccess: () => {
         refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
+        toast.dismiss(); // 👈 يخفي أي توستات شغالة حالياً
         toast.custom((toastInstance) => (
           <div
             className={`${
@@ -276,7 +277,9 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     mutationFn: UpdateCartItemQuantity,
     onSuccess: () => {
       refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
-      if (pathname === "/cart") {
+      toast.dismiss(); // 👈 يخفي أي توستات شغالة حالياً
+
+      if (pathname.endsWith("/cart")) {
         toast.success(t("updatedQuantitySuccess")); // من ملف الترجمة
       } else {
         toast.custom((toastInstance) => (
