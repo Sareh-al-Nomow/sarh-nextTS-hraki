@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
 import { useCurrency } from "@/store/CurrencyContext";
 import { useSettings } from "@/store/SettingsContext";
+import { useLocale } from "next-intl";
 
 export default function CurrencySelector({
   textColor = "text-gray-800",
@@ -14,17 +15,12 @@ export default function CurrencySelector({
   const { available_currencies } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+
+  const locale = useLocale();
+  const isRTL = locale === "ar";
 
   // Detect mobile width for dropdown alignment
-  useEffect(() => {
-    function checkMobile() {
-      setIsMobile(window.innerWidth < 768);
-    }
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,7 +71,7 @@ export default function CurrencySelector({
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className={`absolute ${
-              isMobile ? "left-0" : "left-0"
+              isRTL ? "left-0" : "right-0"
             } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
           >
             {available_currencies.map((currency) => (
