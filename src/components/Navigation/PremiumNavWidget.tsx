@@ -13,6 +13,7 @@ import { BrandWithProducts } from "@/lib/models/brandsModal";
 import { useTranslations } from "next-intl";
 import Language from "./Languages";
 import { AuthContext } from "@/store/AuthContext";
+import { AuthModalContext } from "@/store/AuthModalContext";
 // import CurrencySelector from "./CurrencySelector";
 
 interface Group {
@@ -24,6 +25,7 @@ interface Group {
 export default function PremiumNavWidget() {
   const t = useTranslations("navbar");
   const { isAuthenticated, user } = useContext(AuthContext);
+  const { openAuthModal } = useContext(AuthModalContext);
 
   const [groups, setGroups] = useState<Group[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -352,16 +354,18 @@ export default function PremiumNavWidget() {
                 </div>
               ) : (
                 <div className=" bg-white bottom-0 p-5 border-t border-gray-100">
-                  <Link
-                    href="/login"
+                  <button
                     className="flex items-center justify-center gap-2 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all w-full"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      openAuthModal();
+                      setIsOpen(false);
+                    }}
                   >
                     <FiLogIn className="text-lg" />
                     <span className="font-medium text-[16px]">
                       {t("login")}
                     </span>
-                  </Link>
+                  </button>
                 </div>
               )}
             </motion.div>
