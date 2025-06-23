@@ -52,8 +52,10 @@ const ProductItem = ({
         return "from-purple-500 to-pink-500";
       case "NEW":
         return "from-blue-500 to-cyan-500";
-      default:
+      case "SALE":
         return "from-green-500 to-emerald-500";
+      default:
+        return "from-gray-500 to-gray-500";
     }
   };
 

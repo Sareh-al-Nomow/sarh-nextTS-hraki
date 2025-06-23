@@ -88,7 +88,7 @@ export default function HorizontalProductList({
         : "left"
       : direction;
 
-    const scrollAmount = effectiveDirection === "left" ? -400 : 400;
+    const scrollAmount = effectiveDirection === "left" ? -250 : 250;
     scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
@@ -110,7 +110,7 @@ export default function HorizontalProductList({
   };
 
   return (
-    <section className="py-10 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-50 to-cyan-50">
+    <section className="py-5 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-50 to-cyan-50">
       {/* Header Section */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
