@@ -118,7 +118,7 @@ export default function Products() {
         <motion.div
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center md:justify-items-start gap-4"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 justify-items-center md:justify-items-start gap-4"
         >
           {allProducts.map(
             (product: FrontEndProductCartItem, index: number) => (

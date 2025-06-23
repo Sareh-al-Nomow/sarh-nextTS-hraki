@@ -697,5 +697,10 @@
       "loading": "Failed to load products",
       "retry": "Retry"
     }
+  },
+  "cartContext": {
+    "addToCartSuccess": "Your item was added successfully!",
+    "updatedQuantitySuccess": "Item quantity updated successfully!",
+    "goToCart": "Go to cart"
   }
 }

@@ -1,8 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-
 import ProductItem from "./ProductItem";
 import { FrontendProduct } from "@/models/forntEndProduct";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
@@ -19,69 +18,78 @@ export default function HorizontalProductList({
   id?: number;
 }) {
   const t = useTranslations("HorizontalProductList");
-  const isRTL = t("dir") === "rtl"; // Add a translation key for direction
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
-  const [likedProducts, setLikedProducts] = useState<number[]>([]);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-
+  const isRTL = t("dir") === "rtl";
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollState, setScrollState] = useState({
+    showLeft: false,
+    showRight: true,
+    isOverflowing: false,
+  });
+  const [likedProducts, setLikedProducts] = useState<number[]>([]);
 
+  // Load wishlist and setup scroll listeners
   useEffect(() => {
-    const stored = localStorage.getItem("wishlist");
-    const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
-
-    if (stored) {
-      const wishlistIDS = wishlist.flatMap((p) => p.id);
-      setLikedProducts(wishlistIDS);
+    // Load wishlist from localStorage
+    const storedWishlist = localStorage.getItem("wishlist");
+    if (storedWishlist) {
+      const wishlist: FrontendProduct[] = JSON.parse(storedWishlist);
+      setLikedProducts(wishlist.map((product) => product.id));
     }
 
+    // Check overflow and setup scroll listener
     const checkOverflow = () => {
-      if (scrollRef.current) {
-        setIsOverflowing(
-          scrollRef.current.scrollWidth > scrollRef.current.clientWidth
-        );
-      }
+      if (!scrollRef.current) return;
+
+      const { scrollWidth, clientWidth } = scrollRef.current;
+      const isOverflowing = scrollWidth > clientWidth;
+
+      setScrollState((prev) => ({
+        ...prev,
+        isOverflowing,
+        showRight: isOverflowing,
+      }));
+    };
+
+    const handleScroll = () => {
+      if (!scrollRef.current) return;
+
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      const maxScroll = scrollWidth - clientWidth;
+
+      setScrollState((prev) => ({
+        ...prev,
+        showLeft: isRTL ? scrollLeft < 0 : scrollLeft > 0,
+        showRight: isRTL
+          ? scrollLeft > -maxScroll + 1
+          : scrollLeft < maxScroll - 1,
+      }));
     };
 
     checkOverflow();
-    window.addEventListener("resize", checkOverflow);
-    return () => window.removeEventListener("resize", checkOverflow);
-  }, [products]);
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    if (scrollRef.current) {
+      resizeObserver.observe(scrollRef.current);
+      scrollRef.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+      scrollRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [products, isRTL]);
 
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      // Reverse the scroll direction for RTL languages
-      const effectiveDirection = isRTL
-        ? direction === "left"
-          ? "right"
-          : "left"
-        : direction;
+    if (!scrollRef.current) return;
 
-      const scrollAmount = effectiveDirection === "left" ? -400 : 400;
-      scrollRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+    const effectiveDirection = isRTL
+      ? direction === "left"
+        ? "right"
+        : "left"
+      : direction;
 
-  const checkScrollPosition = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      // For RTL, we need to check scroll position differently
-      if (isRTL) {
-        // In RTL, the scrollLeft starts at 0 and goes negative
-        const maxScrollLeft = scrollWidth - clientWidth;
-        setShowLeftArrow(scrollLeft < 0);
-        setShowRightArrow(scrollLeft > -maxScrollLeft + 1);
-      } else {
-        setShowLeftArrow(scrollLeft > 0);
-        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-      }
-    }
+    const scrollAmount = effectiveDirection === "left" ? -400 : 400;
+    scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
   const toggleLike = (product: FrontEndProductCartItem) => {
@@ -89,49 +97,38 @@ export default function HorizontalProductList({
     let wishlist: FrontEndProductCartItem[] = stored ? JSON.parse(stored) : [];
 
     const exists = wishlist.some((p) => p.id === product.id);
+    wishlist = exists
+      ? wishlist.filter((p) => p.id !== product.id)
+      : [...wishlist, product];
 
-    if (exists) {
-      wishlist = wishlist.filter((p) => p.id !== product.id);
-    } else {
-      wishlist.push(product);
-    }
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    setLikedProducts((prev) =>
-      prev.includes(product.id)
-        ? prev.filter((id) => id !== product.id)
-        : [...prev, product.id]
-    );
+    setLikedProducts(wishlist.map((p) => p.id));
   };
 
-  function viewAllHandler() {
+  const viewAllHandler = () => {
     router.push(`/shopGrid?collectionId=${id}`);
-  }
+  };
 
   return (
-    <div className="pt-8 relative group" dir={isRTL ? "rtl" : "ltr"}>
-      <motion.div
-        className="flex justify-between items-center w-full px-4 md:px-12 mb-6"
+    <section className="py-10 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-50 to-cyan-50">
+      {/* Header Section */}
+      <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
       >
         <motion.h2
-          className="text-3xl font-bold pr-text"
+          className="text-2xl md:text-3xl font-bold text-gray-900"
           whileHover={{ scale: 1.02 }}
-          transition={{ type: "spring", stiffness: 300 }}
         >
           {title}
         </motion.h2>
 
         <motion.button
           onClick={viewAllHandler}
-          className="cursor-pointer px-5 py-2.5 rounded-xl font-semibold text-white pr-bg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 flex items-center gap-2"
-          whileHover={{
-            scale: 1.05,
-            background: "linear-gradient(to right, #212249, #023047)",
-            boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.3)",
-          }}
-          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
         >
           {t("ExploreAll")}
           <motion.span
@@ -141,39 +138,63 @@ export default function HorizontalProductList({
             {isRTL ? "←" : "→"}
           </motion.span>
         </motion.button>
-      </motion.div>
+      </motion.header>
 
+      {/* Product Carousel */}
       <div className="relative">
-        {/* Left Arrow - becomes "previous" arrow */}
-        {isOverflowing && showLeftArrow && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => scroll("left")}
-            className={`absolute ${
-              isRTL ? "right-0" : "left-0"
-            } top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-r from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center`}
-            style={{
-              background: isRTL
-                ? "linear-gradient(to left, white, transparent)"
-                : "linear-gradient(to right, white, transparent)",
-            }}
-            whileHover={{ scale: 1.1 }}
-            aria-label={t("ScrollPrevious")}
-          >
-            {isRTL ? (
-              <FiChevronRight className="h-6 w-6 text-gray-800" />
-            ) : (
-              <FiChevronLeft className="h-6 w-6 text-gray-800" />
-            )}
-          </motion.button>
-        )}
+        {/* Navigation Arrows */}
+        <AnimatePresence>
+          {scrollState.isOverflowing && scrollState.showLeft && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => scroll("left")}
+              className={`absolute ${
+                isRTL ? "right-0" : "left-0"
+              } top-0 bottom-0 z-20 w-16 h-full flex items-center justify-center`}
+              whileHover={{ scale: 1.1 }}
+              aria-label={t("ScrollPrevious")}
+            >
+              <div className="p-2 bg-white rounded-full shadow-lg">
+                {isRTL ? (
+                  <FiChevronRight className="h-5 w-5 text-gray-800" />
+                ) : (
+                  <FiChevronLeft className="h-5 w-5 text-gray-800" />
+                )}
+              </div>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {scrollState.isOverflowing && scrollState.showRight && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => scroll("right")}
+              className={`absolute ${
+                isRTL ? "left-0" : "right-0"
+              } top-0 bottom-0 z-20 w-16 h-full flex items-center justify-center`}
+              whileHover={{ scale: 1.1 }}
+              aria-label={t("ScrollNext")}
+            >
+              <div className="p-2 bg-white rounded-full shadow-lg">
+                {isRTL ? (
+                  <FiChevronLeft className="h-5 w-5 text-gray-800" />
+                ) : (
+                  <FiChevronRight className="h-5 w-5 text-gray-800" />
+                )}
+              </div>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {/* Product List */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto px-4 md:px-12 gap-4 py-2 scrollbar-hide"
-          onScroll={checkScrollPosition}
+          className="flex overflow-x-auto scroll-smooth gap-6 py-2 scrollbar-hide"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -181,40 +202,22 @@ export default function HorizontalProductList({
           }}
         >
           {products.map((product) => (
-            <ProductItem
+            <motion.div
               key={product.id}
-              product={product}
-              toggleLike={toggleLike}
-              likedProducts={likedProducts}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0 w-[240px]"
+            >
+              <ProductItem
+                product={product}
+                toggleLike={toggleLike}
+                likedProducts={likedProducts}
+              />
+            </motion.div>
           ))}
         </div>
-
-        {/* Right Arrow - becomes "next" arrow */}
-        {isOverflowing && showRightArrow && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => scroll("right")}
-            className={`absolute ${
-              isRTL ? "left-0" : "right-0"
-            } top-0 bottom-0 z-20 w-12 h-full bg-gradient-to-l from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center`}
-            style={{
-              background: isRTL
-                ? "linear-gradient(to right, white, transparent)"
-                : "linear-gradient(to left, white, transparent)",
-            }}
-            whileHover={{ scale: 1.1 }}
-            aria-label={t("ScrollNext")}
-          >
-            {isRTL ? (
-              <FiChevronLeft className="h-6 w-6 text-gray-800" />
-            ) : (
-              <FiChevronRight className="h-6 w-6 text-gray-800" />
-            )}
-          </motion.button>
-        )}
       </div>
-    </div>
+    </section>
   );
 }

@@ -697,5 +697,10 @@
       "loading": "فشل تحميل المنتجات",
       "retry": "إعادة المحاولة"
     }
+  },
+  "cartContext": {
+    "addToCartSuccess": "تم إضافة المنتج بنجاح!",
+    "updatedQuantitySuccess": "تم تحديث كمية المنتج بنجاح!",
+    "goToCart": "اذهب إلى السلة"
   }
 }

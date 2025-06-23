@@ -10,8 +10,12 @@ import {
 } from "@/lib/axios/CartAxios";
 import { saveOrderData } from "@/lib/axios/OrderAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FiCheck, FiX } from "react-icons/fi";
 
 export type Cart = {
   cart_id: number;
@@ -177,6 +181,9 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
   });
   const [cartError, setCartError] = useState<string | null>(null);
 
+  const t = useTranslations("cartContext");
+  const pathname = usePathname();
+
   const {
     data,
     isLoading: isLoadingCart,
@@ -222,7 +229,39 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
       mutationFn: AddToCart,
       onSuccess: () => {
         refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
-        toast.success("your item added successflly!");
+        toast.custom((toastInstance) => (
+          <div
+            className={`${
+              toastInstance.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-xl rounded-xl pointer-events-auto flex border border-gray-100 overflow-hidden`}
+          >
+            <div className="flex-1 p-4 flex items-center">
+              <div className="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                <FiCheck className="h-5 w-5 text-green-600" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">
+                  {t("addToCartSuccess")}
+                </p>
+                <div className="mt-1 text-sm text-gray-500">
+                  <Link
+                    href="/cart"
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    onClick={() => toast.dismiss(toastInstance.id)}
+                  >
+                    {t("goToCart")} →
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => toast.dismiss(toastInstance.id)}
+              className="px-4 border-l border-gray-100 flex items-center justify-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <FiX className="h-5 w-5" />
+            </button>
+          </div>
+        ));
       },
       onError: (error: Error) => {
         setCartError(error.message);
@@ -237,7 +276,43 @@ const CartContextProvider: React.FC<CartContextProviderProps> = ({
     mutationFn: UpdateCartItemQuantity,
     onSuccess: () => {
       refetch(); // لو بدك تحدث بيانات الكارت بعد الإضافة
-      toast.success("updated quantity item successflly!");
+      if (pathname === "/cart") {
+        toast.success(t("updatedQuantitySuccess")); // من ملف الترجمة
+      } else {
+        toast.custom((toastInstance) => (
+          <div
+            className={`${
+              toastInstance.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-xl rounded-xl pointer-events-auto flex border border-gray-100 overflow-hidden`}
+          >
+            <div className="flex-1 p-4 flex items-center">
+              <div className="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                <FiCheck className="h-5 w-5 text-green-600" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">
+                  {t("updatedQuantitySuccess")}
+                </p>
+                <div className="mt-1 text-sm text-gray-500">
+                  <Link
+                    href="/cart"
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    onClick={() => toast.dismiss(toastInstance.id)}
+                  >
+                    {t("goToCart")} →
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => toast.dismiss(toastInstance.id)}
+              className="px-4 border-l border-gray-100 flex items-center justify-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <FiX className="h-5 w-5" />
+            </button>
+          </div>
+        ));
+      }
     },
     onError: (error: Error) => {
       setCartError(error.message);
