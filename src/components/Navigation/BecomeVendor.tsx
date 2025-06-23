@@ -63,7 +63,7 @@ export default function BecomeVendor() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="px-3 py-1 bg-white text-[#1a7a9a] rounded-md hover:bg-gray-100 transition-colors text-sm font-semibold"
+        className="px-2 py-1 bg-white text-[#1a7a9a] rounded-md hover:bg-gray-100 transition-colors text-sm font-semibold"
       >
         {t("button")}
       </button>

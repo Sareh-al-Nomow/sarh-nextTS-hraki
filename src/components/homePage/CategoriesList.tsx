@@ -55,7 +55,7 @@ export default function CategoriesList() {
                   key={index}
                   className="flex flex-col items-center text-center group w-24 sm:w-28 md:w-auto"
                 >
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
+                  <div className="w-[68px] h-[68px] sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-[#fff] shadow-md group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={cat.description.image ?? "/image/products/img.png"}
                       alt={cat.description.name}

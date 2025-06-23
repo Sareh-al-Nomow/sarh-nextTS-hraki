@@ -18,12 +18,12 @@ export default function AnnouncementBar() {
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div
-        className={`container mx-auto px-4 py-2 flex justify-between items-center`}
+        className={`container mx-auto px-2 sm:px-4 py-1 flex justify-between items-center`}
       >
         <div className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}>
           <span className="mr-2">🚀</span>
           <span>
-            {t("message")} <strong>waleed</strong>
+            {t("message")} <strong>hraki</strong>
           </span>
         </div>
         <BecomeVendor />

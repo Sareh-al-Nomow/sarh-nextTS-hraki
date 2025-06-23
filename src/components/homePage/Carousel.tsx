@@ -103,7 +103,7 @@ const Carousel: React.FC<CarouselProps> = ({ collections }) => {
       <div className="container m-auto w-full rounded relative">
         {/* Carousel wrapper - clickable area for the image */}
         <div
-          className={`relative h-[124.47px] sm:h-[140px] md:h-[190px] lg:h-[270px] xl:h-[320px] 2xl:h-[360px] overflow-hidden rounded-2xl transition-all duration-300 ${
+          className={`relative h-[130.47px] sm:h-[140px] md:h-[190px] lg:h-[270px] xl:h-[310px] 2xl:h-[320px] overflow-hidden rounded-2xl transition-all duration-300 ${
             isFlashing ? "bg-white" : ""
           }`}
           onClick={handleImageClick}

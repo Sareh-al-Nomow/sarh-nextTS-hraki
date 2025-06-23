@@ -35,7 +35,7 @@ const EcommerceHeader = () => {
                   {t("announcement.limited")}
                 </span>
                 <p className={isRTL ? "text-right" : "text-left"}>
-                  {t("announcement.text")} <strong>ali</strong>
+                  {t("announcement.text")} <strong>ahmad</strong>
                 </p>
                 <FiArrowRight className={isRTL ? "mr-1 rotate-180" : "ml-1"} />
               </motion.div>

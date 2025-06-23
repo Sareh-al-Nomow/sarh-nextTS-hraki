@@ -30,7 +30,7 @@
       }
     },
     "AnnouncementBar": {
-      "message": "| استخدم الكود"
+      "message": "استخدم كود  : "
     }
   },
   "auth": {

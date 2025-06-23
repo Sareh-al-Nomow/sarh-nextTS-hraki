@@ -115,7 +115,7 @@ export default function HorizontalProductList({
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
+        className="flex flex-row justify-between items-center sm:items-center mb-8 gap-4"
       >
         <motion.h2
           className="text-2xl md:text-3xl font-bold text-gray-900"
@@ -126,7 +126,7 @@ export default function HorizontalProductList({
 
         <motion.button
           onClick={viewAllHandler}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium text-xl shadow-md hover:shadow-lg transition-all"
+          className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#1a7a9a] to-cyan-500 text-white rounded-lg font-medium text-xl shadow-md hover:shadow-lg transition-all"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >

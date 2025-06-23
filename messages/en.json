@@ -26,11 +26,11 @@
     "topHeader": {
       "announcement": {
         "limited": "LIMITED",
-        "text": "Use code:"
+        "text": "Use code: "
       }
     },
     "AnnouncementBar": {
-      "message": "Free shipping on all orders | Use code:"
+      "message": "Use code: "
     }
   },
   "auth": {
