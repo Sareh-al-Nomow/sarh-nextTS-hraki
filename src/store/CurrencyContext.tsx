@@ -1,10 +1,17 @@
 "use client";
 
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { convertCurrency } from "@/lib/currencySettings/convert-currency";
 import {
   getSavedUserCurrency,
   saveUserCurrency,
 } from "@/utils/currencyStorage";
-import { createContext, useContext, useEffect, useState } from "react";
 
 type CurrencyContextType = {
   userCurrency: string;
@@ -22,19 +29,19 @@ export const CurrencyContext = createContext<CurrencyContextType>(
   defaultCurrencyContext
 );
 
-import React, { ReactNode } from "react";
 type Props = {
-  userCurrency: string;
-  rate: number;
+  userIpCurrency: string;
+  defaultSettingCurrrency: string;
   children: ReactNode;
 };
 
 export default function CurrencyProvider({
-  userCurrency: initialCurrency,
-  rate,
+  userIpCurrency,
+  defaultSettingCurrrency,
   children,
 }: Props) {
-  const [userCurrency, setUserCurrency] = useState(initialCurrency);
+  const [userCurrency, setUserCurrency] = useState(userIpCurrency);
+  const [rate, setRate] = useState(1);
 
   useEffect(() => {
     const saved = getSavedUserCurrency();
@@ -42,6 +49,23 @@ export default function CurrencyProvider({
       setUserCurrency(saved);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchRate = async () => {
+      try {
+        const rate = await convertCurrency(
+          1,
+          defaultSettingCurrrency,
+          userCurrency
+        );
+        setRate(rate);
+      } catch (err) {
+        console.error("Error converting currency:", err);
+      }
+    };
+
+    fetchRate();
+  }, [defaultSettingCurrrency, userCurrency]);
 
   const handleCurrencyChange = (currency: string) => {
     setUserCurrency(currency);
@@ -60,9 +84,7 @@ export default function CurrencyProvider({
 export function useCurrency() {
   const context = useContext(CurrencyContext);
   if (!context) {
-    throw new Error(
-      "useCurrency must be used within a CurrencyContext.Provider"
-    );
+    throw new Error("useCurrency must be used within a CurrencyProvider");
   }
   return context;
 }

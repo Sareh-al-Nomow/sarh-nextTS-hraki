@@ -82,22 +82,23 @@ export default async function RootLayout({
   const userCurrencyRaw = await getLocationCurrency(ip);
 
   // تحقق من صلاحية الرموز
-  const fromCurrency = isValidCurrency(defaultCurrency)
+  const baseSystemCurrency = isValidCurrency(defaultCurrency)
     ? defaultCurrency
     : "USD";
-  const toCurrency = isValidCurrency(userCurrencyRaw)
+
+  const userIpCurrency = isValidCurrency(userCurrencyRaw)
     ? userCurrencyRaw
-    : fromCurrency;
+    : baseSystemCurrency;
 
   console.log("🌍 Visitor IP:", ip);
-  console.log("💰 Default currency:", fromCurrency);
-  console.log("💱 User currency:", toCurrency);
+  console.log("💰 Default currency:", baseSystemCurrency);
+  console.log("💱 User currency:", userIpCurrency);
 
   // حساب نسبة التحويل
-  const rate = await convertCurrency(1, fromCurrency, toCurrency);
+  const rate = await convertCurrency(1, baseSystemCurrency, userIpCurrency);
 
   console.log(
-    `💱 Conversion rate from ${fromCurrency} to ${toCurrency} is:`,
+    `💱 Conversion rate from ${baseSystemCurrency} to ${userIpCurrency} is:`,
     rate
   );
 
@@ -108,7 +109,10 @@ export default async function RootLayout({
       <body className={`${dosis.variable} antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SettingsProvider settings={settings}>
-            <CurrencyProvider userCurrency={toCurrency} rate={rate}>
+            <CurrencyProvider
+              defaultSettingCurrrency={baseSystemCurrency}
+              userIpCurrency={userIpCurrency}
+            >
               <QueryClientProvider client={queryClient}>
                 <AuthModalProvider>
                   <SearchProvider>
