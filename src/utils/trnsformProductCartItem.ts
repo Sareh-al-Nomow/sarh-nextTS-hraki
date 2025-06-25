@@ -20,12 +20,7 @@ export function transformProductCartItem(
       product.old_price ? "SALE" : undefined,
     ].filter(Boolean) as string[],
     short_description: product.description.short_description,
-    features: product.attributes
-      ?.filter((attr) => attr.attribute?.attribute_code === "feature")
-      .map((attr) => attr.option_text),
-    colors: product.attributes
-      ?.filter((attr) => attr.attribute?.attribute_code === "color")
-      .map((attr) => attr.option_text),
+
     stock_availability: product.inventory.qty === 0 ? false : true,
     description: product.description.description,
   };

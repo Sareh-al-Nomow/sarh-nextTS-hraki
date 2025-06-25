@@ -9,6 +9,11 @@ interface ProductImage {
   created_at: string;
   updated_at: string;
 }
+
+export interface Attributes {
+  attribute_id: number;
+  option_text: string;
+}
 export interface FrontendProduct {
   categoryId: number;
   createdAt: string | number | Date;
@@ -16,6 +21,8 @@ export interface FrontendProduct {
   uuid: string;
   name: string;
   url_key: string;
+  group_id: number;
+  variant_group_id: number;
   price: number;
   originalPrice?: number | undefined;
   image: string;
@@ -31,10 +38,7 @@ export interface FrontendProduct {
     qty: number;
   };
   images?: ProductImage[];
-  attributes?: {
-    attribute_name: string;
-    option_text: string;
-  }[];
+  attributes?: Attributes[];
   // reviews: string[];
   meanRating: number | null;
   stock_availability: boolean;

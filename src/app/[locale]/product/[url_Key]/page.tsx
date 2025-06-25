@@ -29,16 +29,17 @@ import { CartContext } from "@/store/CartContext";
 import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import Attributes from "@/components/product/Attributes";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
 };
 
-const colors = [
-  { name: "gold", hex: "#D4AF37" },
-  { name: "platinum", hex: "#E5E4E2" },
-  { name: "onyx", hex: "#353839" },
-];
+// const colors = [
+//   { name: "gold", hex: "#D4AF37" },
+//   { name: "platinum", hex: "#E5E4E2" },
+//   { name: "onyx", hex: "#353839" },
+// ];
 export default function ProductDetails({ params }: ProductDetailsProps) {
   const t = useTranslations("ProductDetails");
   const [quantity, setQuantity] = useState(1);
@@ -46,7 +47,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
-  const [selectedColor, setSelectedColor] = useState("gold");
+  // const [selectedColor, setSelectedColor] = useState("gold");
   const [likedProduct, setLikedProduct] = useState<boolean>(false);
 
   const { url_Key } = use(params);
@@ -91,6 +92,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     }
     setQuantity((prev) => prev + 1);
   };
+
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
@@ -428,7 +430,12 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
               {/* Color Options */}
               <div className="mb-6 sm:mb-8">
-                <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3 uppercase tracking-wider">
+                <Attributes
+                  group_id={product?.group_id ?? 0}
+                  variant_group_id={product?.variant_group_id ?? 0}
+                  defaultAttributes={product?.attributes ?? []}
+                />
+                {/* <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3 uppercase tracking-wider">
                   {t("colorLabel", { color: selectedColor })}
                 </h3>
                 <div className="flex gap-2 sm:gap-3">
@@ -467,7 +474,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                       )}
                     </motion.button>
                   ))}
-                </div>
+                </div> */}
               </div>
 
               {/* Features */}

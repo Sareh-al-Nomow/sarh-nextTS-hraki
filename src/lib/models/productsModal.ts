@@ -116,22 +116,7 @@ interface ProductAttribute {
   option_text: string;
   created_at: string;
   updated_at: string;
-  attribute: Attribute;
   option: AttributeOption;
-}
-
-interface Attribute {
-  attribute_id: number;
-  uuid: string;
-  attribute_code: string;
-  attribute_name: string;
-  type: string;
-  is_required: boolean;
-  display_on_frontend: boolean;
-  sort_order: number;
-  is_filterable: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 interface AttributeOption {
