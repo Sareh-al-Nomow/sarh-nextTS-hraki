@@ -6,7 +6,7 @@ export async function fetchConversionRate(
   if (from === to) return 1;
   try {
     const res = await fetch(
-      `https:/.exchangerate.host/convert?from=${from}&to=${to}&amount=1`
+      `https:/api.exchangerate.host/convert?from=${from}&to=${to}&amount=1`
     );
     const data = await res.json();
     const rate = Number(data.result);
