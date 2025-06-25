@@ -137,14 +137,6 @@ export default function Footer() {
                   href="/about"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  {t.raw("sections.about.items")[0]}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-blue-500 transition-colors"
-                >
                   {t.raw("sections.about.items")[1]}
                 </Link>
               </li>
@@ -168,7 +160,7 @@ export default function Footer() {
           viewport={{ once: true }}
           className="flex flex-wrap justify-center gap-6 mb-12"
         >
-          <Link href="/shipping">
+          <Link href="/contact">
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"
@@ -181,7 +173,7 @@ export default function Footer() {
               </span>
             </motion.div>
           </Link>
-          <Link href="/warranty">
+          <Link href="/contact">
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"
@@ -194,7 +186,7 @@ export default function Footer() {
               </span>
             </motion.div>
           </Link>
-          <Link href="/secure">
+          <Link href="/contact">
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"

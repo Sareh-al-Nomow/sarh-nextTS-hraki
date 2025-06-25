@@ -35,11 +35,6 @@ type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
 };
 
-// const colors = [
-//   { name: "gold", hex: "#D4AF37" },
-//   { name: "platinum", hex: "#E5E4E2" },
-//   { name: "onyx", hex: "#353839" },
-// ];
 export default function ProductDetails({ params }: ProductDetailsProps) {
   const t = useTranslations("ProductDetails");
   const [quantity, setQuantity] = useState(1);
@@ -147,6 +142,12 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
         : false;
 
       setLikedProduct(isExsist);
+    }
+
+    const scrollY = localStorage.getItem("product");
+    if (scrollY !== null) {
+      window.scrollTo(0, parseInt(scrollY, 10));
+      localStorage.removeItem("product");
     }
   }, [product]);
 

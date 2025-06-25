@@ -129,6 +129,7 @@ const Attributes = ({
     setSelectedOptions(updated);
 
     if (matchedVariant.url_key) {
+      localStorage.setItem("product", window.scrollY.toString());
       router.push(`/product/${matchedVariant.url_key}`);
     }
   };

@@ -702,5 +702,27 @@
     "addToCartSuccess": "Your item was added successfully!",
     "updatedQuantitySuccess": "Item quantity updated successfully!",
     "goToCart": "Go to cart"
+  },
+  "BecomeVendor": {
+    "title": "Become a Vendor",
+    "description": "Join our platform as a vendor and start selling your products to our customers",
+    "backButton": "Back",
+    "form": {
+      "name": "Full Name",
+      "shopName": "Shop Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "success": "Your application has been received successfully!",
+      "error": "An error occurred while submitting"
+    },
+    "success": {
+      "title": "Application Submitted!",
+      "message": "Thank you for registering as a vendor. Our team will contact you soon to complete the process.",
+      "homeButton": "Back to Home",
+      "newFormButton": "Submit New Application"
+    },
+    "footerText": "For any inquiries, please contact us at info@example.com"
   }
 }
