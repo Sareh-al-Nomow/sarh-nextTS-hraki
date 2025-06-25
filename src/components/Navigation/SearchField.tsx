@@ -11,46 +11,6 @@ import { getSearchProducts } from "@/lib/axios/searchAxios";
 import { Product } from "@/lib/models/productsModal";
 import { transformProductCartItem } from "@/utils/trnsformProductCartItem";
 
-// Mock product data - replace with your API call
-// type Product = {
-//   id: number;
-//   name: string;
-//   price: number;
-//   image: string;
-//   rating: number;
-//   category: string;
-// };
-
-// const mockSearchResults = (query: string): Product[] => {
-//   if (!query) return [];
-
-//   return [
-//     {
-//       id: 1,
-//       name: "Wireless Noise-Cancelling Headphones",
-//       price: 199.99,
-//       image: "/image/categories/book.jpg",
-//       rating: 4.5,
-//       category: "Audio",
-//     },
-//     {
-//       id: 2,
-//       name: "Smart Watch Series 5",
-//       price: 249.99,
-//       image: "/image/categories/book.jpg",
-//       rating: 4.2,
-//       category: "Wearables",
-//     },
-//     {
-//       id: 3,
-//       name: "Premium Bluetooth Speaker",
-//       price: 129.99,
-//       image: "/image/categories/book.jpg",
-//       rating: 4.7,
-//       category: "Audio",
-//     },
-//   ];
-// };
 
 export default function SearchField() {
   const t = useTranslations("navbar");

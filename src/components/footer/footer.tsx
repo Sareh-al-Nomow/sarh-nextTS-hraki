@@ -1,251 +1,317 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
 import {
   FiFacebook,
   FiTwitter,
   FiInstagram,
   FiCreditCard,
-  FiTruck,
-  FiShield,
   FiPrinter,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiClock,
+  FiStar,
+  FiZap,
+  FiMessageSquare,
+  FiRefreshCw,
 } from "react-icons/fi";
 import { useSettings } from "@/store/SettingsContext";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../UI/SpinnerLoading";
+import { getCategories } from "@/lib/axios/categoryAxios";
+import { MdLocalShipping } from "react-icons/md";
 
 export default function Footer() {
   const settings = useSettings();
-  const t = useTranslations("footer");
+
+  const {
+    data: categories,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="my-20">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="my-20">
+        <h1>{error.name}</h1>
+        <h3>{error.message}</h3>
+      </div>
+    );
+  }
+
+  const displayCategories = categories?.data.slice(0, 5);
 
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
-      <div className="container mx-auto px-6">
-        {/* Top Section */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Logo and Description */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-2xl font-bold mb-4 text-center sm:text-start">
-              SARAH
-            </h2>
-            <p className="text-gray-400 mb-6  text-center sm:text-start">
-              {t("description")}
-            </p>
-            <div className="flex justify-center sm:justify-start space-x-4">
-              <Link href={settings.social_media_links.facebook}>
-                <FiFacebook className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
-              </Link>
-              <Link href={settings.social_media_links.twitter}>
-                <FiTwitter className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
-              </Link>
-              <Link href={settings.social_media_links.instagram}>
-                <FiInstagram className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
-              </Link>
-              <Link href={settings.social_media_links.pinterest}>
-                <FiPrinter className="text-xl text-gray-400 hover:text-blue-500 transition-colors" />
-              </Link>
+    <footer className="bg-gray-900 text-white">
+      {/* Email Subscription Section */}
+      <div className="bg-gray-800 py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="text-center lg:text-left">
+              <h3 className="text-2xl font-bold mb-2">Join Our Newsletter</h3>
+              <p className="text-gray-300 max-w-md">
+                Subscribe to receive updates, access to exclusive deals, and
+                more.
+              </p>
             </div>
-          </motion.div>
+            <div className="w-full lg:w-auto">
+              <form className="flex flex-col sm:flex-row gap-3 max-w-xl w-full">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-grow px-5 py-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          {/* Shop Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 text-center sm:text-start">
-              {t("sections.shop.title")}
-            </h3>
-            <ul className="space-y-2 text-center sm:text-start">
-              <li>
+      {/* Main Footer Content */}
+      <div className="container mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <FiMapPin className="mt-1 text-blue-500" />
+                <span className="text-gray-400">{settings.store_address}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <FiPhone className="text-blue-500" />
                 <Link
-                  href="#"
+                  href="tel:+11234567890"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  {t.raw("sections.shop.items")[0]}
+                  {settings.contact_phone}
+                </Link>
+              </li>
+              <li className="flex items-center gap-3">
+                <FiMail className="text-blue-500" />
+                <Link
+                  href="mailto:info@sarahfashion.com"
+                  className="text-gray-400 hover:text-blue-500 transition-colors"
+                >
+                  {settings.contact_email}
+                </Link>
+              </li>
+              <li className="flex items-start gap-3">
+                <FiClock className="mt-1 text-blue-500" />
+                <span className="text-gray-400">Mon-Fri: 9AM - 6PM</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/infoPages/about"
+                  className="text-gray-400 hover:text-blue-500 transition-colors"
+                >
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/infoPages/contact"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  {t.raw("sections.shop.items")[1]}
+                  Contact Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/infoPages/faq"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  {t.raw("sections.shop.items")[2]}
+                  FAQs
                 </Link>
               </li>
             </ul>
-          </motion.div>
+          </div>
 
-          {/* Service Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 text-center sm:text-start">
-              {t("sections.service.title")}
-            </h3>
-            <ul className="space-y-2 text-center sm:text-start">
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  {t.raw("sections.service.items")[0]}
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  {t.raw("sections.service.items")[2]}
-                </Link>
-              </li>
+          {/* Categories */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Categories</h3>
+            <ul className="space-y-3">
+              {displayCategories?.map((cat) => (
+                <li key={cat.id}>
+                  <Link
+                    href={`/shopGrid?categoryid=${cat.id}`}
+                    className="text-gray-400 hover:text-blue-500 transition-colors"
+                  >
+                    {cat.description.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </motion.div>
+          </div>
 
-          {/* About Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 text-center sm:text-start">
-              {t("sections.about.title")}
-            </h3>
-            <ul className="space-y-2 text-center sm:text-start">
-              <li>
+          {/* Social & Info */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">SARAH</h2>
+            <p className="text-gray-400 mb-6">
+              Your premier destination for fashion and style. We offer the
+              latest trends at affordable prices.
+            </p>
+
+            <div className="mb-8">
+              <h4 className="text-sm font-semibold mb-3 text-gray-300">
+                Follow Us
+              </h4>
+              <div className="flex space-x-3">
                 <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-blue-500 transition-colors"
+                  href={settings.social_media_links.facebook || "#"}
+                  className="bg-gray-800 hover:bg-blue-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  aria-label="Facebook"
                 >
-                  {t.raw("sections.about.items")[1]}
+                  <FiFacebook className="text-xl" />
                 </Link>
-              </li>
-              <li>
                 <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-blue-500 transition-colors"
+                  href={settings.social_media_links.twitter || "#"}
+                  className="bg-gray-800 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  aria-label="Twitter"
                 >
-                  {t.raw("sections.about.items")[2]}
+                  <FiTwitter className="text-xl" />
                 </Link>
-              </li>
-            </ul>
-          </motion.div>
+                <Link
+                  href={settings.social_media_links.instagram || "#"}
+                  className="bg-gray-800 hover:bg-pink-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  aria-label="Instagram"
+                >
+                  <FiInstagram className="text-xl" />
+                </Link>
+                <Link
+                  href={settings.social_media_links.pinterest || "#"}
+                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  aria-label="Pinterest"
+                >
+                  <FiPrinter className="text-xl" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Trust Badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-6 mb-12"
-        >
-          <Link href="/contact">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"
-            >
-              <div className="text-blue-500">
-                <FiTruck className="text-2xl" />
-              </div>
-              <span className="text-sm font-medium">
-                {t("badges.shipping")}
-              </span>
-            </motion.div>
-          </Link>
-          <Link href="/contact">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"
-            >
-              <div className="text-blue-500">
-                <FiShield className="text-2xl" />
-              </div>
-              <span className="text-sm font-medium">
-                {t("badges.warranty")}
-              </span>
-            </motion.div>
-          </Link>
-          <Link href="/contact">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 bg-gray-800 px-6 py-3 rounded-lg cursor-pointer"
-            >
-              <div className="text-blue-500">
-                <FiCreditCard className="text-2xl" />
-              </div>
-              <span className="text-sm font-medium">{t("badges.secure")}</span>
-            </motion.div>
-          </Link>
-        </motion.div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
+          {/* Express Delivery */}
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-xl flex flex-col items-center text-center border border-gray-700 hover:border-green-400 transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-green-500/10 p-3 rounded-full mb-3">
+              <FiZap className="text-green-400 text-2xl" />
+            </div>
+            <h4 className="font-semibold mb-1 text-white">Express Delivery</h4>
+            <p className="text-sm text-green-200">fast delevary</p>
+          </div>
 
-        {/* Payment Methods - Static */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            className="bg-gray-800 p-3 rounded-md flex items-center gap-2"
-          >
-            <FiCreditCard />
-            <span className="text-sm">{t.raw("paymentMethods")[0]}</span>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            className="bg-gray-800 p-3 rounded-md flex items-center gap-2"
-          >
-            <FiCreditCard />
-            <span className="text-sm">{t.raw("paymentMethods")[1]}</span>
-          </motion.div>
+          {/* Instant Support */}
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-xl flex flex-col items-center text-center border border-gray-700 hover:border-purple-400 transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-purple-500/10 p-3 rounded-full mb-3">
+              <FiMessageSquare className="text-purple-400 text-2xl" />
+            </div>
+            <h4 className="font-semibold mb-1 text-white">Instant Support</h4>
+            <p className="text-sm text-purple-200">24/7 chat</p>
+          </div>
+
+          {/* Easy Returns */}
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-xl flex flex-col items-center text-center border border-gray-700 hover:border-amber-400 transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-amber-500/10 p-3 rounded-full mb-3">
+              <FiRefreshCw className="text-amber-400 text-2xl" />
+            </div>
+            <h4 className="font-semibold mb-1 text-white">Easy Returns</h4>
+            <p className="text-sm text-amber-200">hassle-free</p>
+          </div>
+
+          {/* Premium Members */}
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-xl flex flex-col items-center text-center border border-gray-700 hover:border-red-400 transition-all duration-300 hover:-translate-y-1">
+            <div className="bg-red-500/10 p-3 rounded-full mb-3">
+              <FiStar className="text-red-400 text-2xl" />
+            </div>
+            <h4 className="font-semibold mb-1 text-white">Premium Items</h4>
+            <p className="text-sm text-red-200">Priority services</p>
+          </div>
+        </div>
+
+        {/* Payment Methods */}
+        <div className="mb-8">
+          <h4 className="text-center text-gray-300 text-sm font-medium mb-4">
+            We Accept
+          </h4>
+          <div className="flex flex-wrap justify-center gap-3">
+            <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
+              <FiCreditCard />
+              <span className="text-sm">Visa</span>
+            </div>
+            <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
+              <FiCreditCard />
+              <span className="text-sm">MasterCard</span>
+            </div>
+            <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
+              <MdLocalShipping />
+              <span className="text-sm">Cash on Delevary</span>
+            </div>
+            {/* <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
+              <FiCreditCard />
+              <span className="text-sm">Apple Pay</span>
+            </div> */}
+          </div>
         </div>
 
         {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm"
-        >
+        <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>{t("bottom.copyright")}</p>
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#">
-                <motion.span whileHover={{ color: "#3B82F6" }}>
-                  {t("bottom.privacy")}
-                </motion.span>
+            <p className="text-gray-400 text-sm mb-4 md:mb-0">
+              &copy; {new Date().getFullYear()} SARAH Fashion. All rights
+              reserved.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/infoPages/privacyPolicy">
+                <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
+                  Privacy Policy
+                </span>
               </Link>
-              <Link href="#">
-                <motion.span whileHover={{ color: "#3B82F6" }}>
-                  {t("bottom.terms")}
-                </motion.span>
+              <Link href="/infoPages/termsOfService">
+                <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
+                  Terms of Service
+                </span>
               </Link>
-              <Link href="#">
-                <motion.span whileHover={{ color: "#3B82F6" }}>
-                  {t("bottom.cookies")}
-                </motion.span>
+              <Link href="/infoPages/shippingPolicy">
+                <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
+                  Shipping Policy
+                </span>
+              </Link>
+              <Link href="/infoPages/returnPolicy">
+                <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
+                  Refund Policy
+                </span>
               </Link>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );
