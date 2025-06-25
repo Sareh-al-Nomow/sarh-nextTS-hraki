@@ -19,7 +19,7 @@ export default function ClientLayoutPart() {
       localStorage.setItem("token", googleLoginToken);
       loginWithGoogle(googleLoginToken);
     }
-  }, [searchParams]);
+  }, [searchParams, loginWithGoogle]);
 
   return <></>;
 }

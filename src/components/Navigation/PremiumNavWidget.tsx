@@ -90,7 +90,7 @@ export default function PremiumNavWidget() {
 
       setGroups(newGroups);
     }
-  }, [categoriesData, brandsData]);
+  }, [categoriesData, brandsData ,t]);
 
   // function handleSearchTerm() {
   //   if (term) {

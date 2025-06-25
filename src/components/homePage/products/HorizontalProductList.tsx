@@ -68,14 +68,17 @@ export default function HorizontalProductList({
 
     checkOverflow();
     const resizeObserver = new ResizeObserver(checkOverflow);
-    if (scrollRef.current) {
-      resizeObserver.observe(scrollRef.current);
-      scrollRef.current.addEventListener("scroll", handleScroll);
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer) {
+      resizeObserver.observe(scrollContainer);
+      scrollContainer.addEventListener("scroll", handleScroll);
     }
 
     return () => {
       resizeObserver.disconnect();
-      scrollRef.current?.removeEventListener("scroll", handleScroll);
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [products, isRTL]);
 
