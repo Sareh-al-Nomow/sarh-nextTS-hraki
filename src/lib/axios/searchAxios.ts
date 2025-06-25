@@ -19,7 +19,7 @@ export const getSearchProducts = async (
   try {
     const lang = localStorage.getItem("lang") ?? "en";
     const response = await axios.get<searchProductsResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/search?lang=${lang}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/search?lang=${lang}`,
       { params, signal }
     );
     return response.data;

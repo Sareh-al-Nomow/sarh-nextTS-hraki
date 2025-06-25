@@ -9,7 +9,7 @@ export const getReviewsForProduct = async (
 
   try {
     const response = await axios.get<ProductReviewProfile[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reviews/product/${productId}/customer`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/product/${productId}/customer`,
       {
         signal,
         headers: {
@@ -38,7 +38,7 @@ export const addReview = async (
   try {
     const token = localStorage.getItem("token");
     const response = await axios.post<ProductReview>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reviews`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews`,
       {
         ...newReview,
       },
@@ -65,7 +65,7 @@ export const getReviewsForProductById = async (
 
   try {
     const response = await axios.get<ProductReview[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reviews/product/${productId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/product/${productId}`,
       {
         signal,
         headers: {

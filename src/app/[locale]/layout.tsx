@@ -38,7 +38,7 @@ const dosis = Dosis({
 // ✅ جلب إعدادات الموقع من السيرفر حسب اللغة
 async function getSettings(locale: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/settings?lang=${locale}`
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/settings?lang=${locale}`
   );
   if (!res.ok) return null;
   return res.json();

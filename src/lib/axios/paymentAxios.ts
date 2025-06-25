@@ -14,7 +14,7 @@ export const placeOrder = async (payload: OrderPayload) => {
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`,
       payload,
       {
         headers: {

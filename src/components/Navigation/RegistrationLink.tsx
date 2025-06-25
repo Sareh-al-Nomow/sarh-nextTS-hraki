@@ -329,7 +329,7 @@ export default function RegistrationLink() {
               <div className="text-center">
                 <Link
                   href={
-                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/auth/google"
                   }
                   className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
                 >
@@ -486,7 +486,7 @@ export default function RegistrationLink() {
               <div className="text-center mt-4">
                 <Link
                   href={
-                    process.env.NEXT_PUBLIC_API_BASE_URL + "/api/auth/google"
+                    process.env.NEXT_PUBLIC_API_BASE_URL + "/auth/google"
                   }
                   className="flex items-center justify-center gap-2 border border-gray-600 hover:bg-gray-700 w-full py-2 rounded"
                 >

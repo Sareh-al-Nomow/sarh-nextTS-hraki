@@ -14,7 +14,7 @@ export const updateProfile = async (
   try {
     const token = localStorage.getItem("token");
     const response = await axios.put<User>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/profile/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/profile/${userId}`,
       {
         ...userData,
       },

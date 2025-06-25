@@ -16,7 +16,7 @@ export const otpVerify = async (data: otpRequest): Promise<otpResponse> => {
 
   try {
     const response = await axios.post<otpResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify-otp`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/verify-otp`,
       data
     );
     return response.data;

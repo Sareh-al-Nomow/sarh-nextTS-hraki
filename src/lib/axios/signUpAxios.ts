@@ -13,7 +13,7 @@ export const signUp = async (data: SignUpRequest): Promise<User> => {
 
   try {
     const response = await axios.post<User>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/register`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`,
       data
     );
     return response.data;

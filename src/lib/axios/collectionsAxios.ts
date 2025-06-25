@@ -11,7 +11,7 @@ export const getCollections = async (): Promise<CollectionResponse> => {
     const lang = localStorage.getItem("lang") ?? "en";
 
     const response = await axios.get<CollectionResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/collections?lang=${lang}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/collections?lang=${lang}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export const getCollectionById = async (
     const lang = localStorage.getItem("lang") ?? "en";
 
     const response = await axios.get<Collection>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/collections/${collectionId}?lang=${lang}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/collections/${collectionId}?lang=${lang}`,
       {
         signal,
         headers: {

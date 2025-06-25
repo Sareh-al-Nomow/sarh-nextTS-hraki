@@ -49,7 +49,7 @@ export const getAddresses = async (): Promise<AddressResponse[]> => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get<AddressResponse[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/addresses`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/addresses`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -82,7 +82,7 @@ export const addAddress = async (
   try {
     const token = localStorage.getItem("token");
     const response = await axios.post<AddressResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/addresses`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/addresses`,
       {
         ...newAddress,
       },
@@ -116,7 +116,7 @@ export const updateAddress = async (
   try {
     const token = localStorage.getItem("token");
     const response = await axios.put<AddressResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/addresses/${addressId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/addresses/${addressId}`,
       {
         ...newAddress,
       },
@@ -139,7 +139,7 @@ export const deleteAddress = async (addressId: number): Promise<string> => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.delete<string>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/addresses/${addressId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/addresses/${addressId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

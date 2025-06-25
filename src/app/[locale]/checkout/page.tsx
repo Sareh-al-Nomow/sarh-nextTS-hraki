@@ -282,9 +282,9 @@ const CheckoutPage = () => {
                         transition={{ delay: 0.1 * index }}
                         className="flex justify-between"
                       >
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-3">
                           <div className="flex items-center">
-                            <div className="relative w-12 h-12 rounded bg-gray-200 mr-3 overflow-hidden">
+                            <div className="relative w-12 h-12 rounded bg-gray-200 overflow-hidden">
                               <Image
                                 src={item.image}
                                 alt={item.product_name || "Product image"}

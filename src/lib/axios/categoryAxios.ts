@@ -6,7 +6,7 @@ export const getCategories = async (): Promise<CategoryResponse> => {
     const token = localStorage.getItem("token");
     const lang = localStorage.getItem("lang") ?? "en";
     const response = await axios.get<CategoryResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories?lang=${lang}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories?lang=${lang}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

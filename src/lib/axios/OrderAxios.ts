@@ -32,13 +32,13 @@ export const saveOrderData = async ({
     console.log("Using token:", token);
 
     await axios.put(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/${cartId}/shipping-address/${addressId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/${cartId}/shipping-address/${addressId}`,
       {},
       config
     );
 
     await axios.put(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/${cartId}/shipping-method/${DelevaryMethodId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/${cartId}/shipping-method/${DelevaryMethodId}`,
       {},
       config
     );
@@ -59,7 +59,7 @@ export const placeOrder = async (payload: OrderPayload) => {
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`,
       payload,
       {
         headers: {
@@ -87,7 +87,7 @@ export const getOrders = async (): Promise<Order[]> => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get<Order[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/user`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/user`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

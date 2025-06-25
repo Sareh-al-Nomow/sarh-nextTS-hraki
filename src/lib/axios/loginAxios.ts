@@ -15,7 +15,7 @@ export interface loginResponse {
 export const login = async (data: loginRequest): Promise<loginResponse> => {
   try {
     const response = await axios.post<loginResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
       data
     );
     return response.data;

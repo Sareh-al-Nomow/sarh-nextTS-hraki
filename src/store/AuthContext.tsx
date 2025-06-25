@@ -93,7 +93,7 @@ export const AuthProvider: FC<AuthProviderProp> = ({ children }) => {
       let res;
       try {
         res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify-token`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/verify-token`,
           {
             method: "GET",
             headers: {

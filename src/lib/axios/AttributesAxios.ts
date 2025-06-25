@@ -9,7 +9,7 @@ export const getAttributeGroupById = async (
     const lang = localStorage.getItem("lang") ?? "en";
 
     const response = await axios.get<AttributeGroupResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/attribute-groups/${groupId}?lang=${lang}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/attribute-groups/${groupId}?lang=${lang}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

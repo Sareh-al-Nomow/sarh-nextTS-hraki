@@ -6,7 +6,7 @@ export const getCountries = async (): Promise<Country[]> => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get<Country[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/countries`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/countries`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ export const getCountry = async (
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get<CountryShipping>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/countries/${countryId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/countries/${countryId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

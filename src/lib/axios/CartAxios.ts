@@ -78,7 +78,7 @@ export const getCartByToken = async (): Promise<CartResponse> => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get<CartResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/customer`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/customer`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ export const AddToCart = async ({
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/add-items`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/add-items`,
       {
         product_id: productId,
         qty: qty,
@@ -152,7 +152,7 @@ export const UpdateCartItemQuantity = async ({
 
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/items/${cart_item_id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/items/${cart_item_id}`,
       {
         qty: qty,
       },
@@ -189,7 +189,7 @@ export const DeleteCartItem = async ({
 
   try {
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/carts/items/${cart_item_id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/items/${cart_item_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -225,7 +225,7 @@ export const ApplyCoupon = async ({
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupons/apply`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/coupons/apply`,
       {
         couponCode: coupon_code,
       },
@@ -263,7 +263,7 @@ export const DeleteAppliedCoupon = async ({
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupons/remove`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/coupons/remove`,
       { cartId },
       {
         headers: {

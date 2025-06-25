@@ -13,7 +13,7 @@ export const restPasswordRequest = async ({
 }: RestPasswordRequestParams): Promise<RestPasswordResponse> => {
   try {
     const response = await axios.post<RestPasswordResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/password-reset/request`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/password-reset/request`,
       { email }
     );
     return response.data;
@@ -36,7 +36,7 @@ export const newPasswordRequest = async ({
 }: NewPasswordRequestParams): Promise<RestPasswordResponse> => {
   try {
     const response = await axios.post<RestPasswordResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/password-reset`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/password-reset`,
       { newPassword,token}
     );
     return response.data;
