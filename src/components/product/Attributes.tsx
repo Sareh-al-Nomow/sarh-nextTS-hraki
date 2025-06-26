@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import type { Attributes } from "@/models/forntEndProduct";
 import { getVariantGroupById } from "@/lib/axios/variantAxios";
-import { extractCoupledVariants } from "@/utils/flattenedAttribute";
+import {
+  extractAttributesFromVariantGroup,
+  extractCoupledVariants,
+} from "@/utils/flattenedAttribute";
 import { useRouter } from "next/navigation";
 
 type AttributesProps = {
@@ -101,6 +104,10 @@ const Attributes = ({
     ? extractCoupledVariants(dataVariant)
     : [];
 
+  const variantsOptions = dataVariant
+    ? extractAttributesFromVariantGroup(dataVariant)
+    : [];
+
   useEffect(() => {
     const initial: Record<number, string> = {};
     defaultAttributes.forEach((att) => {
@@ -115,7 +122,30 @@ const Attributes = ({
     );
   };
 
-  const handleOptionSelect = (optionId: number) => {
+  const isGloableAvailable = (attributeId: number, optionId: number) => {
+    // 1. تحديث الخيار المحدد
+    const newSelectedOptions = {
+      ...selectedOptions,
+      [attributeId]:
+        variantsOptions.find((opt) => opt.option_id === optionId)
+          ?.option_text || "",
+    };
+
+    // 2. البحث عن المتغير الذي يتطابق مع جميع الخيارات المحددة
+    const matchedVariant = coupledVariants.find((variant) =>
+      variant.options.every(
+        (opt) => newSelectedOptions[opt.attribute_id] === opt.option_text
+      )
+    );
+
+    if (matchedVariant?.url_key) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleOptionSelect = (attributeId: number, optionId: number) => {
     const matchedVariant = coupledVariants.find((variant) =>
       variant.options.some((opt) => opt.option_id === optionId)
     );
@@ -133,6 +163,11 @@ const Attributes = ({
       router.push(`/product/${matchedVariant.url_key}`);
     }
   };
+
+  console.log(dataVariant);
+  console.log(variantsOptions);
+  console.log(coupledVariants);
+  console.log(selectedOptions);
 
   if (isLoading || isLoadingVariant) {
     return (
@@ -210,6 +245,10 @@ const Attributes = ({
                 const isAvailable = isAvailableOption(
                   option.attribute_option_id
                 );
+                const isGloableAva = isGloableAvailable(
+                  option.attribute_id,
+                  option.attribute_option_id
+                );
 
                 return (
                   <motion.div
@@ -223,7 +262,10 @@ const Attributes = ({
                     <button
                       disabled={!isAvailable}
                       onClick={() =>
-                        handleOptionSelect(option.attribute_option_id)
+                        handleOptionSelect(
+                          option.attribute_id,
+                          option.attribute_option_id
+                        )
                       }
                       className={`
                         w-full h-12 rounded-md flex items-center justify-center transition-all
@@ -238,6 +280,11 @@ const Attributes = ({
                             ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-45 relative after:content-[''] after:absolute after:top-1/2 after:left-0 after:w-full after:h-[1px] after:bg-gray-400 after:transform after:rotate-[-15deg] after:origin-center"
                             : "opacity-100 cursor-pointer hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98]"
                         }
+                         ${
+                           !isGloableAva
+                             ? " bg-gray-100 border-gray-200 text-gray-400 opacity-45 relative after:content-[''] after:absolute after:top-1/2 after:left-0 after:w-full after:h-[1px] after:bg-gray-400 after:transform after:rotate-[-15deg] after:origin-center"
+                             : "opacity-100 cursor-pointer hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98]"
+                         }
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                       `}
                     >
@@ -257,6 +304,10 @@ const Attributes = ({
                         <div className="absolute top-0 right-0 bg-gray-400 text-white text-[10px] font-bold px-1 rounded-bl-md">
                           غير متوفر
                         </div>
+                      )}
+
+                      {!isGloableAva && (
+                        <div className="absolute top-0 right-0 bg-gray-400 text-white text-[10px] font-bold px-1 rounded-bl-md"></div>
                       )}
 
                       {isSelected && !isColorOption && (
