@@ -133,6 +133,37 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   }
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const restoreScrollPosition = () => {
+      // محاولة الاستعادة من localStorage أولاً
+      const scrollY =
+        localStorage.getItem("product-scroll") ||
+        sessionStorage.getItem("product-scroll-mobile");
+
+      if (scrollY) {
+        // تأخير متعدد للهواتف
+        const attemptScroll = () => {
+          window.scrollTo(0, parseInt(scrollY));
+          localStorage.removeItem("product-scroll");
+          sessionStorage.removeItem("product-scroll-mobile");
+        };
+
+        attemptScroll(); // المحاولة الأولى فوراً
+        const retryTimer = setTimeout(attemptScroll, 200); // المحاولة الثانية بعد 200ms
+        const fallbackTimer = setTimeout(attemptScroll, 500); // المحاولة الثالثة بعد 500ms
+
+        return () => {
+          clearTimeout(retryTimer);
+          clearTimeout(fallbackTimer);
+        };
+      }
+    };
+
+    restoreScrollPosition();
+  }, []); // أضف dependencies حسب الحاجة
+
+  useEffect(() => {
     const stored = localStorage.getItem("wishlist");
     const wishlist: FrontendProduct[] = stored ? JSON.parse(stored) : [];
 
@@ -144,10 +175,21 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       setLikedProduct(isExsist);
     }
 
-    const scrollY = localStorage.getItem("product");
-    if (scrollY !== null) {
-      window.scrollTo(0, parseInt(scrollY, 10));
-      localStorage.removeItem("product");
+    if (typeof window === "undefined") return;
+
+    const scrollY =
+      localStorage.getItem("product-scroll") ||
+      sessionStorage.getItem("product-scroll-mobile");
+
+    if (scrollY) {
+      const scrollToPosition = () => {
+        window.scrollTo(0, parseInt(scrollY));
+        localStorage.removeItem("product-scroll");
+        sessionStorage.removeItem("product-scroll-mobile");
+      };
+
+      // محاولات متعددة للهواتف
+      scrollToPosition();
     }
   }, [product]);
 
