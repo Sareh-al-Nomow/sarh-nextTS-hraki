@@ -174,23 +174,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
       setLikedProduct(isExsist);
     }
-
-    if (typeof window === "undefined") return;
-
-    const scrollY =
-      localStorage.getItem("product-scroll") ||
-      sessionStorage.getItem("product-scroll-mobile");
-
-    if (scrollY) {
-      const scrollToPosition = () => {
-        window.scrollTo(0, parseInt(scrollY));
-        localStorage.removeItem("product-scroll");
-        sessionStorage.removeItem("product-scroll-mobile");
-      };
-
-      // محاولات متعددة للهواتف
-      scrollToPosition();
-    }
   }, [product]);
 
   const toggleLike = (product: FrontEndProductCartItem) => {
