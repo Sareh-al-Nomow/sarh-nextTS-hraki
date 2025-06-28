@@ -30,6 +30,7 @@ import { FrontEndProductCartItem } from "@/models/frontEndProductCartItem";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import Attributes from "@/components/product/Attributes";
+import { useCurrency } from "@/store/CurrencyContext";
 
 type ProductDetailsProps = {
   params: Promise<{ url_Key: string }>;
@@ -56,6 +57,12 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const { openAuthModal } = useContext(AuthModalContext);
   const { addToCart } = useContext(CartContext);
   const { isAuthenticated } = useContext(AuthContext);
+  const { rate, userCurrency } = useCurrency();
+
+  const price = (Number(product?.price) * rate).toFixed(2);
+  const originalPrice = product?.originalPrice
+    ? (Number(product.originalPrice) * rate).toFixed(2)
+    : null;
 
   const {
     data: productReviews,
@@ -146,16 +153,13 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
         const attemptScroll = () => {
           window.scrollTo(0, parseInt(scrollY));
           localStorage.removeItem("product-scroll");
-          sessionStorage.removeItem("product-scroll-mobile");
         };
 
         attemptScroll(); // المحاولة الأولى فوراً
         const retryTimer = setTimeout(attemptScroll, 200); // المحاولة الثانية بعد 200ms
-        const fallbackTimer = setTimeout(attemptScroll, 500); // المحاولة الثالثة بعد 500ms
 
         return () => {
           clearTimeout(retryTimer);
-          clearTimeout(fallbackTimer);
         };
       }
     };
@@ -432,7 +436,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
               <div className="mb-6 sm:mb-8">
                 <div className="flex items-end gap-2">
                   <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-                    ${product?.price?.toFixed(2) || "--"}
+                    {userCurrency} {price}
                   </span>
                   {product &&
                     typeof product.originalPrice === "number" &&
@@ -440,13 +444,14 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                     product.originalPrice > product.price && (
                       <>
                         <span className="text-gray-500 line-through text-sm">
-                          ${product.originalPrice}
+                          {userCurrency} {originalPrice}
                         </span>
                         <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded">
                           {t("save", {
                             amount: (
-                              product.originalPrice - product.price
+                              Number(originalPrice) - Number(price)
                             ).toFixed(2),
+                            cu: userCurrency,
                           })}
                         </span>
                       </>
@@ -588,9 +593,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                         <FiShoppingCart className="text-lg sm:text-xl" />
                         <span>
                           {t("addToCart", {
-                            price: product
-                              ? (product.price * quantity).toFixed(2)
-                              : "0.00",
+                            price: price,
+                            cu: userCurrency,
                           })}
                         </span>
                       </motion.button>

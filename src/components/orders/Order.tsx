@@ -9,6 +9,7 @@ import { FiChevronDown, FiTruck } from "react-icons/fi";
 import ReturnModal from "./ReturnModal";
 import ProductItem from "./ProductItem";
 import { useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 type OrderStatus = "processing" | "shipped" | "delivered" | "cancelled";
 
@@ -29,6 +30,13 @@ const Order: React.FC<OrderProp> = ({
 }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const t = useTranslations("orders.order");
+
+  const { rate, userCurrency } = useCurrency();
+
+  function viewPriceCurencyHandler(priceNumber: number) {
+    const price = (Number(priceNumber) * rate).toFixed(2);
+    return price ? price : 0;
+  }
 
   const toggleOpenModal = () => {
     setIsOpenModal(!isOpenModal);
@@ -77,7 +85,9 @@ const Order: React.FC<OrderProp> = ({
             </div>
           </div>
           <div className="flex items-center">
-            <p className="font-medium">${order.grand_total.toFixed(2)}</p>
+            <p className="font-medium">
+              {userCurrency} {viewPriceCurencyHandler(order.grand_total ?? 0)}
+            </p>
             <motion.div
               animate={{
                 rotate: expandedOrder === order.order_id ? 180 : 0,
@@ -123,7 +133,8 @@ const Order: React.FC<OrderProp> = ({
                           {t("summaryItems.price")}
                         </span>
                         <span className="text-sm font-semibold text-gray-900">
-                          ${order.sub_total}
+                          {userCurrency}{" "}
+                          {viewPriceCurencyHandler(order.sub_total ?? 0)}
                         </span>
                       </div>
 
@@ -133,7 +144,10 @@ const Order: React.FC<OrderProp> = ({
                             {t("summaryItems.shipping")}
                           </span>
                           <span className="text-sm font-semibold text-gray-900">
-                            ${order.shipping_fee_incl_tax}
+                            {userCurrency}{" "}
+                            {viewPriceCurencyHandler(
+                              order.shipping_fee_incl_tax ?? 0
+                            )}
                           </span>
                         </div>
                       )}
@@ -144,7 +158,10 @@ const Order: React.FC<OrderProp> = ({
                             {t("summaryItems.discount")}
                           </span>
                           <span className="text-sm text-red-300 line-through">
-                            ${order.discount_amount ?? 0}
+                            {userCurrency}{" "}
+                            {viewPriceCurencyHandler(
+                              order.discount_amount ?? 0
+                            )}
                           </span>
                         </div>
                       )}
@@ -155,7 +172,8 @@ const Order: React.FC<OrderProp> = ({
                             {t("summaryItems.total")}
                           </span>
                           <span className="text-sm font-semibold text-green-600">
-                            ${order.grand_total}
+                            {userCurrency}{" "}
+                            {viewPriceCurencyHandler(order.grand_total ?? 0)}
                           </span>
                         </div>
                       )}

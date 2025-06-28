@@ -651,7 +651,7 @@
     },
     "addToCart": "Add to Cart - ${price}",
     "quantity": "Quantity",
-    "save": "Save ${amount}",
+    "save": "Save {cu} {amount}",
     "since": "Since {year}",
     "addReview": "Add your review",
     "reviewsCount": "{rating} ({count} reviews)",

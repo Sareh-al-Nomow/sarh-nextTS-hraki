@@ -163,11 +163,6 @@ const Attributes = ({
       if (typeof window !== "undefined") {
         // للكمبيوتر
         localStorage.setItem("product-scroll", window.scrollY.toString());
-        // للهاتف مع تأخير إضافي
-        sessionStorage.setItem(
-          "product-scroll-mobile",
-          window.scrollY.toString()
-        );
       }
       router.push(`/product/${matchedVariant.url_key}`);
     }

@@ -5,6 +5,7 @@ import React from "react";
 import Spinner from "../UI/SpinnerLoading";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 const Shipping: React.FC<{
   countryId: number;
@@ -30,6 +31,13 @@ const Shipping: React.FC<{
 
   if (data?.ShippingZone && data.ShippingZone.length > 0) {
     console.log(data.ShippingZone[0].zone_methods);
+  }
+
+  const { rate, userCurrency } = useCurrency();
+
+  function viewPriceCurencyHandler(priceNumber: number) {
+    const price = (Number(priceNumber) * rate).toFixed(2);
+    return price ? price : 0;
   }
 
   function handleSelectDelevaryMethod(e: React.ChangeEvent<HTMLInputElement>) {
@@ -106,7 +114,9 @@ const Shipping: React.FC<{
                     {method.method.name}
                   </label>
                 </div>
-                <span className="text-sm text-gray-600">${method.cost}</span>
+                <span className="text-sm text-gray-600">
+                  {userCurrency} {viewPriceCurencyHandler(method.cost ?? 0)}
+                </span>
               </div>
             ))}
           </div>

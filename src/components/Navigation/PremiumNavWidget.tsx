@@ -90,7 +90,7 @@ export default function PremiumNavWidget() {
 
       setGroups(newGroups);
     }
-  }, [categoriesData, brandsData ,t]);
+  }, [categoriesData, brandsData, t]);
 
   // function handleSearchTerm() {
   //   if (term) {
@@ -284,7 +284,8 @@ export default function PremiumNavWidget() {
                                 >
                                   <Link
                                     href={`/shopGrid?${
-                                      category.name === "Categories"
+                                      category.name === "Categories" ||
+                                      category.name === "الأقسام"
                                         ? "categoryid"
                                         : "brandid"
                                     }=${category.ids[index]}`}

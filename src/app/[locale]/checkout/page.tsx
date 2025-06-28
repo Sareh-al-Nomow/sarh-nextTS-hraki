@@ -15,6 +15,7 @@ import Spinner from "@/components/UI/SpinnerLoading";
 import Shipping from "@/components/chechout/Shipping";
 import PaymentTap from "@/components/chechout/PaymentTap";
 import { useLocale, useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 const CheckoutPage = () => {
   const t = useTranslations("checkout");
@@ -43,6 +44,13 @@ const CheckoutPage = () => {
     addressId: null,
     delevaryMethodId: null,
   });
+
+  const { rate, userCurrency } = useCurrency();
+
+  function viewPriceCurencyHandler(priceNumber: number) {
+    const price = (Number(priceNumber) * rate).toFixed(2);
+    return price ? price : 0;
+  }
 
   const {
     margeItems,
@@ -304,7 +312,8 @@ const CheckoutPage = () => {
                           </div>
                         </div>
                         <p className="text-sm font-medium text-gray-900">
-                          ${summaryCart.grandTotal}
+                          {userCurrency}{" "}
+                          {viewPriceCurencyHandler(summaryCart.grandTotal ?? 0)}
                         </p>
                       </motion.div>
                     ))}
@@ -319,7 +328,8 @@ const CheckoutPage = () => {
                         {t("orderSummary.subtotal")}
                       </span>
                       <span className="text-gray-900">
-                        ${summaryCart.subTotal}
+                        {userCurrency}{" "}
+                        {viewPriceCurencyHandler(summaryCart.subTotal)}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -328,7 +338,9 @@ const CheckoutPage = () => {
                         {t("orderSummary.shipping")}
                       </span>
                       <span className="text-gray-900">
-                        ${summaryCart.shippingFee ?? 0}
+                        {/* {summaryCart.shippingFee ?  : 0} */}
+                        {userCurrency}{" "}
+                        {viewPriceCurencyHandler(summaryCart.shippingFee ?? 0)}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -337,7 +349,8 @@ const CheckoutPage = () => {
                         {t("orderSummary.tax")}
                       </span>
                       <span className="text-gray-900">
-                        ${summaryCart.tax ?? 0}
+                        {userCurrency}{" "}
+                        {viewPriceCurencyHandler(summaryCart.tax ?? 0)}
                       </span>
                     </div>
                     {summaryCart.discount && (
@@ -347,7 +360,8 @@ const CheckoutPage = () => {
                           {t("orderSummary.discount")}
                         </span>
                         <span className="text-red-300 line-through">
-                          ${summaryCart.discount ?? 0}
+                          {userCurrency}{" "}
+                          {viewPriceCurencyHandler(summaryCart.discount ?? 0)}
                         </span>
                       </div>
                     )}
@@ -357,7 +371,8 @@ const CheckoutPage = () => {
                         {t("orderSummary.total")}
                       </span>
                       <span className="font-medium text-gray-900">
-                        ${summaryCart.grandTotal ?? 0}
+                        {userCurrency}{" "}
+                        {viewPriceCurencyHandler(summaryCart.grandTotal ?? 0)}
                       </span>
                     </div>
                   </div>

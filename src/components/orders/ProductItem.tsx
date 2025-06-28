@@ -16,6 +16,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaExclamationTriangle, FaRegStar } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { useCurrency } from "@/store/CurrencyContext";
 
 interface productItemProps {
   item: OrderItem;
@@ -58,6 +59,13 @@ const ProductItem: React.FC<productItemProps> = ({ item, orderStatus }) => {
       toast.error(err.message);
     },
   });
+
+  const { rate, userCurrency } = useCurrency();
+
+  function viewPriceCurencyHandler(priceNumber: number) {
+    const price = (Number(priceNumber) * rate).toFixed(2);
+    return price ? price : 0;
+  }
 
   const toggleDetails = () => setIsModalOpen(!isModalOpen);
   const handleStarClick = (index: number) => setRating(index);
@@ -127,29 +135,30 @@ const ProductItem: React.FC<productItemProps> = ({ item, orderStatus }) => {
         <div>
           <p className="font-medium">{item.product_name}</p>
           <p className="text-sm text-gray-500">
-            ${item.product_price} * {item.qty} = $
-            {item.qty * item.product_price}
+            {userCurrency} {viewPriceCurencyHandler(item.product_price ?? 0)} *{" "}
+            {item.qty} ={userCurrency}{" "}
+            {item.qty * Number(viewPriceCurencyHandler(item.product_price ?? 0))}
           </p>
         </div>
       </div>
 
       <div className="w-full md:w-auto text-end">
-      {review && review[0] ? (
-        <StarRating rating={review[0]?.rating ?? 0} interactive={false} />
-      ) : (
-        orderStatus && (
-          <button
-            onClick={toggleDetails}
-            disabled={isLoading}
-            className="flex flex-wrap items-center gap-1 border border-blue-700 pr-text hover:bg-blue-50 transition rounded-full px-4 py-1.5 font-medium disabled:opacity-50"
-          >
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaRegStar key={star} size={16} className="pr-text" />
-            ))}
-            <span className="ml-1 pr-text font-bold">{t("reviewBtn")}</span>
-          </button>
-        )
-      )}
+        {review && review[0] ? (
+          <StarRating rating={review[0]?.rating ?? 0} interactive={false} />
+        ) : (
+          orderStatus && (
+            <button
+              onClick={toggleDetails}
+              disabled={isLoading}
+              className="flex flex-wrap items-center gap-1 border border-blue-700 pr-text hover:bg-blue-50 transition rounded-full px-4 py-1.5 font-medium disabled:opacity-50"
+            >
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaRegStar key={star} size={16} className="pr-text" />
+              ))}
+              <span className="ml-1 pr-text font-bold">{t("reviewBtn")}</span>
+            </button>
+          )
+        )}
       </div>
 
       <Modal open={isModalOpen} classesName="pr-bg">

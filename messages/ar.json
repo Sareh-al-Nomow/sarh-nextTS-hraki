@@ -649,9 +649,9 @@
       "additional": "معلومات إضافية",
       "reviews": "التقييمات"
     },
-    "addToCart": "أضف إلى السلة - {price} دولار",
+    "addToCart": "أضف إلى السلة - {price} {cu}",
     "quantity": "الكمية",
-    "save": "وفر {amount} دولار",
+    "save": "وفر {amount} {cu}",
     "since": "منذ عام {year}",
     "addReview": "أضف تقييمك",
     "reviewsCount": "{rating} ({count} تقييمات)",
