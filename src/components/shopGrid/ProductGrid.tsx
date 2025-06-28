@@ -39,6 +39,7 @@ const ProductGrid = ({
   const t = useTranslations("shopGrid.ProductGrid");
   const locale = useLocale();
   const isRTL = locale === "ar"; // Add other RTL languages as needed
+  console.log(selectedCategory);
 
   return (
     <div className="flex-1" dir={isRTL ? "rtl" : "ltr"}>
@@ -65,13 +66,13 @@ const ProductGrid = ({
         </div>
       ) : products.length > 0 ? (
         <>
-          {selectedCategory?.subCategory && (
+          {selectedCategory?.categoryParent && (
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-4">
                 {t("subcategories")}
               </h2>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                {selectedCategory.subCategory.map((subC) => (
+                {[selectedCategory?.categoryParent].map((subC) => (
                   <div key={subC.id} className="flex flex-col items-center">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -100,6 +101,43 @@ const ProductGrid = ({
               </div>
             </div>
           )}
+
+          {selectedCategory?.subCategory &&
+            selectedCategory.subCategory.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold mb-4">
+                  {t("subcategories")}
+                </h2>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                  {selectedCategory.subCategory.map((subC) => (
+                    <div key={subC.id} className="flex flex-col items-center">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        onClick={() => toggleCategoryId(subC.id)}
+                        className={`p-2 rounded-full border-2 ${
+                          selectedCategoriesIds.includes(subC.id)
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200"
+                        }`}
+                      >
+                        <Image
+                          src={
+                            subC.description.image ?? "/image/products/img.png"
+                          }
+                          alt={subC.description.name}
+                          width={64}
+                          height={64}
+                          className="w-16 h-16 rounded-full object-cover"
+                        />
+                      </motion.button>
+                      <span className="mt-2 text-sm text-center">
+                        {subC.description.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           <motion.div
             initial={{ opacity: 0 }}

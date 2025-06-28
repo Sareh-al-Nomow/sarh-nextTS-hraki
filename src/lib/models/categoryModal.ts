@@ -19,6 +19,7 @@ export interface Category {
   description: CategoryDescription;
   products: Product[];
   subCategory: Category[];
+  categoryParent: Category;
 }
 
 export interface CategoryDescription {

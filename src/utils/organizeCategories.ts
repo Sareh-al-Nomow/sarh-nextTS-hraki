@@ -1,13 +1,30 @@
 import { Category } from "@/lib/models/categoryModal";
 
-type CategoryWithChildren = Category & { children: Category[] };
-type CategoryWithSubCategory = Category & { subCategory?: Category[] };
+// Type for subcategory that includes its parent
+type SubCategoryWithParent = Category & {
+  parentCategory: CategoryWithParent | undefined;
+};
 
-export const organizeParentCategoriesWithSubs = (categories: Category[]) => {
-  // Create a map to group children by parent_id
+// Category with full parent category instead of parent_id
+type CategoryWithParent = Category & {
+  categoryParent?: CategoryWithParent;
+};
+
+// Category that may have subcategories
+type CategoryWithSubCategory = CategoryWithParent & {
+  subCategory: SubCategoryWithParent[];
+};
+
+// Optional: for other uses
+type CategoryWithChildren = Category & {
+  children: Category[];
+};
+
+export const organizeParentCategoriesWithSubs = (
+  categories: Category[]
+): CategoryWithSubCategory[] => {
   const childrenMap: Record<string, Category[]> = {};
 
-  // First pass: build the children map
   categories.forEach((cat) => {
     if (cat.parent_id) {
       if (!childrenMap[cat.parent_id]) {
@@ -17,19 +34,19 @@ export const organizeParentCategoriesWithSubs = (categories: Category[]) => {
     }
   });
 
-  // Filter only parent categories (parent_id === null)
   const parentCategories = categories.filter((cat) => cat.parent_id === null);
 
-  // Add subCategory property to parents that have children
   const parentsWithSubs: CategoryWithSubCategory[] = parentCategories.map(
     (parent) => {
-      if (childrenMap[parent.id]) {
-        return {
-          ...parent,
-          subCategory: childrenMap[parent.id],
-        };
-      }
-      return parent;
+      const sub = childrenMap[parent.id];
+      const subWithParent: SubCategoryWithParent[] = (sub ?? []).map((child) => ({
+        ...child,
+        parentCategory: { ...parent },
+      }));
+      return {
+        ...parent,
+        subCategory: subWithParent,
+      };
     }
   );
 
@@ -37,44 +54,79 @@ export const organizeParentCategoriesWithSubs = (categories: Category[]) => {
 };
 
 export const organizeCategories = (categories: Category[]) => {
-  // تصفية الفئات التي ليس لها اباء (parent_id === null)
-  const parents = categories.filter((cat) => cat.parent_id === null);
-
-  // تصفية الفئات الفرعية (subcategories)
-  const subcategories = categories.filter((cat) => cat.parent_id !== null);
-
-  // إنشاء خريطة لتجميع الأبناء حسب parent_id
-  const map: Record<string, Category[]> = {};
-  subcategories.forEach((sub) => {
-    if (!sub.parent_id) return; // تأكد من وجود parent_id
-    if (!map[sub.parent_id]) map[sub.parent_id] = [];
-    map[sub.parent_id].push(sub);
+  // Build map for quick access and to replace parent_id with full object recursively
+  const categoryMap: Record<number, Category> = {};
+  categories.forEach((cat) => {
+    categoryMap[cat.id] = cat;
   });
 
-  // بناء مصفوفة الـ parent categories التي لها أبناء فقط
+  // Helper to remove parent_id and add categoryParent recursively
+  function transformCategory(cat: Category): CategoryWithParent {
+    const { parent_id, ...rest } = cat;
+    const categoryParent = parent_id !== null ? transformCategory(categoryMap[parent_id]) : undefined;
+    return categoryParent
+      ? {
+          ...rest,
+          parent_id,
+          categoryParent,
+        }
+      : {
+          ...rest,
+          parent_id,
+        };
+  }
+
+  // Build children map
+  const childrenMap: Record<number, Category[]> = {};
+  categories.forEach((cat) => {
+    if (cat.parent_id !== null) {
+      if (!childrenMap[cat.parent_id]) childrenMap[cat.parent_id] = [];
+      childrenMap[cat.parent_id].push(cat);
+    }
+  });
+
+  // parents with children
+  const parents = categories.filter((cat) => cat.parent_id === null);
   const parentsWithChildren: CategoryWithChildren[] = parents
     .map((parent) => {
-      const children = map[parent.id] || [];
-      if (children.length === 0) return null; // إذا لا يوجد أبناء تجاهل
+      const children = childrenMap[parent.id] || [];
+      if (children.length === 0) return null;
       return { ...parent, children };
     })
     .filter(Boolean) as CategoryWithChildren[];
 
-  // بناء مصفوفة للـ parents الذين ليس لديهم أبناء (يعني ما موجودين في الـ parentsWithChildren)
   const parentsWithoutChildren = parents.filter(
-    (parent) => !(parent.id in map)
+    (parent) => !childrenMap[parent.id] || childrenMap[parent.id].length === 0
   );
 
   const allParent = organizeParentCategoriesWithSubs(categories);
 
-  // بناء allWithSub: كل الفئات مع خاصية subCategory إذا كانت موجودة
+  // Build allWithSub with full categoryParent and parentCategory inside subCategory
   const allWithSub: CategoryWithSubCategory[] = categories.map((cat) => {
-    const subCategory = map[cat.id];
-    if (subCategory && subCategory.length > 0) {
-      return { ...cat, subCategory };
-    }
-    return cat;
+    const transformedCat = transformCategory(cat);
+    const sub = childrenMap[cat.id] ?? [];
+    const subWithParent: SubCategoryWithParent[] = sub.map((child) => ({
+      ...transformCategory(child),
+      parentCategory: transformedCat,
+    }));
+
+    return {
+      ...transformedCat,
+      subCategory: subWithParent,
+    };
   });
 
-  return { parentsWithChildren, parentsWithoutChildren, allWithSub, allParent };
+  return {
+    parentsWithChildren,
+    parentsWithoutChildren,
+    allWithSub,
+    allParent,
+  };
 };
+
+// Helper to remove parent_id from category object
+// (No longer needed, but kept for reference.)
+// function omitParentId(cat: Category): Omit<Category, "parent_id"> {
+//   const { parent_id, ...rest } = cat;
+//   return rest;
+// }

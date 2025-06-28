@@ -9,7 +9,7 @@ const PaginationControls = ({
   totalPages,
   onPageChange,
 }: PaginationControlsProps) => {
-  if (totalPages <= 1) return null;
+  // if (totalPages <= 1) return null;
 
   return (
     <div className="flex justify-center mt-8 gap-2">

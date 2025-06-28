@@ -237,6 +237,8 @@ const ShopGridPage = () => {
 
   // Toggle category selection
   const toggleCategoryId = (categoryId: number) => {
+    console.log(selectedCategory?.id === categoryId);
+
     setSelectedCategoriesIds((prev) =>
       prev.includes(categoryId)
         ? prev.filter((c) => c !== categoryId)
@@ -244,6 +246,10 @@ const ShopGridPage = () => {
     );
 
     setProductQuery((prev) => {
+      if (selectedCategory?.id === categoryId) {
+        setSelectedCategory(null);
+      }
+
       if (prev.categoryId === categoryId) {
         const updated = { ...prev };
         delete updated.categoryId;
