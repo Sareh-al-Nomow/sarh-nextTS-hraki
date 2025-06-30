@@ -381,43 +381,62 @@
   },
 
   "footer": {
-    "description": "Your premier destination for quality products and exceptional service since 2010",
-    "sections": {
-      "shop": {
-        "title": "Shop",
-        "items": [
-          "All Products",
-          "New Arrivals",
-          "Best Sellers",
-          "Special Offers"
-        ]
-      },
-      "service": {
-        "title": "Customer Service",
-        "items": [
-          "Contact Us",
-          "FAQs",
-          "Shipping Policy",
-          "Returns & Exchanges"
-        ]
-      },
-      "about": {
-        "title": "About Us",
-        "items": ["Our Story", "Sustainability", "Careers", "Press"]
-      }
+    "newsletter": {
+      "title": "Join Our Newsletter",
+      "description": "Subscribe to receive updates, access to exclusive deals, and more.",
+      "placeholder": "Your email address",
+      "button": "Subscribe"
     },
-    "badges": {
-      "shipping": "Free Shipping Over $50",
-      "warranty": "2-Year Warranty",
-      "secure": "Secure Payments"
+    "contact": {
+      "title": "Contact Us",
+      "hours": "Mon-Fri: 9AM - 6PM"
     },
-    "paymentMethods": ["Visa", "Mastercard"],
-    "bottom": {
-      "copyright": "© 2025 . All rights reserved.",
+    "links": {
+      "title": "Quick Links",
+      "about": "About Us",
+      "contact": "Contact Us",
+      "faq": "FAQs",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
-      "cookies": "Cookies"
-    }
+      "shipping": "Shipping Policy",
+      "refund": "Refund Policy"
+    },
+    "categories": {
+      "title": "Categories"
+    },
+    "about": {
+      "description": "Your premier destination for fashion and style. We offer the latest trends at affordable prices."
+    },
+    "social": {
+      "follow": "Follow Us"
+    },
+    "badges": {
+      "delivery": {
+        "title": "Express Delivery",
+        "subtitle": "fast delivery"
+      },
+      "support": {
+        "title": "Instant Support",
+        "subtitle": "24/7 chat"
+      },
+      "returns": {
+        "title": "Easy Returns",
+        "subtitle": "hassle-free"
+      },
+      "premium": {
+        "title": "Premium Items",
+        "subtitle": "Priority services"
+      }
+    },
+    "payment": {
+      "title": "We Accept",
+      "methods": {
+        "visa": "Visa",
+        "mastercard": "MasterCard",
+        "cod": "Cash on Delivery"
+      }
+    },
+    "copyright": "© {year} {name}. All rights reserved."
   },
 
   "account": {
@@ -724,5 +743,245 @@
       "newFormButton": "Submit New Application"
     },
     "footerText": "For any inquiries, please contact us at info@example.com"
+  },
+  "returnPolicy": {
+    "title": "Return & Refund Policy - Sarah Alnomow",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "eligibility": {
+        "title": "1. Return Eligibility",
+        "content": "At Sarah Alnomow in Jordan, we accept returns within 14 days of the original purchase date. Items must be unused, in original condition with all tags attached and packaging intact. Proof of purchase is required."
+      },
+      "initiateReturn": {
+        "title": "2. How to Initiate a Return",
+        "content": "To return an item to Sarah Alnomow, please email us at {email} with your order number and reason for return. We will provide return instructions specific to your location in Jordan.",
+        "note": "For returns in Amman, you may also visit our physical store with your original receipt."
+      },
+      "shipping": {
+        "title": "3. Return Shipping in Jordan",
+        "table": {
+          "headers": ["Return Method", "Details"],
+          "rows": [
+            ["Store Return", "Free returns at our Amman location"],
+            ["Courier Pickup", "We arrange pickup for defective items (free)"],
+            [
+              "Self Shipping",
+              "Customer pays return shipping for change of mind"
+            ]
+          ]
+        },
+        "note": "*Return shipping costs vary by location in Jordan. Contact us for exact fees."
+      },
+      "refundProcess": {
+        "title": "4. Refund Process",
+        "content": "Sarah Alnomow processes refunds within 5 business days after receiving your return. Refunds are issued to the original payment method. Please allow 3-5 additional days for bank processing in Jordan."
+      },
+      "exchanges": {
+        "title": "5. Exchanges",
+        "content": "Sarah Alnomow offers size exchanges within Jordan when stock is available. Please contact us within 7 days of delivery to arrange an exchange."
+      },
+      "damagedItems": {
+        "title": "6. Damaged or Defective Items",
+        "content": "If you receive a damaged item from Sarah Alnomow, please contact us immediately at {email} with photos of the damage. We will arrange a free return and replacement for items available in our Jordan warehouse."
+      },
+      "international": {
+        "title": "7. International Returns",
+        "content": "For international customers returning to Jordan, you are responsible for return shipping costs and any customs fees. Sarah Alnomow cannot refund original shipping costs for international orders."
+      },
+      "storeCredit": {
+        "title": "8. Store Credit",
+        "content": "Sarah Alnomow may issue store credit in JOD for returns that don't meet our policy requirements. This credit can be used for future purchases at our Jordan store or online."
+      },
+      "contact": {
+        "title": "9. Contact Sarah Alnomow",
+        "content": "For return questions in Jordan:",
+        "details": {
+          "email": "Email: {email}",
+          "phone": "Phone: {phone}",
+          "hours": "Hours: Sunday-Thursday, 9AM-6PM (Jordan Time)"
+        },
+        "shippingLink": "For our shipping policy within Jordan, please see {link}.",
+        "linkText": "Shipping Policy"
+      }
+    }
+  },
+  "shippingPolicy": {
+    "title": "Shipping Policy",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "processingTime": {
+        "title": "1. Processing Time",
+        "content": "All orders are processed within a few business days after receiving your order confirmation. You will receive a notification when your order has shipped."
+      },
+      "domesticShipping": {
+        "title": "2. Domestic Shipping",
+        "table": {
+          "headers": ["Shipping Method", "Delivery Time", "Details"],
+          "rows": [
+            [
+              "Standard Shipping",
+              "3-5 business days",
+              "Our most economical option"
+            ],
+            [
+              "Express Shipping",
+              "1-2 business days",
+              "Faster delivery for urgent orders"
+            ],
+            [
+              "Free Shipping",
+              "5-7 business days",
+              "Available for qualifying orders"
+            ]
+          ]
+        },
+        "note": "Delivery times are estimates and may vary depending on location and carrier."
+      },
+      "internationalShipping": {
+        "title": "3. International Shipping",
+        "content": "We offer international shipping to many countries. Delivery times vary by destination. Customers are responsible for any customs fees or import duties that may apply."
+      },
+      "orderTracking": {
+        "title": "4. Order Tracking",
+        "content": "Once your order ships, you will receive tracking information via email. If you haven't received tracking details within a reasonable time, please contact us at {email}."
+      },
+      "shippingRestrictions": {
+        "title": "5. Shipping Restrictions",
+        "content": "Some items may have shipping restrictions due to size, weight, or content regulations. We cannot ship to PO boxes or certain restricted addresses."
+      },
+      "delayedOrders": {
+        "title": "6. Delayed Orders",
+        "content": "While we strive for timely delivery, occasional delays may occur due to unforeseen circumstances. We will notify you if your order experiences significant delays."
+      },
+      "incorrectAddress": {
+        "title": "7. Incorrect Shipping Address",
+        "content": "Please verify your shipping address before submitting your order. We are not responsible for orders shipped to incorrect addresses provided by the customer."
+      },
+      "lostPackages": {
+        "title": "8. Lost or Stolen Packages",
+        "content": "If your tracking shows delivered but you haven't received your package, please contact us within {days} days of the delivery date so we can investigate with the carrier."
+      },
+      "returnsExchanges": {
+        "title": "9. Returns & Exchanges",
+        "content": "For information about returning or exchanging items, please see our {link}. Customers are responsible for return shipping costs unless the return is due to our error."
+      },
+      "contact": {
+        "title": "10. Contact Us",
+        "content": "For shipping-related questions:",
+        "details": {
+          "email": "Email: {email}",
+          "phone": "Phone: {phone}",
+          "hours": "Hours: Monday-Friday, 9AM-5PM"
+        }
+      }
+    }
+  },
+  "termsOfService": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing and using our website (the \"Service\"), you accept and agree to be bound by these terms. If you do not agree, please do not use this Service."
+      },
+      "description": {
+        "title": "2. Description of Service",
+        "content": "We provide an online platform for e-commerce services. The Service may change from time to time at our sole discretion."
+      },
+      "responsibilities": {
+        "title": "3. User Responsibilities",
+        "content": "As a user, you agree to provide accurate registration information, maintain account confidentiality, and use the Service only for lawful purposes."
+      },
+      "purchases": {
+        "title": "4. Purchases and Payments",
+        "content": "For purchases, you may need to provide payment information. You represent that you have the legal right to use your payment method and that your information is accurate."
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property",
+        "content": "The Service and its original content are our exclusive property, protected by copyright and trademark laws. Our trademarks may not be used without prior written consent."
+      },
+      "userContent": {
+        "title": "6. User Content",
+        "content": "You are responsible for any content you post through the Service. By posting content, you grant us the right to use, modify, and distribute such content."
+      },
+      "prohibitedActivities": {
+        "title": "7. Prohibited Activities",
+        "content": "You agree not to use the Service for illegal purposes, harass others, upload malicious code, or attempt unauthorized access to our systems."
+      },
+      "termination": {
+        "title": "8. Termination",
+        "content": "We may terminate your account and access to the Service immediately, without notice, for any reason including breach of these Terms."
+      },
+      "liability": {
+        "title": "9. Limitation of Liability",
+        "content": "We shall not be liable for any indirect, incidental, or consequential damages resulting from your use of the Service or any content obtained from it."
+      },
+      "governingLaw": {
+        "title": "10. Governing Law",
+        "content": "These Terms shall be governed by the laws of the applicable jurisdiction, without regard to its conflict of law provisions."
+      },
+      "changes": {
+        "title": "11. Changes to Terms",
+        "content": "We may modify these Terms at any time. For material changes, we will provide notice before new terms take effect. Continued use constitutes acceptance."
+      },
+      "contact": {
+        "title": "12. Contact Us",
+        "content": "If you have questions about these Terms:",
+        "details": {
+          "email": "Email: {email}",
+          "address": "Address: {address}"
+        }
+      }
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "Welcome to our website. We are committed to protecting your personal information and your right to privacy. If you have questions or concerns, please contact us at {email}. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website or make purchases."
+      },
+      "informationCollection": {
+        "title": "2. Information We Collect",
+        "content": "We collect personal information you voluntarily provide when registering, placing orders, subscribing to newsletters, or contacting us. This may include your name, email, phone number, shipping/billing address, and payment information."
+      },
+      "informationUse": {
+        "title": "3. How We Use Your Information",
+        "content": "We use collected information to process orders, communicate with you, provide customer support, improve our services, send marketing communications (if opted in), prevent fraud, and comply with legal obligations."
+      },
+      "informationSharing": {
+        "title": "4. Sharing Your Information",
+        "content": "We may share information with service providers who perform services for us (payment processing, shipping, etc.). Information may also be shared during business transfers or when required by law to protect our rights."
+      },
+      "cookies": {
+        "title": "5. Cookies and Tracking Technologies",
+        "content": "We use cookies and similar technologies to track website activity. You can refuse cookies through your browser settings, but this may affect your ability to use some site features."
+      },
+      "dataSecurity": {
+        "title": "6. Data Security",
+        "content": "We implement security measures to protect your personal information. However, no Internet transmission or electronic storage method is 100% secure."
+      },
+      "privacyRights": {
+        "title": "7. Your Privacy Rights",
+        "content": "Depending on your location, you may have rights regarding your personal information including access, correction, objection to processing, and withdrawal of consent. To exercise these rights, contact us at {email}."
+      },
+      "childrenPrivacy": {
+        "title": "8. Children's Privacy",
+        "content": "Our services are not directed to children under 13. We do not knowingly collect personal information from children under 13 and will delete such information if discovered."
+      },
+      "policyChanges": {
+        "title": "9. Changes to This Policy",
+        "content": "We may update this Privacy Policy periodically. We will notify you of changes by posting the updated policy with a new \"Last updated\" date. Changes are effective when posted."
+      },
+      "contact": {
+        "title": "10. Contact Us",
+        "content": "For questions about this Privacy Policy:",
+        "details": {
+          "email": "Email: {email}",
+          "address": "Address: {address}"
+        }
+      }
+    }
   }
 }

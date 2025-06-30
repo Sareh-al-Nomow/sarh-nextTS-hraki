@@ -1,215 +1,159 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function ShippingPolicy() {
+  const t = useTranslations("shippingPolicy");
+  const contactEmail = "shipping@example.com";
+  const contactPhone = "+123 456 7890";
+
   return (
     <div className="bg-gray-50 min-h-screen py-16">
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Shipping Policy
+            {t("title")}
           </h1>
           <p className="text-gray-600 mb-8">
-            Last updated: {new Date().toLocaleDateString()}
+            {t("lastUpdated", { date: new Date().toLocaleDateString() })}
           </p>
 
           <div className="prose max-w-none">
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                1. Processing Time
+                {t("sections.processingTime.title")}
               </h2>
               <p className="text-gray-600">
-                All orders are processed within 1-3 business days (excluding
-                weekends and holidays) after receiving your order confirmation
-                email. You will receive another notification when your order has
-                shipped.
+                {t("sections.processingTime.content")}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                2. Domestic Shipping Options & Rates
+                {t("sections.domesticShipping.title")}
               </h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 mb-4">
+              <div className="overflow-x-auto mb-4">
+                <table className="min-w-full bg-white border border-gray-200">
                   <thead>
                     <tr className="bg-gray-100">
-                      <th className="py-3 px-4 border-b text-left">
-                        Shipping Method
-                      </th>
-                      <th className="py-3 px-4 border-b text-left">
-                        Delivery Time
-                      </th>
-                      <th className="py-3 px-4 border-b text-left">Price</th>
+                        {(t
+                        .raw("sections.domesticShipping.table.headers") as string[])
+                        .map((header: string, index: number) => (
+                          <th
+                          key={index}
+                          className="py-3 px-4 border-b text-left"
+                          >
+                          {header}
+                          </th>
+                        ))}
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="py-3 px-4 border-b">Standard Shipping</td>
-                      <td className="py-3 px-4 border-b">3-5 business days</td>
-                      <td className="py-3 px-4 border-b">$5.99</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 border-b">Expedited Shipping</td>
-                      <td className="py-3 px-4 border-b">2-3 business days</td>
-                      <td className="py-3 px-4 border-b">$12.99</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 border-b">Free Shipping</td>
-                      <td className="py-3 px-4 border-b">5-7 business days</td>
-                      <td className="py-3 px-4 border-b">
-                        Free on orders over $50
-                      </td>
-                    </tr>
+                    {(t
+                      .raw("sections.domesticShipping.table.rows") as string[][])
+                      .map((row: string[], rowIndex: number) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell: string, cellIndex: number) => (
+                        <td key={cellIndex} className="py-3 px-4 border-b">
+                          {cell}
+                        </td>
+                        ))}
+                      </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
               <p className="text-gray-600 text-sm">
-                *Delivery times are estimates and not guaranteed. Actual
-                delivery time may vary.
+                {t("sections.domesticShipping.note")}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                3. International Shipping
-              </h2>
-              <p className="text-gray-600 mb-4">
-                We currently ship to the following countries: [List countries
-                you ship to]. International delivery times vary by destination:
-              </p>
-              <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-                <li>Canada: 7-14 business days</li>
-                <li>Europe: 10-18 business days</li>
-                <li>Australia/NZ: 12-20 business days</li>
-                <li>Other countries: 14-21 business days</li>
-              </ul>
-              <p className="text-gray-600">
-                International customers are responsible for any customs fees,
-                import duties, or taxes that may apply. These charges are not
-                included in the item price or shipping cost.
-              </p>
-            </section>
-
-            <section className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                4. Order Tracking
-              </h2>
-              <p className="text-gray-600 mb-4">
-                Once your order has shipped, you will receive an email with a
-                tracking number and a link to track your package. You can also
-                track your order by logging into your account on our website.
-              </p>
-              <p className="text-gray-600">
-                If you&#39;re having trouble tracking your package or haven&#39;t
-                received your tracking information within 5 business days,
-                please contact us at support@sarah.com.
-              </p>
-            </section>
-
-            <section className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                5. Shipping Restrictions
-              </h2>
-              <p className="text-gray-600 mb-4">
-                We cannot ship to PO boxes or APO/FPO addresses. Some items may
-                have additional shipping restrictions:
-              </p>
-              <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-                <li>Fragile items may require special handling</li>
-                <li>Certain products cannot be shipped internationally</li>
-                <li>Oversized items may incur additional shipping fees</li>
-              </ul>
-            </section>
-
-            <section className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                6. Delayed Orders
-              </h2>
-              <p className="text-gray-600 mb-4">
-                While we make every effort to deliver your order on time, there
-                may be circumstances beyond our control that could result in
-                delays:
-              </p>
-              <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-                <li>Severe weather conditions</li>
-                <li>Carrier delays</li>
-                <li>Customs hold for international orders</li>
-                <li>Incorrect shipping address</li>
-              </ul>
-              <p className="text-gray-600">
-                If your order is significantly delayed, we will notify you via
-                email with updated delivery information.
-              </p>
-            </section>
-
-            <section className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                7. Incorrect Shipping Address
+                {t("sections.internationalShipping.title")}
               </h2>
               <p className="text-gray-600">
-                Please double-check your shipping address when placing your
-                order. We are not responsible for orders shipped to incorrect
-                addresses provided by the customer. If your package is returned
-                to us due to an incorrect address, you will be responsible for
-                the cost of reshipping the order.
+                {t("sections.internationalShipping.content")}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                8. Lost or Stolen Packages
+                {t("sections.orderTracking.title")}
               </h2>
-              <p className="text-gray-600 mb-4">
-                SARAH is not responsible for lost or stolen packages confirmed
-                to be delivered by the carrier. If your tracking information
-                shows your package was delivered but you can&#39;t find it:
-              </p>
-              <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-                <li>Check with neighbors or your building manager</li>
-                <li>Look around your property (porch, garage, etc.)</li>
-                <li>Contact your local post office with the tracking number</li>
-              </ul>
               <p className="text-gray-600">
-                If you&#39;re unable to locate your package, please contact us
-                within 14 days of the delivery date and we&#39;ll work with the
-                carrier to investigate.
+                {t("sections.orderTracking.content", { email: contactEmail })}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                9. Returns & Exchanges
+                {t("sections.shippingRestrictions.title")}
               </h2>
               <p className="text-gray-600">
-                Please see our{" "}
-                <Link
-                  href="/infoPages/returnPolicy"
-                  className="text-blue-600 hover:underline"
-                >
-                  Return Policy
-                </Link>{" "}
-                for information about returning or exchanging items. Customers
-                are responsible for return shipping costs unless the return is
-                due to our error.
+                {t("sections.shippingRestrictions.content")}
+              </p>
+            </section>
+
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                {t("sections.delayedOrders.title")}
+              </h2>
+              <p className="text-gray-600">
+                {t("sections.delayedOrders.content")}
+              </p>
+            </section>
+
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                {t("sections.incorrectAddress.title")}
+              </h2>
+              <p className="text-gray-600">
+                {t("sections.incorrectAddress.content")}
+              </p>
+            </section>
+
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                {t("sections.lostPackages.title")}
+              </h2>
+              <p className="text-gray-600">
+                {t("sections.lostPackages.content", { days: 14 })}
+              </p>
+            </section>
+
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                {t("sections.returnsExchanges.title")}
+              </h2>
+              <p className="text-gray-600">
+                {t.rich("sections.returnsExchanges.content", {
+                  link: (chunks) => (
+                    <Link
+                      href="/return-policy"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                10. Contact Us
+                {t("sections.contact.title")}
               </h2>
               <p className="text-gray-600 mb-2">
-                If you have any questions about our shipping policy, please
-                contact our customer service team:
+                {t("sections.contact.content")}
               </p>
               <p className="text-gray-600">
-                <strong>Email:</strong> shipping@sarah.com
+                {t("sections.contact.details.email", { email: contactEmail })}
                 <br />
-                <strong>Phone:</strong> (123) 456-7890
+                {t("sections.contact.details.phone", { phone: contactPhone })}
                 <br />
-                <strong>Hours:</strong> Monday-Friday, 9AM-5PM EST
+                {t("sections.contact.details.hours")}
               </p>
             </section>
           </div>

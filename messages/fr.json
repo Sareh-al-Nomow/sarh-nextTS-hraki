@@ -1,0 +1,993 @@
+{
+  "navbar": {
+    "home": "Accueil",
+    "categories": "Catégories",
+    "brands": "Marques",
+    "pubulareQuestion": "FAQ",
+    "aboutUs": "À propos",
+    "myAccount": "Mon Compte",
+    "viewProfile": "Voir le Profil",
+    "searchPlaceholder": "Que cherchez-vous ?",
+    "wishlist": "Liste de souhaits",
+    "login": "Connexion",
+    "browse": "Parcourir",
+    "BecomeVendor": {
+      "button": "Devenir Vendeur",
+      "title": "Devenir Vendeur",
+      "form": {
+        "name": "Votre Nom",
+        "shopName": "Nom de la Boutique",
+        "email": "Email",
+        "phone": "Numéro de Téléphone",
+        "submit": "Soumettre la Demande",
+        "success": "Votre demande a été soumise avec succès !"
+      }
+    },
+    "topHeader": {
+      "announcement": {
+        "limited": "LIMITÉ",
+        "text": "Utilisez le code : "
+      }
+    },
+    "AnnouncementBar": {
+      "message": "Utilisez le code : "
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas de compte ?",
+      "createAccount": "Créer un compte",
+      "googleLogin": "Se connecter avec Google",
+      "errors": {
+        "email": "Veuillez entrer votre email",
+        "password": "Veuillez entrer votre mot de passe"
+      }
+    },
+    "signup": {
+      "title": "Créer un Compte",
+      "fullName": "Nom Complet",
+      "phone": "Numéro de Téléphone",
+      "email": "Email",
+      "password": "Mot de passe",
+      "agreePolicy": "J'accepte la politique de confidentialité",
+      "submit": "Créer un Compte",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "login": "Se connecter",
+      "googleSignup": "S'inscrire avec Google",
+      "errors": {
+        "name": "Le nom est requis",
+        "phone": "Un numéro de téléphone valide est requis",
+        "email": "L'email est requis",
+        "password": "Le mot de passe est requis",
+        "agreePolicy": "Vous devez accepter la politique de confidentialité"
+      }
+    },
+    "otp": {
+      "title": "Vérification OTP",
+      "sentTo": "Nous avons envoyé un OTP à :",
+      "placeholder": "Entrez le code à 6 chiffres pour vérifier votre compte",
+      "submit": "Vérifier",
+      "pending": "Vérification en cours..."
+    },
+    "forgotPassword": {
+      "title": "Mot de Passe Oublié",
+      "enterEmail": "Veuillez entrer votre email",
+      "emailPlaceholder": "Entrez votre email pour recevoir le lien de réinitialisation",
+      "submit": "Envoyer",
+      "pending": "Envoi en cours...",
+      "success": "Nous avons envoyé un lien de réinitialisation à votre email",
+      "done": "Terminé",
+      "noAccount": "Pas de compte ?",
+      "createAccount": "Créer un compte"
+    },
+    "close": "Fermer"
+  },
+
+  "topHeader": {
+    "available": "Nous sommes disponibles 24/7, Besoin d'aide ?",
+    "phone": "+962791986721"
+  },
+
+  "accountCard": {
+    "Profile": "Profil",
+    "Orders": "Commandes",
+    "wishlist": "Liste de souhaits",
+    "SignOut": "Déconnexion"
+  },
+
+  "category": {
+    "title": "Parcourir les Catégories",
+    "noCategory": "Aucune catégorie disponible"
+  },
+
+  "cart": {
+    "pageTitle": "Votre Panier | Boutique Moderne",
+    "title": "Votre Panier",
+    "itemsCount": "{count} {count, plural, one {Article} other {Articles}} dans le Panier",
+    "Item": "Article",
+    "Items": "Articles",
+    "inCart": "dans le Panier",
+    "emptyCart": {
+      "message": "Votre panier est vide",
+      "continueShopping": "Continuer vos achats"
+    },
+    "product": {
+      "remove": "Supprimer l'article"
+    },
+    "orderSummary": {
+      "title": "Récapitulatif de Commande",
+      "subtotal": "Sous-total",
+      "tax": "Taxe",
+      "discount": "Réduction",
+      "total": "Total"
+    },
+    "checkout": "Passer la Commande",
+    "orContinue": "ou",
+    "coupon": {
+      "title": "COUPON",
+      "applied": "appliqué",
+      "placeholder": "Entrez le code promo",
+      "apply": "Appliquer le Coupon",
+      "remove": "Supprimer le coupon"
+    },
+    "paymentMethods": {
+      "title": "Nous Acceptons",
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "paypal": "PayPal",
+      "applePay": "Apple Pay",
+      "cashOnDelivery": "Paiement à la Livraison"
+    }
+  },
+
+  "checkout": {
+    "pageTitle": "Commande | Boutique Moderne",
+    "headings": {
+      "main": "Finalisez Votre Achat",
+      "sub": "Paiement sécurisé avec notre système crypté",
+      "orderSummary": "Récapitulatif de Commande"
+    },
+    "tabs": {
+      "information": "Information",
+      "shipping": "Livraison",
+      "payment": "Paiement"
+    },
+    "messages": {
+      "selectAddress": "Veuillez sélectionner votre adresse...",
+      "saveOrderFail": "Échec de l'enregistrement de la commande",
+      "tryAgain": "Réessayer",
+      "tryAgainMessage": "essayez d'ajouter votre adresse et votre méthode de livraison à nouveau"
+    },
+    "orderSummary": {
+      "subtotal": "Sous-total",
+      "shipping": "Livraison",
+      "tax": "Taxe",
+      "discount": "Réduction",
+      "total": "Total",
+      "quantity": "Qté"
+    }
+  },
+
+  "address": {
+    "modal": {
+      "title": "Erreurs de saisie d'adresse",
+      "close": "Fermer"
+    },
+    "form": {
+      "contactInfo": "Informations de Contact",
+      "shippingAddress": "Adresse de Livraison",
+      "chooseAddress": "Choisir une adresse enregistrée",
+      "fullName": "Nom Complet",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "addressDetails": "Détails de l'Adresse (Optionnel)",
+      "country": "Pays",
+      "selectCountry": "- Sélectionnez un Pays",
+      "city": "Ville",
+      "selectCity": "- Sélectionnez une Ville",
+      "postcode": "Code Postal",
+      "edit": "Modifier",
+      "cancel": "Annuler",
+      "saveAddress": "Enregistrer l'Adresse",
+      "continueShipping": "Continuer vers la Livraison",
+      "placeholderName": "Votre Nom"
+    }
+  },
+
+  "shipping": {
+    "title": "Méthode de Livraison",
+    "noDelivery": "Aucune livraison disponible dans votre région !",
+    "back": "← Retour aux Informations",
+    "continue": "Continuer vers le Paiement",
+    "errors": {
+      "selectMethod": "Veuillez sélectionner une méthode de livraison !"
+    }
+  },
+
+  "payment": {
+    "title": "Méthode de Paiement",
+    "methods": {
+      "creditCard": "Carte de Crédit",
+      "cashOnDelivery": "Paiement à la Livraison"
+    },
+    "terms": "J'accepte les ",
+    "and": "et",
+    "termsLinks": {
+      "terms": "Conditions d'Utilisation",
+      "privacy": "Politique de Confidentialité"
+    },
+    "navigation": {
+      "back": "← Retour à la Livraison",
+      "complete": "Finaliser la Commande"
+    },
+    "errors": {
+      "stripeFailed": "Échec du paiement Stripe."
+    }
+  },
+  "orderSuccess": {
+    "title": "Commande Confirmée !",
+    "description": "Merci pour votre achat ! Votre commande a été passée avec succès. Vous pouvez voir les détails de votre commande et suivre la livraison dans votre profil.",
+    "viewOrders": "Voir mes Commandes",
+    "continueShopping": "Continuer vos Achats",
+    "needHelp": "Besoin d'aide pour votre commande ?",
+    "contactSupport": "Contacter le support"
+  },
+
+  "resetPassword": {
+    "title": "Réinitialiser votre Mot de Passe",
+    "description": "Entrez votre nouveau mot de passe ci-dessous",
+    "form": {
+      "newPassword": "Nouveau Mot de Passe",
+      "newPasswordPlaceholder": "Entrez un nouveau mot de passe",
+      "confirmPassword": "Confirmer le Mot de Passe",
+      "confirmPasswordPlaceholder": "Confirmez le nouveau mot de passe",
+      "updateButton": "Mettre à jour le Mot de Passe",
+      "updating": "Mise à jour en cours..."
+    },
+    "success": {
+      "title": "Mot de Passe Mis à Jour !",
+      "message": "Votre mot de passe a été mis à jour avec succès.",
+      "button": "Retour à la Connexion"
+    },
+    "requirements": {
+      "title": "Exigences du Mot de Passe",
+      "minLength": "Minimum 8 caractères",
+      "uppercase": "Au moins une majuscule",
+      "number": "Au moins un chiffre",
+      "specialChar": "Au moins un caractère spécial",
+      "match": "Les mots de passe correspondent"
+    },
+    "errors": {
+      "passwordLength": "Le mot de passe doit contenir au moins 8 caractères !"
+    },
+    "console": {
+      "success": "OTP envoyé avec succès",
+      "error": "Erreur lors de l'envoi de l'OTP :"
+    }
+  },
+
+  "faq": {
+    "title": "Centre d'Aide",
+    "subtitle": "Trouvez des réponses aux questions fréquentes sur les commandes, la livraison, les retours et plus encore.",
+    "categories": {
+      "all": "Toutes les Questions",
+      "shipping": "Livraison",
+      "payments": "Paiements",
+      "returns": "Retours",
+      "account": "Compte"
+    },
+    "questions": {
+      "shippingTime": {
+        "question": "Combien de temps prend la livraison ?",
+        "answer": "La plupart des commandes sont expédiées sous 1-2 jours ouvrables et arrivent en 3-5 jours ouvrables. Des options de livraison express sont disponibles à la caisse."
+      },
+      "paymentMethods": {
+        "question": "Quels modes de paiement acceptez-vous ?",
+        "answer": "Nous acceptons Visa, Mastercard, American Express, PayPal, Apple Pay et Google Pay. Tous les paiements sont traités de manière sécurisée."
+      },
+      "returns": {
+        "question": "Puis-je retourner ou échanger un article ?",
+        "answer": "Oui ! Nous offrons des retours gratuits dans les 30 jours suivant l'achat. Les articles doivent être inutilisés et dans leur emballage d'origine. Visitez notre Centre de Retours pour initier un retour."
+      },
+      "tracking": {
+        "question": "Comment suivre ma commande ?",
+        "answer": "Une fois votre commande expédiée, vous recevrez un numéro de suivi par email. Vous pouvez aussi vérifier le statut de votre commande en vous connectant à votre compte."
+      },
+      "internationalShipping": {
+        "question": "Offrez-vous la livraison internationale ?",
+        "answer": "Oui, nous livrons dans plus de 100 pays. Les frais et délais de livraison internationaux varient selon la destination."
+      },
+      "createAccount": {
+        "question": "Comment créer un compte ?",
+        "answer": "Cliquez sur 'S'inscrire' dans la navigation en haut. Vous pouvez aussi créer un compte lors du paiement en sélectionnant 'Enregistrer mes informations pour la prochaine fois'."
+      }
+    },
+    "cta": {
+      "title": "Toujours besoin d'aide ?",
+      "description": "Notre équipe de support client est disponible 24/7 pour vous aider.",
+      "contactSupport": "Contacter le Support",
+      "liveChat": "Chat en Direct"
+    }
+  },
+
+  "aboutUs": {
+    "hero": {
+      "title": "Nous redéfinissons l'avenir du shopping",
+      "subtitle": "Une équipe passionnée dédiée à vous offrir les meilleurs produits avec une expérience exceptionnelle",
+      "button": "Acheter notre Collection"
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "p1": "Fondée en 2010, nous avons commencé comme une petite boutique avec un grand rêve - rendre les produits premium accessibles à tous.",
+      "p2": "Nous croyons que le shopping devrait être joyeux, durable et personnel. Chaque produit de notre collection est soigneusement sélectionné pour répondre à nos normes élevées.",
+      "p3": "Aujourd'hui, nous sommes fiers de servir des millions de clients dans le monde tout en restant fidèles à nos valeurs originelles."
+    },
+    "stats": {
+      "customers": "Clients Satisfaits",
+      "countries": "Pays dans le Monde",
+      "established": "Fondé en",
+      "support": "Support Client"
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "subtitle": "Ces principes guident tout ce que nous faisons",
+      "items": {
+        "customer": {
+          "title": "Obsession Client",
+          "desc": "Nous commençons par le client et remontons."
+        },
+        "sustainability": {
+          "title": "Avenir Durable",
+          "desc": "Engagés envers des pratiques écologiques."
+        },
+        "innovation": {
+          "title": "Innovation",
+          "desc": "Repoussons constamment les limites."
+        },
+        "quality": {
+          "title": "Qualité Artisanale",
+          "desc": "Chaque produit répond à nos normes."
+        },
+        "community": {
+          "title": "Communauté",
+          "desc": "Créons des liens significatifs."
+        },
+        "transparency": {
+          "title": "Transparence",
+          "desc": "Ouverts sur nos processus."
+        }
+      }
+    },
+    "team": {
+      "title": "Rencontrez l'Équipe",
+      "subtitle": "Les esprits brillants derrière notre succès",
+      "ceo": {
+        "name": "Ahmad Alhraki",
+        "role": "Ingénieur Logiciel",
+        "bio": "Leader visionnaire..."
+      }
+    },
+    "cta": {
+      "title": "Rejoignez Notre Communauté",
+      "subtitle": "Inscrivez-vous pour des offres exclusives et des mises à jour.",
+      "placeholder": "Votre adresse email",
+      "button": "S'abonner"
+    }
+  },
+
+  "footer": {
+    "newsletter": {
+      "title": "Abonnez-vous à notre Newsletter",
+      "description": "Abonnez-vous pour recevoir des mises à jour, des offres exclusives et plus encore.",
+      "placeholder": "Votre adresse email",
+      "button": "S'abonner"
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "hours": "Lun-Ven : 9h - 18h"
+    },
+    "links": {
+      "title": "Liens Rapides",
+      "about": "À propos",
+      "contact": "Contactez-nous",
+      "faq": "FAQ",
+      "privacy": "Politique de Confidentialité",
+      "terms": "Conditions d'Utilisation",
+      "shipping": "Politique de Livraison",
+      "refund": "Politique de Remboursement"
+    },
+    "categories": {
+      "title": "Catégories"
+    },
+    "about": {
+      "description": "Votre destination premium pour la mode et le style. Nous offrons les dernières tendances à des prix abordables."
+    },
+    "social": {
+      "follow": "Suivez-nous"
+    },
+    "badges": {
+      "delivery": {
+        "title": "Livraison Express",
+        "subtitle": "livraison rapide"
+      },
+      "support": {
+        "title": "Support Instantané",
+        "subtitle": "chat 24/7"
+      },
+      "returns": {
+        "title": "Retours Faciles",
+        "subtitle": "sans tracas"
+      },
+      "premium": {
+        "title": "Articles Premium",
+        "subtitle": "services prioritaires"
+      }
+    },
+    "payment": {
+      "title": "Nous Acceptons",
+      "methods": {
+        "visa": "Visa",
+        "mastercard": "MasterCard",
+        "cod": "Paiement à la Livraison"
+      }
+    },
+    "copyright": "© {year} {name}. Tous droits réservés."
+  },
+
+  "account": {
+    "title": "Paramètres du Compte",
+    "subtitle": "Gérez vos informations personnelles et préférences",
+    "guest": "Utilisateur Invité",
+    "noEmail": "Aucun email fourni",
+    "avatarAlt": "Photo de profil",
+    "tabs": {
+      "profile": "Profil",
+      "security": "Sécurité",
+      "myProducts": "Mes Produits",
+      "addresses": "Adresses",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "personalInfo": "Informations Personnelles",
+      "fullName": "Nom Complet",
+      "birthday": "Date de Naissance",
+      "phoneNumber": "Numéro de Téléphone",
+      "notProvided": "Non fourni",
+      "editProfile": "Modifier le Profil",
+      "cancel": "Annuler",
+      "saveChanges": "Enregistrer les Modifications",
+      "saving": "Enregistrement en cours...",
+      "updateSuccess": "Profil mis à jour avec succès !",
+      "updateError": "Échec de la mise à jour du profil",
+      "missingUserId": "ID utilisateur manquant. Impossible de mettre à jour le profil.",
+      "validationErrors": "Erreurs de Validation",
+      "close": "Fermer"
+    },
+    "security": {
+      "modal": {
+        "title": "Mot de Passe Oublié",
+        "emailLabel": "Veuillez Entrer Votre Email",
+        "emailPlaceholder": "Entrez votre email pour recevoir un lien de réinitialisation",
+        "successMessage": "Nous avons envoyé un lien de réinitialisation à votre email",
+        "send": "Envoyer",
+        "sending": "... Envoi en cours",
+        "done": "Terminé",
+        "closeAriaLabel": "Fermer"
+      },
+      "card": {
+        "title": "Mot de Passe & Sécurité",
+        "passwordLabel": "Mot de Passe",
+        "changePassword": "Changer le Mot de Passe"
+      }
+    },
+    "settings": {
+      "title": "Préférences de Notification",
+      "email": {
+        "title": "Notifications par Email",
+        "orderUpdates": "Mises à jour de commande",
+        "promotions": "Promotions et offres",
+        "recommendations": "Recommandations de produits"
+      },
+      "push": {
+        "title": "Notifications Push",
+        "statusChanges": "Changements de statut de commande",
+        "newArrivals": "Nouveautés",
+        "accountActivity": "Activité du compte"
+      },
+      "save": "Enregistrer les Préférences"
+    },
+    "addressInfo": {
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "modal": {
+        "title": "Supprimer l'adresse",
+        "deleting": "Suppression en cours...",
+        "delete": "Supprimer",
+        "close": "Annuler"
+      },
+      "form": {
+        "title": "Modifier l'Adresse",
+        "fullName": "Nom Complet",
+        "phone": "Numéro de Téléphone",
+        "address1": "Adresse Ligne 1",
+        "address2": "Adresse Ligne 2",
+        "country": "Pays",
+        "city": "Ville",
+        "postcode": "Code Postal",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "saving": "Enregistrement en cours..."
+      },
+      "toast": {
+        "update": "Adresse mise à jour avec succès !",
+        "delete": "Adresse supprimée avec succès !"
+      }
+    },
+    "myProducts": {
+      "retry": "Réessayer",
+      "noData": "Aucune donnée disponible",
+      "noCollection": "Aucune collection disponible",
+      "myProduct": {
+        "myProducts": {
+          "reviewBtn": "Évaluer",
+          "modal": {
+            "title": "Laisser un avis pour {name}"
+          },
+          "form": {
+            "ratingLabel": "Votre Note",
+            "reviewLabel": "Votre Avis",
+            "placeholder": "Partagez votre expérience avec ce produit...",
+            "characters": "caractères",
+            "submit": "Soumettre l'Avis",
+            "cancel": "Annuler",
+            "submitting": "Soumission en cours...",
+            "errors": {
+              "emptyReview": "Veuillez écrire votre opinion"
+            }
+          },
+          "retry": "Réessayer",
+          "toast": {
+            "addSuccess": "Avis ajouté avec succès"
+          }
+        }
+      }
+    }
+  },
+  "floatingCall": {
+    "panel": {
+      "title": "Support Téléphonique",
+      "description": "Parlez directement avec notre équipe de support par téléphone.",
+      "callNow": "Appeler Maintenant"
+    },
+    "button": {
+      "callSupport": "Appeler le Support",
+      "ariaLabel": "Appeler le support"
+    }
+  },
+
+  "orders": {
+    "title": "Mes Commandes",
+    "description": "Voir et gérer votre historique de commandes",
+    "tabs": {
+      "all": "Toutes les Commandes",
+      "processing": "En Cours",
+      "shipped": "Expédiées",
+      "delivered": "Livrées"
+    },
+    "empty": {
+      "title": "Aucune commande trouvée",
+      "description": "Vous n'avez aucune commande {status} pour le moment."
+    },
+    "error": {
+      "title": "Quelque chose a mal tourné",
+      "retry": "Réessayer"
+    },
+    "noData": "Aucune donnée disponible",
+    "order": {
+      "orderId": "Commande #{id}",
+      "itemsTitle": "Articles Commandés",
+      "summary": "Récapitulatif",
+      "summaryItems": {
+        "price": "Prix :",
+        "shipping": "Livraison :",
+        "discount": "Réduction :",
+        "total": "Total :"
+      },
+      "tracking": "Informations de Suivi",
+      "trackingItems": {
+        "orderNumber": "Numéro de Commande :",
+        "shippingMethod": "Méthode de Livraison :",
+        "carrier": "Transporteur :",
+        "trackingNumber": "Numéro de Suivi :",
+        "copy": "Copier",
+        "copySuccess": "Numéro de Suivi Copié"
+      },
+      "actions": {
+        "return": "Retourner la Commande",
+        "buyAgain": "Acheter à Nouveau"
+      },
+      "tabs": {
+        "processing": "En Cours",
+        "shipped": "Expédiées",
+        "delivered": "Livrées",
+        "cancelled": "Annulées"
+      }
+    }
+  },
+  "searchFiles": {
+    "searchPlaceholder": "Rechercher des produits...",
+    "searchResults": "Résultats de Recherche",
+    "viewAll": "Voir tout",
+    "noResults": "Aucun résultat trouvé pour"
+  },
+  "shopGrid": {
+    "Toolbar": {
+      "searchPlaceholder": "Rechercher des produits...",
+      "sortOptions": {
+        "featured": "En Vedette",
+        "priceLow": "Prix : Croissant",
+        "priceHigh": "Prix : Décroissant"
+      },
+      "filters": "Filtres"
+    },
+    "PriceRangeSlider": {
+      "title": "Tranche de Prix",
+      "minLabel": "Min :",
+      "maxLabel": "Max :"
+    },
+    "ProductGrid": {
+      "subcategories": "Sous-catégories",
+      "noProducts": {
+        "title": "Aucun produit trouvé",
+        "description": "Nous n'avons trouvé aucun article correspondant à vos critères",
+        "action": "Réinitialiser les filtres"
+      }
+    },
+    "FilterSidebar": {
+      "Filters": "Filtres",
+      "ResetAll": "Tout Réinitialiser"
+    }
+  },
+  "HorizontalProductList": {
+    "dir": "ltr",
+    "ScrollPrevious": "Défiler vers l'arrière",
+    "ScrollNext": "Défiler vers l'avant",
+    "ExploreAll": "Tout Explorer"
+  },
+  "ProductDetails": {
+    "title": "Détails du Produit",
+    "colorLabel": "Couleur : {color}",
+    "keyFeatures": "Caractéristiques Clés",
+    "tabs": {
+      "description": "Description",
+      "additional": "Informations Supplémentaires",
+      "reviews": "Avis"
+    },
+    "addToCart": "Ajouter au Panier - ${price}",
+    "quantity": "Quantité",
+    "save": "Économiser {cu} {amount}",
+    "since": "Depuis {year}",
+    "addReview": "Ajouter votre avis",
+    "reviewsCount": "{rating} ({count} avis)",
+    "share": {
+      "copied": "URL du produit copiée dans le presse-papiers !",
+      "error": "Les informations sur le produit ne sont pas disponibles."
+    },
+    "vendor": {
+      "name": "Martini Premium Spirits",
+      "rating": "5"
+    },
+    "error": {
+      "title": "Erreur",
+      "retry": "Réessayer"
+    }
+  },
+  "ProductItem": {
+    "badges": {
+      "new": "NOUVEAU",
+      "hot": "POPULAIRE",
+      "bestseller": "MEILLEURE VENTE",
+      "sale": "SOLDES"
+    },
+    "quickShop": "Achat Rapide",
+    "outOfStock": "En Rupture de Stock",
+    "addToCart": "Ajouter au Panier",
+    "viewDetails": "Voir les Détails",
+    "ariaLabels": {
+      "like": "Aimer le produit",
+      "unlike": "Ne plus aimer le produit",
+      "addToCart": "Ajouter au panier",
+      "close": "Fermer la vue rapide"
+    }
+  },
+  "Products": {
+    "header": {
+      "title": "Nouveautés",
+      "count": "Affichage de {shown} sur {total} produits"
+    },
+    "viewMore": "Voir Plus",
+    "empty": "Aucun produit disponible",
+    "error": {
+      "loading": "Échec du chargement des produits",
+      "retry": "Réessayer"
+    }
+  },
+  "cartContext": {
+    "addToCartSuccess": "Votre article a été ajouté avec succès !",
+    "updatedQuantitySuccess": "Quantité de l'article mise à jour avec succès !",
+    "goToCart": "Aller au panier"
+  },
+  "BecomeVendor": {
+    "title": "Devenir Vendeur",
+    "description": "Rejoignez notre plateforme en tant que vendeur et commencez à vendre vos produits à nos clients",
+    "backButton": "Retour",
+    "form": {
+      "name": "Nom Complet",
+      "shopName": "Nom de la Boutique",
+      "email": "Email",
+      "phone": "Numéro de Téléphone",
+      "submit": "Soumettre la Demande",
+      "submitting": "Soumission en cours...",
+      "success": "Votre demande a été reçue avec succès !",
+      "error": "Une erreur est survenue lors de la soumission"
+    },
+    "success": {
+      "title": "Demande Soumise !",
+      "message": "Merci de vous être inscrit en tant que vendeur. Notre équipe vous contactera bientôt pour finaliser le processus.",
+      "homeButton": "Retour à l'Accueil",
+      "newFormButton": "Soumettre une Nouvelle Demande"
+    },
+    "footerText": "Pour toute question, contactez-nous à info@example.com"
+  },
+  "returnPolicy": {
+    "title": "Politique de Retour et Remboursement - Sarah Alnomow",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "sections": {
+      "eligibility": {
+        "title": "1. Éligibilité au Retour",
+        "content": "Chez Sarah Alnomow en Jordanie, nous acceptons les retours dans les 14 jours suivant la date d'achat originale. Les articles doivent être inutilisés, dans leur état d'origine avec toutes les étiquettes attachées et l'emballage intact. Une preuve d'achat est requise."
+      },
+      "initiateReturn": {
+        "title": "2. Comment Initier un Retour",
+        "content": "Pour retourner un article à Sarah Alnomow, veuillez nous envoyer un email à {email} avec votre numéro de commande et la raison du retour. Nous vous fournirons des instructions spécifiques à votre emplacement en Jordanie.",
+        "note": "Pour les retours à Amman, vous pouvez aussi visiter notre magasin physique avec votre reçu original."
+      },
+      "shipping": {
+        "title": "3. Retours en Jordanie",
+        "table": {
+          "headers": ["Méthode de Retour", "Détails"],
+          "rows": [
+            [
+              "Retour en Magasin",
+              "Retours gratuits à notre emplacement d'Amman"
+            ],
+            [
+              "Ramassage par Coursier",
+              "Nous organisons le ramassage pour les articles défectueux (gratuit)"
+            ],
+            [
+              "Expédition par le Client",
+              "Le client paie les frais de retour pour changement d'avis"
+            ]
+          ]
+        },
+        "note": "*Les frais de retour varient selon l'emplacement en Jordanie. Contactez-nous pour les frais exacts."
+      },
+      "refundProcess": {
+        "title": "4. Processus de Remboursement",
+        "content": "Sarah Alnomow traite les remboursements dans les 5 jours ouvrables après réception de votre retour. Les remboursements sont effectués sur le mode de paiement original. Veuillez prévoir 3-5 jours supplémentaires pour le traitement bancaire en Jordanie."
+      },
+      "exchanges": {
+        "title": "5. Échanges",
+        "content": "Sarah Alnomow propose des échanges de taille en Jordanie lorsque le stock est disponible. Veuillez nous contacter dans les 7 jours suivant la livraison pour organiser un échange."
+      },
+      "damagedItems": {
+        "title": "6. Articles Endommagés ou Défectueux",
+        "content": "Si vous recevez un article endommagé de Sarah Alnomow, veuillez nous contacter immédiatement à {email} avec des photos des dommages. Nous organiserons un retour gratuit et un remplacement pour les articles disponibles dans notre entrepôt en Jordanie."
+      },
+      "international": {
+        "title": "7. Retours Internationaux",
+        "content": "Pour les clients internationaux retournant en Jordanie, vous êtes responsable des frais de retour et de toute taxe douanière. Sarah Alnomow ne peut pas rembourser les frais d'expédition originaux pour les commandes internationales."
+      },
+      "storeCredit": {
+        "title": "8. Crédit en Magasin",
+        "content": "Sarah Alnomow peut émettre un crédit en JOD pour les retours ne répondant pas à nos exigences. Ce crédit peut être utilisé pour de futurs achats dans notre magasin en Jordanie ou en ligne."
+      },
+      "contact": {
+        "title": "9. Contacter Sarah Alnomow",
+        "content": "Pour des questions sur les retours en Jordanie :",
+        "details": {
+          "email": "Email : {email}",
+          "phone": "Téléphone : {phone}",
+          "hours": "Heures : Dimanche-Jeudi, 9h-18h (Heure de Jordanie)"
+        },
+        "shippingLink": "Pour notre politique de livraison en Jordanie, veuillez voir {link}.",
+        "linkText": "Politique de Livraison"
+      }
+    }
+  },
+  "shippingPolicy": {
+    "title": "Politique d'expédition",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "sections": {
+      "processingTime": {
+        "title": "1. Délai de traitement",
+        "content": "Toutes les commandes sont traitées dans quelques jours ouvrables après réception de votre confirmation de commande. Vous recevrez une notification lorsque votre commande sera expédiée."
+      },
+      "domesticShipping": {
+        "title": "2. Expédition nationale",
+        "table": {
+          "headers": ["Méthode d'expédition", "Délai de livraison", "Détails"],
+          "rows": [
+            [
+              "Expédition standard",
+              "3-5 jours ouvrables",
+              "Notre option la plus économique"
+            ],
+            [
+              "Expédition express",
+              "1-2 jours ouvrables",
+              "Livraison plus rapide pour les commandes urgentes"
+            ],
+            [
+              "Livraison gratuite",
+              "5-7 jours ouvrables",
+              "Disponible pour les commandes éligibles"
+            ]
+          ]
+        },
+        "note": "Les délais de livraison sont des estimations et peuvent varier selon l'emplacement et le transporteur."
+      },
+      "internationalShipping": {
+        "title": "3. Expédition internationale",
+        "content": "Nous proposons une expédition internationale vers de nombreux pays. Les délais de livraison varient selon la destination. Les clients sont responsables des éventuels frais de douane ou droits d'importation."
+      },
+      "orderTracking": {
+        "title": "4. Suivi de commande",
+        "content": "Une fois votre commande expédiée, vous recevrez des informations de suivi par e-mail. Si vous n'avez pas reçu ces informations dans un délai raisonnable, veuillez nous contacter à {email}."
+      },
+      "shippingRestrictions": {
+        "title": "5. Restrictions d'expédition",
+        "content": "Certains articles peuvent avoir des restrictions d'expédition en raison de leur taille, poids ou réglementations sur le contenu. Nous ne pouvons pas expédier vers des boîtes postales ou certaines adresses restreintes."
+      },
+      "delayedOrders": {
+        "title": "6. Commandes retardées",
+        "content": "Bien que nous nous efforcions d'assurer une livraison rapide, des retards occasionnels peuvent survenir en raison de circonstances imprévues. Nous vous informerons si votre commande subit des retails importants."
+      },
+      "incorrectAddress": {
+        "title": "7. Adresse d'expédition incorrecte",
+        "content": "Veuillez vérifier votre adresse de livraison avant de soumettre votre commande. Nous ne sommes pas responsables des commandes expédiées à des adresses incorrectes fournies par le client."
+      },
+      "lostPackages": {
+        "title": "8. Colis perdus ou volés",
+        "content": "Si votre suivi indique que le colis est livré mais que vous ne l'avez pas reçu, veuillez nous contacter dans les {days} jours suivant la date de livraison pour que nous puissions enquêter avec le transporteur."
+      },
+      "returnsExchanges": {
+        "title": "9. Retours et échanges",
+        "content": "Pour des informations sur le retour ou l'échange d'articles, veuillez consulter notre {link}. Les clients sont responsables des frais d'expédition de retour sauf si le retour est dû à une erreur de notre part."
+      },
+      "contact": {
+        "title": "10. Contactez-nous",
+        "content": "Pour des questions relatives à l'expédition :",
+        "details": {
+          "email": "E-mail : {email}",
+          "phone": "Téléphone : {phone}",
+          "hours": "Heures d'ouverture : Lundi-vendredi, 9h-17h"
+        }
+      }
+    }
+  },
+  "termsOfService": {
+    "title": "Conditions d'utilisation",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptation des conditions",
+        "content": "En accédant et utilisant notre site web (le \"Service\"), vous acceptez et consentez à être lié par ces conditions. Si vous n'êtes pas d'accord, veuillez ne pas utiliser ce Service."
+      },
+      "description": {
+        "title": "2. Description du Service",
+        "content": "Nous fournissons une plateforme en ligne pour des services de commerce électronique. Le Service peut changer à tout moment à notre seule discrétion."
+      },
+      "responsibilities": {
+        "title": "3. Responsabilités de l'utilisateur",
+        "content": "En tant qu'utilisateur, vous acceptez de fournir des informations d'inscription exactes, de maintenir la confidentialité de votre compte et d'utiliser le Service uniquement à des fins légales."
+      },
+      "purchases": {
+        "title": "4. Achats et paiements",
+        "content": "Pour les achats, vous devrez peut-être fournir des informations de paiement. Vous déclarez avoir le droit légal d'utiliser votre méthode de paiement et que vos informations sont exactes."
+      },
+      "intellectualProperty": {
+        "title": "5. Propriété intellectuelle",
+        "content": "Le Service et son contenu original sont notre propriété exclusive, protégés par les lois sur le droit d'auteur et les marques. Nos marques ne peuvent être utilisées sans consentement écrit préalable."
+      },
+      "userContent": {
+        "title": "6. Contenu de l'utilisateur",
+        "content": "Vous êtes responsable de tout contenu que vous publiez via le Service. En publiant du contenu, vous nous accordez le droit d'utiliser, modifier et distribuer ce contenu."
+      },
+      "prohibitedActivities": {
+        "title": "7. Activités interdites",
+        "content": "Vous acceptez de ne pas utiliser le Service à des fins illégales, harceler autrui, télécharger du code malveillant ou tenter d'accéder sans autorisation à nos systèmes."
+      },
+      "termination": {
+        "title": "8. Résiliation",
+        "content": "Nous pouvons résilier votre compte et l'accès au Service immédiatement, sans préavis, pour toute raison incluant la violation de ces Conditions."
+      },
+      "liability": {
+        "title": "9. Limitation de responsabilité",
+        "content": "Nous ne serons pas responsables des dommages indirects, accessoires ou consécutents résultant de votre utilisation du Service ou de tout contenu obtenu à partir de celui-ci."
+      },
+      "governingLaw": {
+        "title": "10. Loi applicable",
+        "content": "Ces Conditions seront régies par les lois de la juridiction applicable, sans tenir compte de ses dispositions relatives aux conflits de lois."
+      },
+      "changes": {
+        "title": "11. Modifications des conditions",
+        "content": "Nous pouvons modifier ces Conditions à tout moment. Pour les changements importants, nous fournirons un préavis avant que les nouvelles conditions ne prennent effet. L'utilisation continue constitue une acceptation."
+      },
+      "contact": {
+        "title": "12. Contactez-nous",
+        "content": "Si vous avez des questions sur ces Conditions :",
+        "details": {
+          "email": "E-mail : {email}",
+          "address": "Adresse : {address}"
+        }
+      }
+    }
+  },
+  "privacyPolicy": {
+    "title": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "Bienvenue sur notre site web. Nous nous engageons à protéger vos informations personnelles et votre droit à la vie privée. Si vous avez des questions ou préoccupations, veuillez nous contacter à {email}. Cette Politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous visitez notre site web ou effectuez des achats."
+      },
+      "informationCollection": {
+        "title": "2. Informations que nous collectons",
+        "content": "Nous collectons les informations personnelles que vous fournissez volontairement lors de l'inscription, de la passation de commandes, de l'abonnement à des newsletters ou du contact avec nous. Cela peut inclure votre nom, e-mail, numéro de téléphone, adresse de livraison/facturation et informations de paiement."
+      },
+      "informationUse": {
+        "title": "3. Comment nous utilisons vos informations",
+        "content": "Nous utilisons les informations collectées pour traiter les commandes, communiquer avec vous, fournir un support client, améliorer nos services, envoyer des communications marketing (si vous y avez consenti), prévenir la fraude et nous conformer à nos obligations légales."
+      },
+      "informationSharing": {
+        "title": "4. Partage de vos informations",
+        "content": "Nous pouvons partager des informations avec des prestataires de services qui effectuent des services pour nous (traitement des paiements, expédition, etc.). Les informations peuvent également être partagées lors de transferts d'entreprise ou lorsque la loi l'exige pour protéger nos droits."
+      },
+      "cookies": {
+        "title": "5. Cookies et technologies de suivi",
+        "content": "Nous utilisons des cookies et des technologies similaires pour suivre l'activité du site web. Vous pouvez refuser les cookies via les paramètres de votre navigateur, mais cela peut affecter votre capacité à utiliser certaines fonctionnalités du site."
+      },
+      "dataSecurity": {
+        "title": "6. Sécurité des données",
+        "content": "Nous mettons en œuvre des mesures de sécurité pour protéger vos informations personnelles. Cependant, aucune transmission Internet ou méthode de stockage électronique n'est sécurisée à 100%."
+      },
+      "privacyRights": {
+        "title": "7. Vos droits en matière de confidentialité",
+        "content": "Selon votre localisation, vous pouvez avoir des droits concernant vos informations personnelles, y compris l'accès, la correction, l'opposition au traitement et le retrait du consentement. Pour exercer ces droits, contactez-nous à {email}."
+      },
+      "childrenPrivacy": {
+        "title": "8. Confidentialité des enfants",
+        "content": "Nos services ne s'adressent pas aux enfants de moins de 13 ans. Nous ne collectons pas sciemment d'informations personnelles auprès d'enfants de moins de 13 ans et supprimerons ces informations si elles sont découvertes."
+      },
+      "policyChanges": {
+        "title": "9. Modifications de cette politique",
+        "content": "Nous pouvons mettre à jour cette Politique de confidentialité périodiquement. Nous vous informerons des changements en publiant la politique mise à jour avec une nouvelle date de \"Dernière mise à jour\". Les modifications prennent effet lors de leur publication."
+      },
+      "contact": {
+        "title": "10. Contactez-nous",
+        "content": "Pour des questions sur cette Politique de confidentialité :",
+        "details": {
+          "email": "E-mail : {email}",
+          "address": "Adresse : {address}"
+        }
+      }
+    }
+  }
+}

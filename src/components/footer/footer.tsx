@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   FiFacebook,
   FiTwitter,
   FiInstagram,
   FiCreditCard,
-  FiPrinter,
   FiMail,
   FiPhone,
   FiMapPin,
@@ -23,6 +23,7 @@ import { getCategories } from "@/lib/axios/categoryAxios";
 import { MdLocalShipping } from "react-icons/md";
 
 export default function Footer() {
+  const t = useTranslations("footer");
   const settings = useSettings();
 
   const {
@@ -60,17 +61,18 @@ export default function Footer() {
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left">
-              <h3 className="text-2xl font-bold mb-2">Join Our Newsletter</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                {t("newsletter.title")}
+              </h3>
               <p className="text-gray-300 max-w-md">
-                Subscribe to receive updates, access to exclusive deals, and
-                more.
+                {t("newsletter.description")}
               </p>
             </div>
             <div className="w-full lg:w-auto">
-              <form className="flex flex-col sm:flex-row gap-3 max-w-xl w-full">
+              <form className="flex flex-col sm:flex-row  gap-3 max-w-xl w-full">
                 <input
                   type="email"
-                  placeholder="Your email address"
+                  placeholder={t("newsletter.placeholder")}
                   className="flex-grow px-5 py-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -78,7 +80,7 @@ export default function Footer() {
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
                 >
-                  Subscribe
+                  {t("newsletter.button")}
                 </button>
               </form>
             </div>
@@ -91,7 +93,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
+            <h3 className="text-lg font-semibold mb-6">{t("contact.title")}</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <FiMapPin className="mt-1 text-blue-500" />
@@ -100,7 +102,7 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <FiPhone className="text-blue-500" />
                 <Link
-                  href="tel:+11234567890"
+                  href={`tel:${settings.contact_phone}`}
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
                   {settings.contact_phone}
@@ -109,7 +111,7 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <FiMail className="text-blue-500" />
                 <Link
-                  href="mailto:info@sarahfashion.com"
+                  href={`mailto:${settings.contact_email}`}
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
                   {settings.contact_email}
@@ -117,21 +119,21 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <FiClock className="mt-1 text-blue-500" />
-                <span className="text-gray-400">Mon-Fri: 9AM - 6PM</span>
+                <span className="text-gray-400">{t("contact.hours")}</span>
               </li>
             </ul>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-6">{t("links.title")}</h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/infoPages/about"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  About Us
+                  {t("links.about")}
                 </Link>
               </li>
               <li>
@@ -139,7 +141,7 @@ export default function Footer() {
                   href="/infoPages/contact"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  Contact Us
+                  {t("links.contact")}
                 </Link>
               </li>
               <li>
@@ -147,7 +149,7 @@ export default function Footer() {
                   href="/infoPages/faq"
                   className="text-gray-400 hover:text-blue-500 transition-colors"
                 >
-                  FAQs
+                  {t("links.faq")}
                 </Link>
               </li>
             </ul>
@@ -155,7 +157,9 @@ export default function Footer() {
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Categories</h3>
+            <h3 className="text-lg font-semibold mb-6">
+              {t("categories.title")}
+            </h3>
             <ul className="space-y-3">
               {displayCategories?.map((cat) => (
                 <li key={cat.id}>
@@ -172,15 +176,12 @@ export default function Footer() {
 
           {/* Social & Info */}
           <div>
-            <h2 className="text-2xl font-bold mb-4">SARAH</h2>
-            <p className="text-gray-400 mb-6">
-              Your premier destination for fashion and style. We offer the
-              latest trends at affordable prices.
-            </p>
+            <h2 className="text-2xl font-bold mb-4">{settings.store_name}</h2>
+            <p className="text-gray-400 mb-6">{t("about.description")}</p>
 
             <div className="mb-8">
               <h4 className="text-sm font-semibold mb-3 text-gray-300">
-                Follow Us
+                {t("social.follow")}
               </h4>
               <div className="flex space-x-3">
                 <Link
@@ -204,13 +205,6 @@ export default function Footer() {
                 >
                   <FiInstagram className="text-xl" />
                 </Link>
-                <Link
-                  href={settings.social_media_links.pinterest || "#"}
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-                  aria-label="Pinterest"
-                >
-                  <FiPrinter className="text-xl" />
-                </Link>
               </div>
             </div>
           </div>
@@ -223,8 +217,12 @@ export default function Footer() {
             <div className="bg-green-500/10 p-3 rounded-full mb-3">
               <FiZap className="text-green-400 text-2xl" />
             </div>
-            <h4 className="font-semibold mb-1 text-white">Express Delivery</h4>
-            <p className="text-sm text-green-200">fast delevary</p>
+            <h4 className="font-semibold mb-1 text-white">
+              {t("badges.delivery.title")}
+            </h4>
+            <p className="text-sm text-green-200">
+              {t("badges.delivery.subtitle")}
+            </p>
           </div>
 
           {/* Instant Support */}
@@ -232,8 +230,12 @@ export default function Footer() {
             <div className="bg-purple-500/10 p-3 rounded-full mb-3">
               <FiMessageSquare className="text-purple-400 text-2xl" />
             </div>
-            <h4 className="font-semibold mb-1 text-white">Instant Support</h4>
-            <p className="text-sm text-purple-200">24/7 chat</p>
+            <h4 className="font-semibold mb-1 text-white">
+              {t("badges.support.title")}
+            </h4>
+            <p className="text-sm text-purple-200">
+              {t("badges.support.subtitle")}
+            </p>
           </div>
 
           {/* Easy Returns */}
@@ -241,8 +243,12 @@ export default function Footer() {
             <div className="bg-amber-500/10 p-3 rounded-full mb-3">
               <FiRefreshCw className="text-amber-400 text-2xl" />
             </div>
-            <h4 className="font-semibold mb-1 text-white">Easy Returns</h4>
-            <p className="text-sm text-amber-200">hassle-free</p>
+            <h4 className="font-semibold mb-1 text-white">
+              {t("badges.returns.title")}
+            </h4>
+            <p className="text-sm text-amber-200">
+              {t("badges.returns.subtitle")}
+            </p>
           </div>
 
           {/* Premium Members */}
@@ -250,33 +256,33 @@ export default function Footer() {
             <div className="bg-red-500/10 p-3 rounded-full mb-3">
               <FiStar className="text-red-400 text-2xl" />
             </div>
-            <h4 className="font-semibold mb-1 text-white">Premium Items</h4>
-            <p className="text-sm text-red-200">Priority services</p>
+            <h4 className="font-semibold mb-1 text-white">
+              {t("badges.premium.title")}
+            </h4>
+            <p className="text-sm text-red-200">
+              {t("badges.premium.subtitle")}
+            </p>
           </div>
         </div>
 
         {/* Payment Methods */}
         <div className="mb-8">
           <h4 className="text-center text-gray-300 text-sm font-medium mb-4">
-            We Accept
+            {t("payment.title")}
           </h4>
           <div className="flex flex-wrap justify-center gap-3">
             <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
               <FiCreditCard />
-              <span className="text-sm">Visa</span>
+              <span className="text-sm">{t("payment.methods.visa")}</span>
             </div>
             <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
               <FiCreditCard />
-              <span className="text-sm">MasterCard</span>
+              <span className="text-sm">{t("payment.methods.mastercard")}</span>
             </div>
             <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
               <MdLocalShipping />
-              <span className="text-sm">Cash on Delevary</span>
+              <span className="text-sm">{t("payment.methods.cod")}</span>
             </div>
-            {/* <div className="bg-gray-800 px-4 py-2 rounded-md flex items-center gap-2">
-              <FiCreditCard />
-              <span className="text-sm">Apple Pay</span>
-            </div> */}
           </div>
         </div>
 
@@ -284,29 +290,31 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} SARAH Fashion. All rights
-              reserved.
+              {t("copyright", {
+                year: new Date().getFullYear(),
+                name: settings.store_name,
+              })}
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/infoPages/privacyPolicy">
                 <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
-                  Privacy Policy
+                  {t("links.privacy")}
                 </span>
               </Link>
               <Link href="/infoPages/termsOfService">
                 <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
-                  Terms of Service
+                  {t("links.terms")}
                 </span>
               </Link>
               <Link href="/infoPages/shippingPolicy">
                 <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
-                  Shipping Policy
+                  {t("links.shipping")}
                 </span>
               </Link>
               <Link href="/infoPages/returnPolicy">
                 <span className="text-gray-400 hover:text-blue-500 text-sm transition-colors">
-                  Refund Policy
+                  {t("links.refund")}
                 </span>
               </Link>
             </div>

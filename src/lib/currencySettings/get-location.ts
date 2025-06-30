@@ -1,12 +1,10 @@
 export async function getLocationCurrency(ip: string): Promise<string> {
-  // ✅ إذا في تطوير محلي، استخدم عملة ثابتة (مثلاً الأردن)
   if (process.env.NODE_ENV === "development") {
     console.log("🌍 Development mode - using mock IP and currency");
     return "JOD";
   }
 
   try {
-    // ✅ استدعاء خدمة مجانية بدون مفتاح API
     const res = await fetch(`https://freegeoip.app/json/${ip}`);
     if (!res.ok) {
       throw new Error("❌ Failed to fetch IP location");
@@ -24,7 +22,6 @@ export async function getLocationCurrency(ip: string): Promise<string> {
   }
 }
 
-// ✅ تحويل كود الدولة إلى رمز العملة
 function getCurrencyFromCountry(countryCode: string): string {
   const map: Record<string, string> = {
     JO: "JOD",
@@ -36,7 +33,6 @@ function getCurrencyFromCountry(countryCode: string): string {
     GB: "GBP",
     FR: "EUR",
     DE: "EUR",
-    // أضف أي دول تحتاجها
   };
 
   return map[countryCode] || "USD";

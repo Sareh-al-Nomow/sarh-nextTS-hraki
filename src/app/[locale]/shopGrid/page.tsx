@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { SearchContext } from "@/store/SearchContext";
@@ -63,6 +63,8 @@ const ShopGridPage = () => {
       collectionId?: number;
     }
   >({ page: 1 });
+
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch data
   const { data: productsData, isLoading: isLoadingFetchProducts } = useQuery({
@@ -285,6 +287,8 @@ const ShopGridPage = () => {
 
   // Handle page changes
   const handlePageChange = (newPage: number) => {
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
     const page = Math.max(
       1,
       Math.min(newPage, Math.ceil(pagination.total / 10))
@@ -303,6 +307,10 @@ const ShopGridPage = () => {
         page,
         limit,
       }));
+      // / Restore scroll position after state updates
+      setTimeout(() => {
+        window.scrollTo(0, scrollPosition);
+      }, 0);
     }
   };
 
@@ -324,9 +332,10 @@ const ShopGridPage = () => {
         : [...prev, product.id]
     );
   };
+  
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div ref={scrollRef} className="min-h-screen bg-gray-50">
       <HeroHeader
         title={collectionData?.name ?? "Discover Our Collection"}
         description={
