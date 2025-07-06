@@ -36,7 +36,7 @@ export default function CategoriesList() {
   }
 
   return (
-    <section className="py-6 md:py-10 text-center">
+    <section className="py-2 md:py-5 text-center">
       <div className="container mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold pr-text mb-10 ">
           {t("title")}

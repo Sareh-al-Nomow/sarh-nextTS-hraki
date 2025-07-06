@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import Language from "./Languages";
 import { AuthContext } from "@/store/AuthContext";
 import { AuthModalContext } from "@/store/AuthModalContext";
+import CurrencySelector from "./CurrencySelector";
 // import CurrencySelector from "./CurrencySelector";
 
 interface Group {
@@ -283,12 +284,11 @@ export default function PremiumNavWidget() {
                                   }}
                                 >
                                   <Link
-                                    href={`/shopGrid?${
-                                      category.name === "Categories" ||
+                                    href={`/shopGrid?${category.name === "Categories" ||
                                       category.name === "الأقسام"
-                                        ? "categoryid"
-                                        : "brandid"
-                                    }=${category.ids[index]}`}
+                                      ? "categoryid"
+                                      : "brandid"
+                                      }=${category.ids[index]}`}
                                     className="block py-3 px-4 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
                                     onClick={() => setIsOpen(false)}
                                   >
@@ -309,6 +309,9 @@ export default function PremiumNavWidget() {
                 {/* <li className="px-8 py-5 text-[18px] pr-5">
                   <CurrencySelector />
                 </li> */}
+                <li className="px-8 py-5 text-[18px] pr-5">
+                  <CurrencySelector />
+                </li>
                 <li className="px-8 py-5 text-[18px] pr-5">
                   <Language />
                 </li>

@@ -129,17 +129,17 @@ export default function HorizontalProductList({
 
         <motion.button
           onClick={viewAllHandler}
-          className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#1a7a9a] to-cyan-500 text-white rounded-lg font-medium text-xl shadow-md hover:shadow-lg transition-all"
+          className="text-xl flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#1a7a9a] to-cyan-500 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
           {t("ExploreAll")}
-          <motion.span
+          {/* <motion.span
             animate={{ x: [0, 4, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
           >
             {isRTL ? "←" : "→"}
-          </motion.span>
+          </motion.span> */}
         </motion.button>
       </motion.header>
 
@@ -197,7 +197,7 @@ export default function HorizontalProductList({
         {/* Product List */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth gap-6 py-2 scrollbar-hide"
+          className="flex overflow-x-auto scroll-smooth gap-3 py-2 scrollbar-hide"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",

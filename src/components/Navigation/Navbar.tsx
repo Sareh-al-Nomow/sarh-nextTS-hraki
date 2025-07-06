@@ -51,10 +51,10 @@ export default function Navbar() {
               <div className="hidden md:block">
                 <Language />
               </div>
-              <div>
+              <div className="hidden md:block">
                 <CurrencySelector />
               </div>
-              <div className="hidden md:block">
+              <div className="">
                 {isAuthenticated ? <AccountLink /> : <RegistrationLink />}
               </div>
               <div className="h-5 w-[1px] rounded-2xl bg-gray-300" />
