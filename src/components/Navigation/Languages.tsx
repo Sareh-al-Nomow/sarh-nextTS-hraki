@@ -6,11 +6,11 @@ import { FiChevronDown } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { getLanguages } from "@/lib/axios/languagesAxios";
+import { useLocale } from "next-intl";
 
 export default function Language() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["languages"],
@@ -20,6 +20,9 @@ export default function Language() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   // Detect current locale from URL (assuming first path segment is locale)
   const currentLocale = pathname?.split("/")[1] || "en";
 
@@ -27,16 +30,6 @@ export default function Language() {
   const currentLanguage = data?.data.find(
     (lang) => lang.languageCode === currentLocale
   );
-
-  // Detect mobile width for dropdown alignment
-  useEffect(() => {
-    function checkMobile() {
-      setIsMobile(window.innerWidth < 768);
-    }
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -108,20 +101,18 @@ export default function Language() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className={`absolute ${
-              isMobile ? "right-0" : "left-0"
-            } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
+            className={`absolute  ${isRTL ? "md:left-0" : "md:right-0"
+              } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
           >
             {data?.data.map((lang) => (
               <motion.button
                 key={lang.languageCode}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleSelectLanguage(lang.languageCode)}
-                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                  currentLocale === lang.languageCode
-                    ? "bg-gray-100 font-semibold"
-                    : ""
-                }`}
+                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${currentLocale === lang.languageCode
+                  ? "bg-gray-100 font-semibold"
+                  : ""
+                  }`}
                 role="menuitem"
               >
                 {lang.languageName}

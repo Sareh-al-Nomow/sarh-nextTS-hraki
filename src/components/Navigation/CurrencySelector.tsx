@@ -20,7 +20,7 @@ export default function CurrencySelector({
   const isRTL = locale === "ar";
 
   // Detect mobile width for dropdown alignment
-  
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -70,18 +70,16 @@ export default function CurrencySelector({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className={`absolute ${
-              isRTL ? "left-0" : "right-0"
-            } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
+            className={`absolute ${isRTL ? "md:left-0" : "md:right-0"
+              } mt-2 w-full min-w-[120px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-50`}
           >
             {available_currencies.map((currency) => (
               <motion.button
                 key={currency}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleSelectCurrency(currency)}
-                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                  userCurrency === currency ? "bg-gray-100 font-semibold" : ""
-                }`}
+                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${userCurrency === currency ? "bg-gray-100 font-semibold" : ""
+                  }`}
                 role="menuitem"
               >
                 {currency}

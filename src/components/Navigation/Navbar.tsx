@@ -25,7 +25,7 @@ export default function Navbar() {
       {/* Main Header */}
       <header className="z-40 w-full bg-white shadow-sm">
         <div className="w-full px-2 lg:px-20">
-          <nav className="container mx-auto flex items-center justify-between py-4 gap-3 md:gap-5">
+          <nav className="container mx-auto flex items-center justify-between py-4 gap-1 md:gap-5">
             {/* Left - Logo */}
             <div className="flex items-center gap-1 md:gap-4">
               <div className="flex items-center md:hidden">
@@ -47,7 +47,7 @@ export default function Navbar() {
             </div>
 
             {/* Right - Actions */}
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-1 md:gap-4">
               <div className="hidden md:block">
                 <Language />
               </div>

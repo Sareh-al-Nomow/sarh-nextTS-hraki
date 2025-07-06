@@ -309,10 +309,10 @@ export default function PremiumNavWidget() {
                 {/* <li className="px-8 py-5 text-[18px] pr-5">
                   <CurrencySelector />
                 </li> */}
-                <li className="px-8 py-5 text-[18px] pr-5">
+                <li className="px-8 py-5 text-[18px] ">
                   <CurrencySelector />
                 </li>
-                <li className="px-8 py-5 text-[18px] pr-5">
+                <li className="px-8 py-5 text-[18px] ">
                   <Language />
                 </li>
                 <li className="px-8 py-5 text-[18px] flex">
