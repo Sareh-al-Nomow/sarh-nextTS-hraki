@@ -1,272 +1,481 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { FiArrowLeft, FiCheckCircle } from "react-icons/fi";
-import toast from "react-hot-toast";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useState, useRef } from 'react';
+import axios from 'axios';
+import Joi from 'joi';
+import { motion } from 'framer-motion';
+import { FaPlus, FaTrashAlt, FaFileAlt, FaFileImage } from 'react-icons/fa';
 
-export default function BecomeVendorPage() {
-  const t = useTranslations("BecomeVendor");
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    shopName: "",
-    email: "",
-    phone: "",
+type FormData = {
+  business_name: string;
+  business_email: string;
+  business_phone: string;
+  tax_id: string;
+  registration_number: string;
+  description: string;
+  url_key: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  postal_code: string;
+};
+
+type FormErrors = Partial<Record<keyof FormData, string>> & { form?: string };
+
+const VendorRegistrationForm = () => {
+  const [formData, setFormData] = useState<FormData>({
+    business_name: '',
+    business_email: '',
+    business_phone: '',
+    tax_id: '',
+    registration_number: '',
+    description: '',
+    url_key: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    postal_code: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [step, setStep] = useState<"form" | "success">("form");
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
+  // Add a new state for the single image file
+  // Validation schema
+  const schema = Joi.object({
+    business_name: Joi.string().required().label('Business Name'),
+    business_email: Joi.string().trim().lowercase().optional().label('Business Email'),
+    business_phone: Joi.string().min(10).optional().label('Business Phone'),
+    tax_id: Joi.string().optional().label('Tax ID'),
+    registration_number: Joi.string().optional().label('Registration Number'),
+    description: Joi.string().optional().label('Description'),
+    url_key: Joi.string().required().label('URL Key'),
+    address: Joi.string().optional().label('Address'),
+    city: Joi.string().optional().label('City'),
+    state: Joi.string().optional().label('State'),
+    country: Joi.string().optional().label('Country'),
+    postal_code: Joi.string().optional().label('Postal Code')
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
+  };
+
+  const validateForm = (): FormErrors | null => {
+    const { error } = schema.validate(formData, { abortEarly: false });
+    if (!error) return null;
+
+    const validationErrors: FormErrors = {};
+    error.details.forEach(err => {
+      const key = err.path[0] as keyof FormData;
+      validationErrors[key] = err.message.replace(/"/g, '');
+    });
+    return validationErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const validationErrors = validateForm();
+    if (validationErrors) {
+      setErrors(validationErrors);
+      return;
+    }
+
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log("Form submitted:", formData);
-      setStep("success");
-      toast.success(t("form.success"));
-    } catch {
-      toast.error(t("form.error"));
+      const data = new FormData();
+      // Append all form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
+      });
+      // Append file if selected
+      selectedFiles.forEach((file) => {
+        data.append('files', file); // 'files' is the field name for multiple files
+      });
+
+      // Use axios or fetch to POST FormData
+      await axios.post('/api/vendors', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setSubmitSuccess(true);
+    } catch (error) {
+      console.error('Submission error:', error);
+      setErrors({
+        ...errors,
+        form: 'Failed to submit form. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (step === "success") {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setFileError(null);
+
+    const allowedTypes = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/vnd.ms-powerpoint',
+      // Accept all image types
+    ];
+
+    let newFiles: File[] = [...selectedFiles];
+
+    for (const file of files) {
+      // Accept all image types
+      if (
+        file.type.startsWith('image/') ||
+        allowedTypes.includes(file.type)
+      ) {
+        if (file.size > 2 * 1024 * 1024) {
+          setFileError(`File "${file.name}" is too large (max 2MB).`);
+          return;
+        }
+        // Only one image allowed, replace if exists
+        newFiles = newFiles.filter(f => !f.type.startsWith('image/'));
+        if (file.type.startsWith('image/')) {
+          newFiles.unshift(file); // Add image at the start
+        } else {
+          // Prevent duplicate docs
+          if (!newFiles.some(f => f.name === file.name && f.size === file.size)) {
+            newFiles.push(file);
+          }
+        }
+      } else {
+        setFileError('Unsupported file type.');
+        return;
+      }
+    }
+
+    setSelectedFiles(newFiles);
+  };
+
+  const handleRemoveFile = (fileToRemove: File) => {
+    setSelectedFiles(selectedFiles.filter(f => f !== fileToRemove));
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#f7fafc] to-[#e2e8f0] flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden"
-        >
-          <div className="p-8 text-center">
-            <div className="flex justify-center mb-6">
-              <FiCheckCircle className="text-green-500 text-6xl" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {t("success.title")}
-            </h1>
-            <p className="text-lg text-gray-600 mb-8">{t("success.message")}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => router.push("/")}
-                className="px-6 py-3 bg-[#1a7a9a] text-white rounded-lg hover:bg-[#156a87] transition-colors font-medium"
-              >
-                {t("success.homeButton")}
-              </button>
-              <button
-                onClick={() => {
-                  setStep("form");
-                  setFormData({
-                    name: "",
-                    shopName: "",
-                    email: "",
-                    phone: "",
-                  });
-                }}
-                className="px-6 py-3 border border-[#1a7a9a] text-[#1a7a9a] rounded-lg hover:bg-[#f0f9ff] transition-colors font-medium"
-              >
-                {t("success.newFormButton")}
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      <motion.div
+        className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-2xl font-bold text-green-600 mb-4">Success!</h2>
+        <p className="text-gray-700">Your vendor registration has been submitted successfully.</p>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f7fafc] to-[#e2e8f0] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <motion.div
+      className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md my-16"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div className="text-center mb-8">
+        <h1 className="text-4xl font-extrabold text-blue-700 mb-2">Become a Vendor</h1>
+        <p className="text-lg text-gray-600">Grow your business by joining our marketplace. Fill out the form below to get started!</p>
+      </motion.div>
+
+      {'form' in errors && errors.form && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
+          className="mb-4 p-3 bg-red-100 text-red-700 rounded"
+          variants={itemVariants}
         >
+          {errors.form}
+        </motion.div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4" variants={containerVariants}>
+          {/* Business Information */}
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="business_name">
+              Business Name *
+            </label>
+            <input
+              type="text"
+              id="business_name"
+              name="business_name"
+              value={formData.business_name}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.business_name ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.business_name && <p className="text-red-500 text-sm mt-1">{errors.business_name}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="url_key">
+              URL Key *
+            </label>
+            <input
+              type="text"
+              id="url_key"
+              name="url_key"
+              value={formData.url_key}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.url_key ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.url_key && <p className="text-red-500 text-sm mt-1">{errors.url_key}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="business_email">
+              Business Email
+            </label>
+            <input
+              type="email"
+              id="business_email"
+              name="business_email"
+              value={formData.business_email}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.business_email ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.business_email && <p className="text-red-500 text-sm mt-1">{errors.business_email}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="business_phone">
+              Business Phone
+            </label>
+            <input
+              type="tel"
+              id="business_phone"
+              name="business_phone"
+              value={formData.business_phone}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.business_phone ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.business_phone && <p className="text-red-500 text-sm mt-1">{errors.business_phone}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="tax_id">
+              Tax ID
+            </label>
+            <input
+              type="text"
+              id="tax_id"
+              name="tax_id"
+              value={formData.tax_id}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.tax_id ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.tax_id && <p className="text-red-500 text-sm mt-1">{errors.tax_id}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="registration_number">
+              Registration Number
+            </label>
+            <input
+              type="text"
+              id="registration_number"
+              name="registration_number"
+              value={formData.registration_number}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.registration_number ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.registration_number && <p className="text-red-500 text-sm mt-1">{errors.registration_number}</p>}
+          </motion.div>
+
+          {/* Location Information */}
+          <motion.div variants={itemVariants} className="md:col-span-2">
+            <label className="block text-gray-700 mb-1" htmlFor="address">
+              Address
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="city">
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="state">
+              State/Province
+            </label>
+            <input
+              type="text"
+              id="state"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.state ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="country">
+              Country
+            </label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.country ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <label className="block text-gray-700 mb-1" htmlFor="postal_code">
+              Postal Code
+            </label>
+            <input
+              type="text"
+              id="postal_code"
+              name="postal_code"
+              value={formData.postal_code}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded ${errors.postal_code ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.postal_code && <p className="text-red-500 text-sm mt-1">{errors.postal_code}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="md:col-span-2">
+            <label className="block text-gray-700 mb-1" htmlFor="description">
+              Business Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={3}
+              className={`w-full px-3 py-2 border rounded ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="md:col-span-2">
+            <label className="block text-gray-700 mb-1" htmlFor="file">
+              Upload Profile Picture and Documents <span className="text-gray-400">(One image, multiple docs, max 2MB each)</span>
+            </label>
+            <button
+              type="button"
+              onClick={handleAddFileClick}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded shadow transition-colors mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <FaPlus /> Add File
+            </button>
+            <input
+              type="file"
+              id="file"
+              name="file"
+              accept=".pdf,.doc,.docx,.ppt,.pptx,image/*"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+              ref={fileInputRef}
+            />
+            {fileError && <p className="text-red-500 text-sm mt-1">{fileError}</p>}
+            {selectedFiles.length > 0 && (
+              <ul className="mt-2 divide-y divide-gray-200 bg-gray-50 rounded shadow p-2">
+                {selectedFiles.map((file) => (
+                  <li key={file.name + file.size} className="flex items-center justify-between py-2 px-1">
+                    <span className="flex items-center gap-2">
+                      {file.type.startsWith('image/') ? <FaFileImage className="text-blue-500" /> : <FaFileAlt className="text-gray-500" />}
+                      <span className="truncate max-w-xs" title={file.name}>{file.name}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(file)}
+                      className="ml-2 text-red-500 hover:text-red-700 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-300"
+                      aria-label={`Remove ${file.name}`}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </motion.div>
+        </motion.div>
+
+        <motion.div className="mt-6" variants={itemVariants}>
           <button
-            onClick={() => router.back()}
-            className="flex items-center text-[#1a7a9a] hover:text-[#156a87] font-medium"
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full px-4 py-2 text-white rounded-md ${isSubmitting ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} transition-colors`}
           >
-            <FiArrowLeft className="mr-2" />
-            {t("backButton")}
+            {isSubmitting ? 'Submitting...' : 'Register Vendor'}
           </button>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-xl overflow-hidden"
-        >
-          <div className="bg-[#1a7a9a] p-6 sm:p-8 text-white">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-              {t("title")}
-            </h1>
-            <p className="text-white/90">{t("description")}</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  {t("form.name")}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a9a] focus:border-transparent transition-all"
-                  required
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.35 }}
-              >
-                <label
-                  htmlFor="shopName"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  {t("form.shopName")}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="shopName"
-                  name="shopName"
-                  value={formData.shopName}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a9a] focus:border-transparent transition-all"
-                  required
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  {t("form.email")}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a9a] focus:border-transparent transition-all"
-                  required
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.45 }}
-              >
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  {t("form.phone")}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a9a] focus:border-transparent transition-all"
-                  required
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="pt-4"
-              >
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full bg-[#1a7a9a] text-white py-3 px-6 rounded-lg hover:bg-[#156a87] transition-colors font-medium text-lg flex items-center justify-center ${
-                    isSubmitting ? "opacity-80 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {t("form.submitting")}
-                    </>
-                  ) : (
-                    t("form.submit")
-                  )}
-                </button>
-              </motion.div>
-            </div>
-          </form>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 text-center text-gray-600 text-sm"
-        >
-          <p>{t("footerText")}</p>
-        </motion.div>
-      </div>
-    </div>
+      </form>
+    </motion.div>
   );
-}
+};
+
+export default VendorRegistrationForm;
